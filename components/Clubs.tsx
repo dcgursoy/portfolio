@@ -21,7 +21,7 @@ const clubs = [
     badge: 'Active',
     badgeColor: 'amber',
     bullets: [
-      'Developing a 240V→480V three-phase AC upgrade, integrating 5+ VFDs to control 15+ HP motors — enabling 300% increase in power delivery for a 1,000-lb autonomous TBM excavating 30-meter tunnels',
+      'Upgraded 240V→480V three-phase AC system with 5+ VFDs controlling 15+ HP motors, enabling 300% greater power delivery for a 1,000-lb autonomous TBM that placed 2nd in The Boring Company\'s 2026 Not-a-Boring Competition',
       'Programmed Siemens S7-1200 PLC & ESP32 MCU with TIA Portal to implement autonomous drilling state machine with hardwired E-stops, software interlocks, and remote kill switch for <100ms fail-safe response',
       'Integrated VFDs & sensors into unified HMI using Modbus RTU, I2C, and Ethernet protocols for synchronized telemetry',
     ],
@@ -72,6 +72,25 @@ const clubs = [
       { src: '/IEEE-3.JPG', caption: 'Team Photo at IEEE Student Conference' },
     ] as Photo[],
   },
+  {
+    company: 'Penn Aerial Robotics',
+    role: 'Electrical Hardware Engineer',
+    location: 'Philadelphia, PA',
+    period: 'Sep 2025 – Jan 2026',
+    badge: 'Past',
+    badgeColor: 'red',
+    bullets: [
+      'Designed custom STM32-based flight controller PCB in Altium Designer from scratch to optimize SWaP-C vs. commercial Pixhawk systems, targeting 50%+ cost reduction and 30% weight reduction for competition UAV platforms',
+      'Engineered power management subsystem with voltage conversion from USB/battery to multiple rails (5V, 3.3V, 1.8V) and implemented dual memory modules, power sensing, and fail-safe systems for flight data logging',
+    ],
+    accent: '#f87171',
+    logo: '/pennair.jpg',
+    photos: [
+      { src: '/pennair-1.png' },
+      { src: '/pennair-2.png' },
+      { src: '/pennair-3.png' },
+    ] as Photo[],
+  },
 ]
 
 const badgeStyles: Record<string, string> = {
@@ -79,6 +98,7 @@ const badgeStyles: Record<string, string> = {
   purple: 'bg-purple-500/12 text-purple-400/80 border-purple-500/20',
   cyan:   'bg-cyan-500/12 text-cyan-400/80 border-cyan-500/20',
   amber:  'bg-amber-500/12 text-amber-400/80 border-amber-500/20',
+  red:    'bg-red-500/12 text-red-400/80 border-red-500/20',
   green:  'bg-emerald-500/12 text-emerald-400/80 border-emerald-500/20',
 }
 

@@ -12,6 +12,37 @@ type Photo = string | { src: string; caption?: string }
 const toPhoto = (p: Photo) => typeof p === 'string' ? { src: p, caption: undefined } : p
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
+const research = [
+  {
+    company: 'Modular Robotics Lab (GRASP Lab)',
+    role: 'Undergraduate Research Assistant',
+    location: 'Philadelphia, PA',
+    period: 'Feb 2026 – Present',
+    badge: 'Research',
+    badgeColor: 'purple',
+    bullets: [
+      'Designing capacitive sensing circuits for joint angle detection on the ABOT modular robot under Prof. Mark Yim, implementing a Schmitt trigger relaxation oscillator with OPA277 op-amp for real-time proprioceptive feedback',
+    ],
+    accent: '#a78bfa',
+    logo: '/modlab.jpg',
+    photos: [] as Photo[],
+  },
+  {
+    company: 'Stony Brook University',
+    role: 'Simons Summer Research Intern',
+    location: 'Stony Brook, NY',
+    period: 'Jun 2024 – Aug 2024',
+    badge: 'Research',
+    badgeColor: 'green',
+    bullets: [
+      'Published co-author research in Langmuir by executing 3,600 ns of atomistic molecular dynamics simulations (LAMMPS/CHARMM36) to quantify PFAS-membrane insertion energetics; discovered that a −9.0 to −17.2 kT free energy gradient drives deep membrane penetration, identifying a critical mechanism for "forever chemical" bioaccumulation',
+    ],
+    accent: '#34d399',
+    logo: '/stonybrook.png',
+    photos: [] as Photo[],
+  },
+]
+
 const professional = [
   {
     company: 'SpaceX',
@@ -26,6 +57,21 @@ const professional = [
     accent: '#4f8ef7',
     logo: '/spacex.jpg',
     logoScale: 1.5,
+    photos: [] as Photo[],
+  },
+  {
+    company: 'Venture Lab · Stealth AI/Healthtech Startup',
+    role: 'LLM Operations Intern',
+    location: 'Philadelphia, PA',
+    period: 'Sep 2025 – Dec 2025',
+    badge: 'Internship',
+    badgeColor: 'purple',
+    bullets: [
+      'Collaborated with an AI / Healthtech startup in stealth at Venture Labs, contributing to a real-time health analytics platform',
+      'Developed features using React Native, Supabase, and FastAPI; integrated ML-powered insight generation to automatically analyze user symptom data and deliver personalized health patterns in under 3 seconds',
+    ],
+    accent: '#f97316',
+    logo: '/venturelab.jpg',
     photos: [] as Photo[],
   },
   {
@@ -111,9 +157,6 @@ function ExperienceCard({ item, index }: { item: Item; index: number }) {
                   <h3 className="font-display font-bold text-base" style={{ color: item.accent }}>
                     {item.company}
                   </h3>
-                  <span className={`text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded border ${badgeStyles[item.badgeColor]}`}>
-                    {item.badge}
-                  </span>
                 </div>
                 <p className="text-sm font-medium text-white/65">{item.role}</p>
               </div>
@@ -201,7 +244,11 @@ function ExperienceCard({ item, index }: { item: Item; index: number }) {
   )
 }
 
+type Tab = 'professional' | 'research'
+
 export default function Experience() {
+  const [tab, setTab] = useState<Tab>('professional')
+
   return (
     <section id="experience" className="py-28 md:py-36 px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
@@ -221,16 +268,51 @@ export default function Experience() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.65, delay: 0.05 }}
-          className="font-display text-4xl md:text-5xl font-bold mb-12"
+          className="font-display text-4xl md:text-5xl font-bold mb-10"
         >
           Where I've <span className="text-gradient">worked</span>
         </motion.h2>
 
-        <div>
-          {professional.map((item, i) => (
-            <ExperienceCard key={item.company + item.role} item={item} index={i} />
+        {/* Tab switcher */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.55, delay: 0.1 }}
+          className="flex gap-1 p-1 rounded-xl glass-md w-fit mb-12"
+        >
+          {(['professional', 'research'] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => setTab(t)}
+              className={`relative px-5 py-2 rounded-lg text-sm font-medium transition-all duration-300 capitalize ${
+                tab === t ? 'text-white' : 'text-white/35 hover:text-white/60'
+              }`}
+            >
+              {tab === t && (
+                <motion.div
+                  layoutId="exp-tab-indicator"
+                  className="absolute inset-0 rounded-lg bg-white/8 border border-white/10"
+                />
+              )}
+              <span className="relative z-10">{t}</span>
+            </button>
           ))}
-        </div>
+        </motion.div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={tab}
+            initial={{ opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -14 }}
+            transition={{ duration: 0.35, ease: 'easeInOut' }}
+          >
+            {(tab === 'professional' ? professional : research).map((item, i) => (
+              <ExperienceCard key={item.company + item.role} item={item} index={i} />
+            ))}
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   )

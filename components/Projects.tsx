@@ -394,15 +394,6 @@ export default function Projects() {
         >
           Things I've <span className="text-gradient-blue">built</span>
         </motion.h2>
-        <motion.p
-          initial={{ opacity: 0, y: 14 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.55, delay: 0.1 }}
-          className="text-white/35 text-base mb-14 max-w-lg"
-        >
-          From AI wearables to FPGA-accelerated trading — real systems, real results.
-        </motion.p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {projects.map((p, i) => (

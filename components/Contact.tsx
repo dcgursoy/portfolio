@@ -1,6 +1,5 @@
 'use client'
 
-import { useState, useRef } from 'react'
 import { motion } from 'framer-motion'
 
 const socials = [
@@ -38,20 +37,6 @@ const socials = [
 ]
 
 export default function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
-  const [status, setStatus] = useState<'idle' | 'sending' | 'sent'>('idle')
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setStatus('sending')
-    // Simulate submit (wire up to your backend/email service)
-    await new Promise((r) => setTimeout(r, 1200))
-    setStatus('sent')
-  }
-
-  const inputClass =
-    'w-full bg-white/[0.03] border border-white/8 rounded-xl px-4 py-3 text-sm text-white/80 placeholder-white/20 focus:outline-none focus:border-blue-500/40 focus:bg-white/5 transition-all duration-300'
-
   return (
     <section id="contact" className="py-28 md:py-36 px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
@@ -67,8 +52,7 @@ export default function Contact() {
           <span className="text-xs font-semibold tracking-[0.22em] text-blue-400/65 uppercase">Contact</span>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-          {/* Left */}
+        <div className="max-w-xl">
           <div>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
@@ -152,97 +136,6 @@ export default function Contact() {
               ))}
             </motion.div>
           </div>
-
-          {/* Right: Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 28 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.7, delay: 0.12, ease: [0.33, 1, 0.68, 1] }}
-          >
-            {status === 'sent' ? (
-              <div className="glass rounded-2xl p-10 text-center">
-                <div className="w-12 h-12 rounded-full bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center mx-auto mb-4">
-                  <svg viewBox="0 0 24 24" className="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" strokeWidth="2">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                </div>
-                <h3 className="font-display font-bold text-lg text-white/80 mb-2">Message sent!</h3>
-                <p className="text-sm text-white/35">I'll get back to you as soon as I can.</p>
-                <button
-                  onClick={() => { setStatus('idle'); setForm({ name: '', email: '', message: '' }) }}
-                  className="mt-6 text-xs text-white/35 hover:text-white/60 transition-colors"
-                >
-                  Send another
-                </button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="glass rounded-2xl p-8 space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-[10px] font-semibold tracking-[0.18em] text-white/25 uppercase mb-2">
-                      Name
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Your name"
-                      value={form.name}
-                      onChange={(e) => setForm({ ...form, name: e.target.value })}
-                      className={inputClass}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-semibold tracking-[0.18em] text-white/25 uppercase mb-2">
-                      Email
-                    </label>
-                    <input
-                      type="email"
-                      required
-                      placeholder="you@email.com"
-                      value={form.email}
-                      onChange={(e) => setForm({ ...form, email: e.target.value })}
-                      className={inputClass}
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[10px] font-semibold tracking-[0.18em] text-white/25 uppercase mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    required
-                    rows={5}
-                    placeholder="What would you like to discuss?"
-                    value={form.message}
-                    onChange={(e) => setForm({ ...form, message: e.target.value })}
-                    className={`${inputClass} resize-none`}
-                  />
-                </div>
-
-                <motion.button
-                  type="submit"
-                  disabled={status === 'sending'}
-                  whileHover={{ scale: 1.01 }}
-                  whileTap={{ scale: 0.99 }}
-                  className="w-full py-3 rounded-xl text-sm font-semibold bg-gradient-to-r from-blue-600/80 to-cyan-600/80 text-white hover:from-blue-600 hover:to-cyan-600 border border-blue-500/25 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {status === 'sending' ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin w-4 h-4" viewBox="0 0 24 24" fill="none">
-                        <circle cx="12" cy="12" r="10" stroke="white" strokeWidth="3" strokeOpacity="0.25" />
-                        <path d="M12 2a10 10 0 0110 10" stroke="white" strokeWidth="3" strokeLinecap="round" />
-                      </svg>
-                      Sending...
-                    </span>
-                  ) : (
-                    'Send Message'
-                  )}
-                </motion.button>
-              </form>
-            )}
-          </motion.div>
         </div>
 
         {/* Footer */}
