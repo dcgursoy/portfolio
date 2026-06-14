@@ -100,14 +100,6 @@ function CircularUI({ phase }: { phase: string }) {
           strokeWidth="0.5"
         />
 
-        {/* Center dot */}
-        <motion.circle
-          cx={C} cy={C} r={3}
-          fill="rgba(255,255,255,0.7)"
-          animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.3, 1] }}
-          transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-          style={{ transformOrigin: `${C}px ${C}px` }}
-        />
 
         {/* Crosshair lines */}
         <line x1={C} y1={C - 20} x2={C} y2={C - 35} stroke="rgba(255,255,255,0.20)" strokeWidth="0.5" />
@@ -198,10 +190,10 @@ const Micro = ({ children, dim = false }: { children: React.ReactNode; dim?: boo
   <span
     style={{
       display: 'block',
-      fontSize: 9,
+      fontSize: 11,
       letterSpacing: '0.18em',
       fontFamily: 'monospace',
-      color: dim ? 'rgba(255,255,255,0.18)' : 'rgba(255,255,255,0.28)',
+      color: dim ? 'rgba(255,255,255,0.38)' : 'rgba(255,255,255,0.58)',
       textTransform: 'uppercase',
       lineHeight: 1.8,
     }}
@@ -371,10 +363,14 @@ export default function IntroScreen({ onComplete }: { onComplete: () => void }) 
             animate={{ opacity: [1, 0.2, 1] }}
             transition={{ duration: 2.5, repeat: Infinity }}
           />
-          <span style={{ fontFamily: 'monospace', fontSize: 9, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.35)', textTransform: 'uppercase' }}>
+          <span style={{ fontFamily: 'monospace', fontSize: 11, letterSpacing: '0.22em', color: 'rgba(255,255,255,0.60)', textTransform: 'uppercase' }}>
             SYS.STATUS: NOMINAL
           </span>
-          <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'rgba(255,255,255,0.15)' }} />
+          <motion.span
+            className="w-1.5 h-1.5 rounded-full bg-white"
+            animate={{ opacity: [1, 0.2, 1] }}
+            transition={{ duration: 2.5, repeat: Infinity, delay: 1.25 }}
+          />
         </motion.div>
 
         {/* Circular UI */}
@@ -415,7 +411,7 @@ export default function IntroScreen({ onComplete }: { onComplete: () => void }) 
                 fontFamily: 'monospace',
                 fontSize: 16,
                 letterSpacing: '0.20em',
-                color: hoverEnter ? 'rgba(255,255,255,0.90)' : 'rgba(255,255,255,0.55)',
+                color: hoverEnter ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.80)',
                 display: 'inline-block',
                 transition: 'color 0.3s ease',
                 userSelect: 'none',
@@ -448,7 +444,7 @@ export default function IntroScreen({ onComplete }: { onComplete: () => void }) 
                 fontFamily: 'monospace',
                 fontSize: 16,
                 letterSpacing: '0.20em',
-                color: hoverEnter ? 'rgba(255,255,255,0.90)' : 'rgba(255,255,255,0.55)',
+                color: hoverEnter ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.80)',
                 display: 'inline-block',
                 transition: 'color 0.3s ease',
                 userSelect: 'none',
@@ -472,9 +468,9 @@ export default function IntroScreen({ onComplete }: { onComplete: () => void }) 
           <motion.span
             style={{
               fontFamily: 'monospace',
-              fontSize: 9,
+              fontSize: 11,
               letterSpacing: '0.20em',
-              color: 'rgba(255,255,255,0.30)',
+              color: 'rgba(255,255,255,0.55)',
               textTransform: 'uppercase',
             }}
             animate={{ opacity: hoverEnter ? 0 : 1 }}

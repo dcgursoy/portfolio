@@ -147,7 +147,7 @@ export default function Contact() {
           className="mt-28 pt-8 border-t border-white/5 flex items-center justify-between flex-wrap gap-4"
         >
           <p className="text-xs text-white/18">
-            © {new Date().getFullYear()} Deniz Gursoy · Electrical Engineering @ UPenn
+            © {new Date().getFullYear()} Deniz Gursoy · Electrical Engineering & Computer Science @ UPenn
           </p>
           <p className="text-xs text-white/12 font-mono">
             Built with Next.js · Framer Motion · Tailwind
