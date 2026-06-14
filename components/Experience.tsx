@@ -46,7 +46,7 @@ const research = [
 const professional = [
   {
     company: 'SpaceX',
-    role: 'Raptor Tooling & Automation Engineering Intern',
+    role: 'Raptor Automation & Controls Engineering Intern',
     location: 'Hawthorne, CA',
     period: 'May 2026 – Aug 2026',
     badge: 'Incoming',
