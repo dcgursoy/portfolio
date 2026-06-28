@@ -11,6 +11,28 @@ const toPhoto = (p: Photo) => typeof p === 'string' ? { src: p, caption: undefin
 
 const projects = [
   {
+    id: 'cartscout',
+    title: 'CartScout',
+    subtitle: 'Safe RL Environment for Real-Browser Shopping Agents',
+    period: 'Jun 2026 · YC HUD Frontier Hackathon',
+    description:
+      'Built an RL-trained browser agent that learns to extract buying-critical facts from real product pages and compress them into cited purchase recommendations, reducing reliance on expensive frontier model inference.',
+    longDescription:
+      'Built at the HUD Frontier / RSI RL Environments Hackathon, CartScout trains agents over real Chromium sessions via Chrome DevTools Protocol — not screenshots. A structured JSON action space (open_url, click_ref, extract_page, emit_packet) enables clean reward mapping for RL training. Agents are scored deterministically on constraint satisfaction and evidence citation quality, then refined with a Fireworks AI Qwen judge via GRPO. Each run produces a PurchasePacket — a structured JSON of product, price, delivery info, and cited evidence — with a hard stop-before-checkout safety boundary. Supports Claude, OpenAI, Ollama, and Fireworks AI backends.',
+    tags: ['Reinforcement Learning', 'Claude API', 'HUD', 'Chromium CDP', 'GRPO', 'PyTorch', 'Playwright', 'FastAPI', 'Python'],
+    accent: '#10b981',
+    accentAlt: '#4f8ef7',
+    stats: [
+      { label: 'Reward Improvement', value: '3×' },
+      { label: 'Constraint Accuracy', value: '90%' },
+      { label: 'vs Frontier Speed', value: '4× faster' },
+      { label: 'Inference Cost vs GPT-4o', value: '−70%' },
+    ],
+    visual: 'agent',
+    photos: [] as Photo[],
+    link: { label: 'View on AI Valley', href: 'https://www.aivalley.io/hackathons/hud-frontier-rsi-rl-environments-hackathon/projects/014a2d37-a6f7-4336-a1f0-09bce706d471', icon: 'external' },
+  },
+  {
     id: 'naviglass',
     title: 'NaviGlass',
     subtitle: 'AI-powered Assistive Wearable for the Visually Impaired',
@@ -104,6 +126,45 @@ const projects = [
 ]
 
 const VisualMap: Record<string, React.FC<{ accent: string; accentAlt: string }>> = {
+  agent: ({ accent, accentAlt }) => (
+    <svg viewBox="0 0 200 200" className="w-full h-full opacity-60">
+      <defs>
+        <radialGradient id="g-agent" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor={accent} stopOpacity="0.2" />
+          <stop offset="100%" stopColor={accentAlt} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      {/* Browser window */}
+      <rect x="30" y="38" width="140" height="104" rx="6" fill="none" stroke={accent} strokeWidth="1.2" strokeOpacity="0.5" />
+      {/* Title bar */}
+      <line x1="30" y1="54" x2="170" y2="54" stroke={accent} strokeWidth="0.8" strokeOpacity="0.3" />
+      {/* Traffic lights */}
+      <circle cx="42" cy="46" r="3" fill={accent} fillOpacity="0.4" />
+      <circle cx="52" cy="46" r="3" fill={accent} fillOpacity="0.25" />
+      <circle cx="62" cy="46" r="3" fill={accent} fillOpacity="0.15" />
+      {/* URL bar */}
+      <rect x="72" y="41" width="82" height="10" rx="3" fill="none" stroke={accent} strokeWidth="0.6" strokeOpacity="0.25" />
+      {/* Content lines */}
+      <line x1="44" y1="68" x2="156" y2="68" stroke={accentAlt} strokeWidth="0.8" strokeOpacity="0.3" />
+      <line x1="44" y1="78" x2="130" y2="78" stroke={accentAlt} strokeWidth="0.8" strokeOpacity="0.2" />
+      <line x1="44" y1="88" x2="142" y2="88" stroke={accentAlt} strokeWidth="0.8" strokeOpacity="0.2" />
+      {/* Reward signal nodes */}
+      <circle cx="60" cy="118" r="8" fill="none" stroke={accent} strokeWidth="1" strokeOpacity="0.6" />
+      <circle cx="100" cy="118" r="8" fill="none" stroke={accent} strokeWidth="1" strokeOpacity="0.6" />
+      <circle cx="140" cy="118" r="8" fill="none" stroke={accent} strokeWidth="1" strokeOpacity="0.6" />
+      <line x1="68" y1="118" x2="92" y2="118" stroke={accent} strokeWidth="0.8" strokeOpacity="0.4" />
+      <line x1="108" y1="118" x2="132" y2="118" stroke={accent} strokeWidth="0.8" strokeOpacity="0.4" />
+      {/* Center node label dots */}
+      <circle cx="60" cy="118" r="2.5" fill={accent} fillOpacity="0.6" />
+      <circle cx="100" cy="118" r="2.5" fill={accent} fillOpacity="0.6" />
+      <circle cx="140" cy="118" r="2.5" fill={accent} fillOpacity="0.3" />
+      {/* Stop line — safety boundary */}
+      <line x1="133" y1="110" x2="147" y2="126" stroke="#ef4444" strokeWidth="1.2" strokeOpacity="0.5" />
+      <line x1="147" y1="110" x2="133" y2="126" stroke="#ef4444" strokeWidth="1.2" strokeOpacity="0.5" />
+      {/* Ambient glow */}
+      <ellipse cx="100" cy="100" rx="60" ry="50" fill="url(#g-agent)" />
+    </svg>
+  ),
   eye: ({ accent, accentAlt }) => (
     <svg viewBox="0 0 200 200" className="w-full h-full opacity-60">
       <defs>
@@ -151,11 +212,6 @@ const VisualMap: Record<string, React.FC<{ accent: string; accentAlt: string }>>
       <rect x="55" y="65" width="90" height="35" rx="8" fill="none" stroke={accent} strokeWidth="1" strokeOpacity="0.4" />
       <circle cx="60" cy="148" r="14" fill="none" stroke={accentAlt} strokeWidth="1.5" strokeOpacity="0.6" />
       <circle cx="140" cy="148" r="14" fill="none" stroke={accentAlt} strokeWidth="1.5" strokeOpacity="0.6" />
-      {[0, 45, 90, 135].map((a) => (
-        <line key={a} x1="60" y1="148" x2={60 + 10 * Math.cos((a * Math.PI) / 180)} y2={148 + 10 * Math.sin((a * Math.PI) / 180)} stroke={accentAlt} strokeWidth="1" strokeOpacity="0.4" />
-      ))}
-      <line x1="20" y1="100" x2="5" y2="85" stroke={accent} strokeWidth="0.8" strokeOpacity="0.3" />
-      <line x1="180" y1="100" x2="195" y2="85" stroke={accent} strokeWidth="0.8" strokeOpacity="0.3" />
     </svg>
   ),
 }

@@ -141,7 +141,7 @@ export default function About() {
                 </div>
                 <div className="text-right shrink-0 ml-4">
                   <p className="text-[10px] text-white/22 uppercase tracking-widest">Expected</p>
-                  <p className="text-white/60 font-semibold text-sm mt-0.5">May 2029</p>
+                  <p className="text-white/60 font-semibold text-sm mt-0.5">May 2028</p>
                 </div>
               </div>
             </motion.div>
