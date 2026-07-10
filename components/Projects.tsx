@@ -55,7 +55,7 @@ const projects: Project[] = [
     id: 'cartscout',
     title: 'CartScout',
     subtitle: 'Safe RL Environment for Real-Browser Shopping Agents',
-    period: 'Jun 2026 · YC HUD Frontier Hackathon',
+    period: 'Jul 2026 · YC HUD Frontier Hackathon',
     description:
       'Built an RL-trained browser agent that learns to extract buying-critical facts from real product pages and compress them into cited purchase recommendations, reducing reliance on expensive frontier model inference.',
     longDescription:
