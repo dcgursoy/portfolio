@@ -4,12 +4,53 @@ import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import Image from 'next/image'
 
-// Use a plain string for no caption:   '/naviglass-1.jpg'
-// Use an object for a caption:         { src: '/naviglass-1.jpg', caption: 'Prototype v2' }
 type Photo = string | { src: string; caption?: string }
 const toPhoto = (p: Photo) => typeof p === 'string' ? { src: p, caption: undefined } : p
 
-const projects = [
+type ProjectLink = { label: string; href: string; icon: 'github' | 'external' }
+
+type Project = {
+  id: string
+  title: string
+  subtitle: string
+  period: string
+  description: string
+  longDescription: string
+  tags: string[]
+  accent: string
+  accentAlt: string
+  stats: { label: string; value: string }[]
+  visual: string
+  photos: Photo[]
+  link: ProjectLink | null
+  demoLink?: ProjectLink | null
+}
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
+const projects: Project[] = [
+  {
+    id: 'systolic-mnist',
+    title: 'INT8 Systolic Array DNN Accelerator',
+    subtitle: 'Weight-Stationary PE Array in SystemVerilog · FPGA Synthesized',
+    period: 'Jul 2026 · RTL Design',
+    description:
+      'A synthesized 4×4 systolic array executing end-to-end INT8 MNIST inference in RTL — bit-exact against a PyTorch golden model, with a live cycle-by-cycle browser visualizer.',
+    longDescription:
+      'Weight-stationary dataflow with skewed activation streaming and double-buffered weights using wavefront swap tokens for zero-bubble tile switching. Per-column INT32 accumulators with pipelined requantization support arbitrary tiled layer sizes. Verified with self-checking testbenches: all 2,000 INT32 logits and 9,600 hidden activations bit-exact across 200 test images. Synthesized with Yosys (10.9k gates for 4×4) and placed-and-routed on Lattice ECP5-85k at 65.1 MHz — 5,605 LUTs, 31 DSPs, 16 BRAMs. A JavaScript twin of the RTL validates frame-exact against Verilog trace data. Draw a digit live and watch the hardware classify it cycle by cycle.',
+    tags: ['SystemVerilog', 'Systolic Array', 'FPGA', 'INT8 Quantization', 'PyTorch', 'Yosys', 'ECP5', 'Icarus Verilog', 'RTL Design'],
+    accent: '#a78bfa',
+    accentAlt: '#22d3ee',
+    stats: [
+      { label: 'Speedup (8×8 array)', value: '52×' },
+      { label: 'INT8 Accuracy', value: '96.53%' },
+      { label: 'Fmax on ECP5', value: '65 MHz' },
+      { label: 'Logits Bit-Exact', value: '200/200' },
+    ],
+    visual: 'systolic',
+    photos: [],
+    link: { label: 'GitHub', href: 'https://github.com/dcgursoy/systolic-mnist', icon: 'github' },
+    demoLink: { label: 'Live Demo', href: 'https://dcgursoy.github.io/systolic-mnist/viz/', icon: 'external' },
+  },
   {
     id: 'cartscout',
     title: 'CartScout',
@@ -29,7 +70,7 @@ const projects = [
       { label: 'Inference Cost vs GPT-4o', value: '−70%' },
     ],
     visual: 'agent',
-    photos: [] as Photo[],
+    photos: [],
     link: { label: 'View on AI Valley', href: 'https://www.aivalley.io/hackathons/hud-frontier-rsi-rl-environments-hackathon/projects/014a2d37-a6f7-4336-a1f0-09bce706d471', icon: 'external' },
   },
   {
@@ -50,7 +91,7 @@ const projects = [
       { label: 'vs Commercial', value: '−72%' },
     ],
     visual: 'eye',
-    photos: [] as Photo[],
+    photos: [],
     link: { label: 'View on Devpost', href: 'https://devpost.com/software/naviglass', icon: 'external' },
   },
   {
@@ -71,7 +112,7 @@ const projects = [
       { label: 'Latency Reduction', value: '158×' },
     ],
     visual: 'chart',
-    photos: [] as Photo[],
+    photos: [],
     link: { label: 'View Code', href: 'https://github.com/dcgursoy/fpga_trading_agent', icon: 'github' },
   },
   {
@@ -96,7 +137,7 @@ const projects = [
       { src: '/hexacopter-1.JPEG' },
       { src: '/hexacopter-2.JPEG' },
       { src: '/hexacopter-3.JPEG' },
-    ] as Photo[],
+    ],
     link: null,
   },
   {
@@ -120,12 +161,82 @@ const projects = [
     photos: [
       { src: '/racecar-1.png' },
       { src: '/racecar-2.png' },
-    ] as Photo[],
+    ],
     link: null,
   },
 ]
 
+// ─── Visuals ──────────────────────────────────────────────────────────────────
 const VisualMap: Record<string, React.FC<{ accent: string; accentAlt: string }>> = {
+  systolic: ({ accent, accentAlt }) => {
+    const size = 22, gap = 9, step = 31
+    const ox = 42.5, oy = 38.5
+    return (
+      <svg viewBox="0 0 200 200" className="w-full h-full opacity-65">
+        <defs>
+          <radialGradient id="g-sys" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor={accent} stopOpacity="0.18" />
+            <stop offset="100%" stopColor={accentAlt} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="100" cy="96" rx="70" ry="64" fill="url(#g-sys)" />
+
+        {/* 4×4 PE grid */}
+        {Array.from({ length: 16 }, (_, i) => {
+          const row = Math.floor(i / 4), col = i % 4
+          const x = ox + col * step, y = oy + row * step
+          const diag = row + col
+          return (
+            <g key={i}>
+              <rect x={x} y={y} width={size} height={size} rx="3"
+                fill={accent} fillOpacity="0.08"
+                stroke={accent} strokeWidth="0.8" strokeOpacity="0.45"
+              >
+                <animate attributeName="fill-opacity" values="0.08;0.28;0.08"
+                  dur="2.4s" begin={`${diag * 0.3}s`} repeatCount="indefinite" />
+                <animate attributeName="stroke-opacity" values="0.45;0.9;0.45"
+                  dur="2.4s" begin={`${diag * 0.3}s`} repeatCount="indefinite" />
+              </rect>
+              <text x={x + 11} y={y + 14} textAnchor="middle" fontSize="7.5"
+                fill={accent} fillOpacity="0.65" fontFamily="monospace" fontWeight="bold">×+</text>
+              {col < 3 && <line x1={x + size} y1={y + 11} x2={x + size + gap} y2={y + 11}
+                stroke={accent} strokeWidth="0.6" strokeOpacity="0.28" />}
+              {row < 3 && <line x1={x + 11} y1={y + size} x2={x + 11} y2={y + size + gap}
+                stroke={accentAlt} strokeWidth="0.6" strokeOpacity="0.22" />}
+            </g>
+          )
+        })}
+
+        {/* Activation dots flowing → */}
+        {Array.from({ length: 4 }, (_, row) => {
+          const cy = oy + row * step + 11
+          return (
+            <circle key={`h${row}`} r="2.5" cy={cy} fill={accent}>
+              <animate attributeName="cx" from="32" to="168" dur="2.2s" begin={`${row * 0.55}s`} repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.05;0.88;1" dur="2.2s" begin={`${row * 0.55}s`} repeatCount="indefinite" />
+            </circle>
+          )
+        })}
+
+        {/* Partial-sum dots flowing ↓ */}
+        {Array.from({ length: 4 }, (_, col) => {
+          const cx = ox + col * step + 11
+          return (
+            <circle key={`v${col}`} r="1.8" cx={cx} fill={accentAlt} fillOpacity="0.7">
+              <animate attributeName="cy" from="28" to="164" dur="2.8s" begin={`${col * 0.4}s`} repeatCount="indefinite" />
+              <animate attributeName="opacity" values="0;0.7;0.7;0" keyTimes="0;0.05;0.88;1" dur="2.8s" begin={`${col * 0.4}s`} repeatCount="indefinite" />
+            </circle>
+          )
+        })}
+
+        {/* Labels */}
+        <text x="17" y={oy + 8}  fontSize="5.5" fill={accent}    fillOpacity="0.5" fontFamily="monospace" textAnchor="middle">ACT</text>
+        <text x="17" y={oy + 16} fontSize="5.5" fill={accent}    fillOpacity="0.5" fontFamily="monospace" textAnchor="middle">→</text>
+        <text x="183" y="157"    fontSize="5.5" fill={accentAlt} fillOpacity="0.45" fontFamily="monospace" textAnchor="middle">OUT</text>
+        <text x="183" y="164"    fontSize="5.5" fill={accentAlt} fillOpacity="0.45" fontFamily="monospace" textAnchor="middle">↓</text>
+      </svg>
+    )
+  },
   agent: ({ accent, accentAlt }) => (
     <svg viewBox="0 0 200 200" className="w-full h-full opacity-60">
       <defs>
@@ -134,34 +245,25 @@ const VisualMap: Record<string, React.FC<{ accent: string; accentAlt: string }>>
           <stop offset="100%" stopColor={accentAlt} stopOpacity="0" />
         </radialGradient>
       </defs>
-      {/* Browser window */}
       <rect x="30" y="38" width="140" height="104" rx="6" fill="none" stroke={accent} strokeWidth="1.2" strokeOpacity="0.5" />
-      {/* Title bar */}
       <line x1="30" y1="54" x2="170" y2="54" stroke={accent} strokeWidth="0.8" strokeOpacity="0.3" />
-      {/* Traffic lights */}
       <circle cx="42" cy="46" r="3" fill={accent} fillOpacity="0.4" />
       <circle cx="52" cy="46" r="3" fill={accent} fillOpacity="0.25" />
       <circle cx="62" cy="46" r="3" fill={accent} fillOpacity="0.15" />
-      {/* URL bar */}
       <rect x="72" y="41" width="82" height="10" rx="3" fill="none" stroke={accent} strokeWidth="0.6" strokeOpacity="0.25" />
-      {/* Content lines */}
       <line x1="44" y1="68" x2="156" y2="68" stroke={accentAlt} strokeWidth="0.8" strokeOpacity="0.3" />
       <line x1="44" y1="78" x2="130" y2="78" stroke={accentAlt} strokeWidth="0.8" strokeOpacity="0.2" />
       <line x1="44" y1="88" x2="142" y2="88" stroke={accentAlt} strokeWidth="0.8" strokeOpacity="0.2" />
-      {/* Reward signal nodes */}
       <circle cx="60" cy="118" r="8" fill="none" stroke={accent} strokeWidth="1" strokeOpacity="0.6" />
       <circle cx="100" cy="118" r="8" fill="none" stroke={accent} strokeWidth="1" strokeOpacity="0.6" />
       <circle cx="140" cy="118" r="8" fill="none" stroke={accent} strokeWidth="1" strokeOpacity="0.6" />
       <line x1="68" y1="118" x2="92" y2="118" stroke={accent} strokeWidth="0.8" strokeOpacity="0.4" />
       <line x1="108" y1="118" x2="132" y2="118" stroke={accent} strokeWidth="0.8" strokeOpacity="0.4" />
-      {/* Center node label dots */}
       <circle cx="60" cy="118" r="2.5" fill={accent} fillOpacity="0.6" />
       <circle cx="100" cy="118" r="2.5" fill={accent} fillOpacity="0.6" />
       <circle cx="140" cy="118" r="2.5" fill={accent} fillOpacity="0.3" />
-      {/* Stop line — safety boundary */}
       <line x1="133" y1="110" x2="147" y2="126" stroke="#ef4444" strokeWidth="1.2" strokeOpacity="0.5" />
       <line x1="147" y1="110" x2="133" y2="126" stroke="#ef4444" strokeWidth="1.2" strokeOpacity="0.5" />
-      {/* Ambient glow */}
       <ellipse cx="100" cy="100" rx="60" ry="50" fill="url(#g-agent)" />
     </svg>
   ),
@@ -216,7 +318,20 @@ const VisualMap: Record<string, React.FC<{ accent: string; accentAlt: string }>>
   ),
 }
 
-function ProjectCard({ project, index }: { project: typeof projects[0]; index: number }) {
+// ─── Link icon helpers ─────────────────────────────────────────────────────────
+const GitHubIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/>
+  </svg>
+)
+const ExternalIcon = () => (
+  <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+    <path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
+// ─── Card ─────────────────────────────────────────────────────────────────────
+function ProjectCard({ project, index }: { project: Project; index: number }) {
   const [expanded, setExpanded] = useState(false)
   const [lightbox, setLightbox] = useState<{ src: string; caption?: string } | null>(null)
   const Visual = VisualMap[project.visual]
@@ -238,7 +353,6 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
           borderBottom: '1px solid rgba(255,255,255,0.06)',
         }}
       >
-        {/* Grid overlay */}
         <div
           className="absolute inset-0 opacity-20"
           style={{
@@ -251,42 +365,31 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
             <Visual accent={project.accent} accentAlt={project.accentAlt} />
           </div>
         </div>
-
-        {/* Period */}
         <div className="absolute top-4 right-4">
           <span className="text-[10px] font-medium text-white/30 tracking-wider">{project.period}</span>
         </div>
-
-        {/* Glow */}
         <div
           className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
-          style={{
-            background: `radial-gradient(400px circle at 50% 50%, ${project.accent}0d, transparent)`,
-          }}
+          style={{ background: `radial-gradient(400px circle at 50% 50%, ${project.accent}0d, transparent)` }}
         />
       </div>
 
       {/* Content */}
       <div className="p-6">
         <div className="mb-4">
-          <h3
-            className="font-display font-bold text-xl mb-1"
-            style={{ color: project.accent }}
-          >
+          <h3 className="font-display font-bold text-xl mb-1" style={{ color: project.accent }}>
             {project.title}
           </h3>
-          <p className="text-xs text-white/35 font-medium">{project.subtitle}</p>
+          <p className="text-xs text-white/30 font-medium">{project.subtitle}</p>
         </div>
 
         <p className="text-[13px] text-white/45 leading-relaxed mb-5">{project.description}</p>
 
         {/* Stats row */}
-        <div className="flex gap-6 mb-5 py-4 border-y border-white/5">
+        <div className="flex gap-6 mb-5 py-4 border-y border-white/5 flex-wrap">
           {project.stats.map((s) => (
             <div key={s.label}>
-              <p className="font-display font-bold text-base" style={{ color: project.accent }}>
-                {s.value}
-              </p>
+              <p className="font-display font-bold text-base" style={{ color: project.accent }}>{s.value}</p>
               <p className="text-[10px] text-white/28 mt-0.5">{s.label}</p>
             </div>
           ))}
@@ -324,7 +427,8 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
           ))}
         </div>
 
-        <div className="flex items-center gap-4">
+        {/* Actions row */}
+        <div className="flex items-center gap-3 flex-wrap">
           <button
             onClick={() => setExpanded(!expanded)}
             className="text-xs font-semibold transition-colors duration-200"
@@ -339,21 +443,23 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all duration-200 hover:bg-white/5"
-              style={{
-                color: `${project.accent}cc`,
-                borderColor: `${project.accent}30`,
-              }}
+              style={{ color: `${project.accent}cc`, borderColor: `${project.accent}30` }}
             >
-              {project.link.icon === 'github' ? (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.37 0 0 5.37 0 12c0 5.3 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61-.546-1.385-1.335-1.755-1.335-1.755-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 21.795 24 17.295 24 12c0-6.63-5.37-12-12-12z"/>
-                </svg>
-              ) : (
-                <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                  <path d="M1 9L9 1M9 1H3M9 1V7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              )}
+              {project.link.icon === 'github' ? <GitHubIcon /> : <ExternalIcon />}
               {project.link.label}
+            </a>
+          )}
+
+          {project.demoLink && (
+            <a
+              href={project.demoLink.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all duration-200 hover:bg-white/5"
+              style={{ color: `${project.accentAlt}cc`, borderColor: `${project.accentAlt}30` }}
+            >
+              <ExternalIcon />
+              {project.demoLink.label}
             </a>
           )}
         </div>
@@ -425,11 +531,11 @@ function ProjectCard({ project, index }: { project: typeof projects[0]; index: n
   )
 }
 
+// ─── Section ──────────────────────────────────────────────────────────────────
 export default function Projects() {
   return (
     <section id="projects" className="py-28 md:py-36 px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        {/* Label */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
