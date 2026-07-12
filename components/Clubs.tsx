@@ -37,7 +37,7 @@ const clubs = [
   },
   {
     company: 'Penn Assistive Devices & Prosthetic Technologies',
-    role: 'Embedded Systems Engineer',
+    role: 'Project Co-Lead',
     location: 'Philadelphia, PA',
     period: 'Sep 2025 – Present',
     badge: 'Active',

@@ -52,6 +52,28 @@ const projects: Project[] = [
     demoLink: { label: 'Live Demo', href: 'https://dcgursoy.github.io/systolic-mnist/viz/', icon: 'external' },
   },
   {
+    id: 'mpc-quadrotor',
+    title: 'Nonlinear MPC Quadrotor Controller',
+    subtitle: 'Receding-Horizon Predictive Flight Through Moving Obstacles',
+    period: 'Jul 2026 · Controls & Robotics',
+    description:
+      'A nonlinear Model Predictive Controller using CasADi/IPOPT that achieves 100% success across 3 obstacle courses with zero collisions — outperforming a tuned cascaded-PID baseline.',
+    longDescription:
+      'Implemented a receding-horizon MPC with N=20 stages at 75 ms intervals (1.5 s lookahead), resolved at 50 Hz via CasADi SX + IPOPT with primal/dual warm-starting. The controller encodes moving obstacle trajectories as future inequality constraints, enabling predictive path planning seconds ahead of contact — compared to the reactive PID baseline which responds only after near-contact. Both controllers operate on a shared 13-state quaternion rigid-body simulation (RK4 at 500 Hz). Achieved 4.8 ms mean solve time (p95: 11.1 ms) across 1,894 IPOPT solves. Includes matplotlib 3D animator with predicted-horizon ribbon and 33 validation tests.',
+    tags: ['Python', 'CasADi', 'IPOPT', 'MPC', 'Control Theory', 'Quaternion Dynamics', 'RK4', 'Trajectory Optimization'],
+    accent: '#f97316',
+    accentAlt: '#facc15',
+    stats: [
+      { label: 'Course Success', value: '3 / 3' },
+      { label: 'Collisions', value: '0' },
+      { label: 'Mean Solve Time', value: '4.8 ms' },
+      { label: 'Lookahead Horizon', value: '1.5 s' },
+    ],
+    visual: 'mpc',
+    photos: [],
+    link: { label: 'View on GitHub', href: 'https://github.com/dcgursoy/MPC_Predictive_System', icon: 'github' },
+  },
+  {
     id: 'cartscout',
     title: 'CartScout',
     subtitle: 'Safe RL Environment for Real-Browser Shopping Agents',
@@ -237,6 +259,49 @@ const VisualMap: Record<string, React.FC<{ accent: string; accentAlt: string }>>
       </svg>
     )
   },
+  mpc: ({ accent, accentAlt }) => (
+    <svg viewBox="0 0 200 200" className="w-full h-full opacity-65">
+      <defs>
+        <radialGradient id="g-mpc" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stopColor={accent} stopOpacity="0.18" />
+          <stop offset="100%" stopColor={accentAlt} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <ellipse cx="100" cy="104" rx="72" ry="66" fill="url(#g-mpc)" />
+
+      {/* Moving obstacle circles */}
+      <circle cx="72" cy="130" r="20" fill="none" stroke="#ef4444" strokeWidth="0.9" strokeOpacity="0.45" strokeDasharray="4 3" />
+      <circle cx="134" cy="88" r="18" fill="none" stroke="#ef4444" strokeWidth="0.9" strokeOpacity="0.45" strokeDasharray="4 3" />
+      <circle cx="96" cy="50" r="14" fill="none" stroke="#ef4444" strokeWidth="0.8" strokeOpacity="0.4" strokeDasharray="3 3" />
+
+      {/* PID path — reactive baseline */}
+      <path id="pid-path"
+        d="M 18,178 C 32,162 52,148 68,120 C 84,92 108,90 126,88 C 148,86 165,64 184,34"
+        fill="none" stroke={accentAlt} strokeWidth="1" strokeOpacity="0.35" strokeDasharray="3 3" />
+
+      {/* MPC path — predictive optimal */}
+      <path id="mpc-path"
+        d="M 18,178 C 30,158 46,140 56,110 C 66,78 88,64 110,60 C 136,56 160,46 184,34"
+        fill="none" stroke={accent} strokeWidth="1.6" strokeOpacity="0.75" />
+
+      {/* Prediction horizon shading */}
+      <path d="M 110,60 C 136,56 160,46 184,34 C 184,40 160,54 136,64 C 110,72 88,76 74,90 Z"
+        fill={accent} fillOpacity="0.07" />
+
+      {/* Animated drone on MPC path */}
+      <circle r="3.5" fill={accent} fillOpacity="0.95">
+        <animateMotion dur="3.5s" repeatCount="indefinite" rotate="auto">
+          <mpath href="#mpc-path" />
+        </animateMotion>
+      </circle>
+
+      {/* Labels */}
+      <text x="36" y="193" fontSize="6" fill={accent}    fillOpacity="0.65" fontFamily="monospace">MPC</text>
+      <text x="130" y="193" fontSize="6" fill={accentAlt} fillOpacity="0.5"  fontFamily="monospace">PID (baseline)</text>
+      <line x1="18" y1="191" x2="34" y2="191" stroke={accent}    strokeWidth="1.5" />
+      <line x1="112" y1="191" x2="128" y2="191" stroke={accentAlt} strokeWidth="1" strokeDasharray="2 2" />
+    </svg>
+  ),
   agent: ({ accent, accentAlt }) => (
     <svg viewBox="0 0 200 200" className="w-full h-full opacity-60">
       <defs>
