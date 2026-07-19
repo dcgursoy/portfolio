@@ -29,6 +29,28 @@ type Project = {
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const projects: Project[] = [
   {
+    id: 'quadruped-rl',
+    title: 'Quadruped Learns to Walk with RL',
+    subtitle: 'PPO Locomotion for a Unitree Go1 in MuJoCo · Push-Recovery Hardened',
+    period: 'Jul 2026 · Robot Learning',
+    description:
+      'A simulated Unitree Go1 taught to walk from scratch with PPO — 1.9 m/s, recovers from 100 N shoves in any direction, and walks through 2× sensor noise, all trained on a laptop CPU.',
+    longDescription:
+      'Trained end-to-end with PPO (Stable-Baselines3) on proprioception only — projected gravity, body-frame velocities, joint state — with actions as joint-target offsets around the standing pose at 50 Hz. The reward went through three documented iterations: the naive baseline reward-hacked into a stable crawl; posture, air-time, and abduction terms produced an upright 1.1 m/s trot; and quantified robustness evaluation exposed left-right gait asymmetry and sensor-noise brittleness, fixed with domain randomization (training-time IMU/encoder noise + random 20–80 N pushes) and a phase-agnostic contact-duty symmetry term. Both 10M-step runs regressed past their best point, so the shipped policy was selected by head-to-head checkpoint evaluation. Final: 1.90 m/s, 40/40 push recovery at ≤75 N (39/40 at 100 N), zero falls under 2× sensor noise, and an interactive MuJoCo demo where you shove the robot with arrow keys.',
+    tags: ['Reinforcement Learning', 'PPO', 'MuJoCo', 'Stable-Baselines3', 'Gymnasium', 'Reward Shaping', 'Domain Randomization', 'PyTorch', 'Python'],
+    accent: '#34d399',
+    accentAlt: '#f472b6',
+    stats: [
+      { label: 'Walking Speed', value: '1.9 m/s' },
+      { label: 'Push Recovery ≤75 N', value: '100%' },
+      { label: 'Falls @ 2× Sensor Noise', value: '0/20' },
+      { label: 'Training (8-core CPU)', value: '~4 h' },
+    ],
+    visual: 'quadruped',
+    photos: [],
+    link: { label: 'GitHub', href: 'https://github.com/dcgursoy/quadruped-rl', icon: 'github' },
+  },
+  {
     id: 'systolic-mnist',
     title: 'INT8 Systolic Array DNN Accelerator',
     subtitle: 'Weight-Stationary PE Array in SystemVerilog · FPGA Synthesized',
@@ -190,6 +212,83 @@ const projects: Project[] = [
 
 // ─── Visuals ──────────────────────────────────────────────────────────────────
 const VisualMap: Record<string, React.FC<{ accent: string; accentAlt: string }>> = {
+  quadruped: ({ accent, accentAlt }) => {
+    // side-view trot: diagonal leg pairs swing in antiphase around their hips
+    const legs = [
+      { hip: 74, phase: 0, far: false },   // rear near
+      { hip: 74, phase: 1, far: true },    // rear far
+      { hip: 126, phase: 1, far: false },  // front near
+      { hip: 126, phase: 0, far: true },   // front far
+    ]
+    return (
+      <svg viewBox="0 0 200 200" className="w-full h-full opacity-65">
+        <defs>
+          <radialGradient id="g-quad" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor={accent} stopOpacity="0.18" />
+            <stop offset="100%" stopColor={accentAlt} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="100" cy="104" rx="72" ry="62" fill="url(#g-quad)" />
+
+        {/* ground + scrolling ticks (walking illusion) */}
+        <line x1="16" y1="150" x2="184" y2="150" stroke={accent} strokeWidth="0.8" strokeOpacity="0.35" />
+        {Array.from({ length: 5 }, (_, i) => (
+          <line key={i} y1="153" y2="156" x1={40 + i * 32} x2={40 + i * 32}
+            stroke={accent} strokeWidth="0.8" strokeOpacity="0.3">
+            <animate attributeName="x1" from={40 + i * 32} to={8 + i * 32} dur="0.9s" repeatCount="indefinite" />
+            <animate attributeName="x2" from={40 + i * 32} to={8 + i * 32} dur="0.9s" repeatCount="indefinite" />
+          </line>
+        ))}
+
+        {/* robot: gentle bob + brief stagger when the push lands */}
+        <g>
+          <animateTransform attributeName="transform" type="translate"
+            values="0,0; 0,1.4; 0,0" dur="0.45s" repeatCount="indefinite" additive="sum" />
+          <animateTransform attributeName="transform" type="translate"
+            values="0,0; 0,0; 7,-1.5; 2,0; 0,0" keyTimes="0;0.5;0.56;0.7;1"
+            dur="4s" repeatCount="indefinite" additive="sum" />
+
+          {/* legs (far pair drawn dimmer, behind the body) */}
+          {legs.map((l, i) => (
+            <g key={i} opacity={l.far ? 0.38 : 0.9}>
+              <path
+                d={`M ${l.hip},112 L ${l.hip - 4},131 L ${l.hip + 4},149`}
+                fill="none" stroke={l.far ? accentAlt : accent}
+                strokeWidth={l.far ? 2 : 2.6} strokeLinecap="round" strokeLinejoin="round"
+              >
+                <animateTransform attributeName="transform" type="rotate"
+                  values={l.phase === 0
+                    ? `-16 ${l.hip} 112; 16 ${l.hip} 112; -16 ${l.hip} 112`
+                    : `16 ${l.hip} 112; -16 ${l.hip} 112; 16 ${l.hip} 112`}
+                  dur="0.9s" repeatCount="indefinite" />
+              </path>
+            </g>
+          ))}
+
+          {/* trunk + head */}
+          <rect x="58" y="96" width="84" height="20" rx="7"
+            fill={accent} fillOpacity="0.14" stroke={accent} strokeWidth="1.4" strokeOpacity="0.8" />
+          <rect x="136" y="90" width="16" height="12" rx="4"
+            fill={accent} fillOpacity="0.14" stroke={accent} strokeWidth="1.2" strokeOpacity="0.7" />
+          <circle cx="147" cy="95" r="1.6" fill={accentAlt} fillOpacity="0.9" />
+        </g>
+
+        {/* push force arrow, lands mid-cycle then fades */}
+        <g opacity="0">
+          <animate attributeName="opacity" values="0;0;1;0;0" keyTimes="0;0.4;0.52;0.66;1"
+            dur="4s" repeatCount="indefinite" />
+          <line x1="22" y1="104" x2="50" y2="104" stroke="#ef4444" strokeWidth="2" strokeOpacity="0.85" />
+          <path d="M 50,104 L 43,100 M 50,104 L 43,108" stroke="#ef4444" strokeWidth="2"
+            strokeOpacity="0.85" strokeLinecap="round" />
+          <text x="22" y="96" fontSize="6" fill="#ef4444" fillOpacity="0.8" fontFamily="monospace">100 N</text>
+        </g>
+
+        {/* labels */}
+        <text x="17" y="172" fontSize="6" fill={accent} fillOpacity="0.55" fontFamily="monospace">PPO @ 50 Hz</text>
+        <text x="132" y="172" fontSize="6" fill={accentAlt} fillOpacity="0.55" fontFamily="monospace">1.9 m/s →</text>
+      </svg>
+    )
+  },
   systolic: ({ accent, accentAlt }) => {
     const size = 22, gap = 9, step = 31
     const ox = 42.5, oy = 38.5
