@@ -21,6 +21,7 @@ type Project = {
   accentAlt: string
   stats: { label: string; value: string }[]
   visual: string
+  media?: string  // video in the card header instead of the SVG visual
   photos: Photo[]
   link: ProjectLink | null
   demoLink?: ProjectLink | null
@@ -47,6 +48,7 @@ const projects: Project[] = [
       { label: 'Training (8-core CPU)', value: '~4 h' },
     ],
     visual: 'quadruped',
+    media: '/quadruped-progression.mp4',
     photos: [],
     link: { label: 'GitHub', href: 'https://github.com/dcgursoy/quadruped-rl', icon: 'github' },
   },
@@ -524,11 +526,19 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             backgroundSize: '32px 32px',
           }}
         />
-        <div className="absolute inset-0 flex items-center justify-center p-8">
-          <div className="w-40 h-40">
-            <Visual accent={project.accent} accentAlt={project.accentAlt} />
+        {project.media ? (
+          <video
+            src={project.media}
+            autoPlay loop muted playsInline
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center p-8">
+            <div className="w-40 h-40">
+              <Visual accent={project.accent} accentAlt={project.accentAlt} />
+            </div>
           </div>
-        </div>
+        )}
         <div className="absolute top-4 right-4">
           <span className="text-[10px] font-medium text-white/30 tracking-wider">{project.period}</span>
         </div>
