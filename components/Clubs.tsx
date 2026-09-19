@@ -7,9 +7,9 @@ import Image from 'next/image'
 // ─── Photo type ───────────────────────────────────────────────────────────────
 // Use a plain string for no caption:   '/hyperloop-1.jpg'
 // Use an object for a caption:         { src: '/hyperloop-1.jpg', caption: 'TBM control panel' }
-type Photo = string | { src: string; caption?: string }
+type Photo = string | { src: string; caption?: string; type?: 'video' }
 
-const toPhoto = (p: Photo) => typeof p === 'string' ? { src: p, caption: undefined } : p
+const toPhoto = (p: Photo) => typeof p === 'string' ? { src: p, caption: undefined, type: undefined as 'video' | undefined } : p
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const clubs = [
@@ -52,6 +52,7 @@ const clubs = [
       { src: '/adapt-1.png', caption: 'Sensor Schematic' },
       { src: '/adapt-4.png', caption: 'Sensor PCB' },
       { src: '/adapt-3.png', caption: 'Main PCB' },
+      { src: '/penn_adapt_video.MOV', caption: 'Board Demo', type: 'video' as const },
     ] as Photo[],
   },
   {
@@ -105,7 +106,7 @@ const badgeStyles: Record<string, string> = {
 type Club = typeof clubs[number]
 
 function ClubCard({ item, index }: { item: Club; index: number }) {
-  const [lightbox, setLightbox] = useState<{ src: string; caption?: string } | null>(null)
+  const [lightbox, setLightbox] = useState<{ src: string; caption?: string; type?: 'video' } | null>(null)
 
   return (
     <>
@@ -182,7 +183,18 @@ function ClubCard({ item, index }: { item: Club; index: number }) {
                       className="relative shrink-0 w-36 h-24 rounded-xl overflow-hidden border border-white/8 hover:border-white/20 transition-colors duration-300 group"
                       style={{ boxShadow: `0 0 20px ${item.accent}15` }}
                     >
-                      <Image src={p.src} alt={p.caption ?? `${item.company} photo ${i + 1}`} fill className="object-cover" />
+                      {p.type === 'video' ? (
+                        <>
+                          <video src={p.src} className="w-full h-full object-cover" muted playsInline />
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/30">
+                            <div className="w-8 h-8 rounded-full bg-white/20 backdrop-blur-sm border border-white/30 flex items-center justify-center">
+                              <svg className="w-3.5 h-3.5 text-white ml-0.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                            </div>
+                          </div>
+                        </>
+                      ) : (
+                        <Image src={p.src} alt={p.caption ?? `${item.company} photo ${i + 1}`} fill className="object-cover" />
+                      )}
                       {p.caption && (
                         <div className="absolute inset-x-0 bottom-0 px-2 py-1.5 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                           <p className="text-[10px] text-white/90 leading-tight truncate">{p.caption}</p>
@@ -215,7 +227,11 @@ function ClubCard({ item, index }: { item: Club; index: number }) {
               className="relative max-w-4xl rounded-2xl overflow-hidden border border-white/10"
               onClick={(e) => e.stopPropagation()}
             >
-              <Image src={lightbox.src} alt={lightbox.caption ?? 'Photo'} width={1200} height={800} className="object-contain max-h-[80vh]" />
+              {lightbox.type === 'video' ? (
+                <video src={lightbox.src} controls autoPlay className="object-contain max-h-[80vh] max-w-full" />
+              ) : (
+                <Image src={lightbox.src} alt={lightbox.caption ?? 'Photo'} width={1200} height={800} className="object-contain max-h-[80vh]" />
+              )}
               {lightbox.caption && (
                 <div className="px-5 py-3 bg-black/60 border-t border-white/8">
                   <p className="text-sm text-white/75 text-center">{lightbox.caption}</p>
