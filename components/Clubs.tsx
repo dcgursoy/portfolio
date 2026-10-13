@@ -28,6 +28,7 @@ const clubs = [
     accent: '#f59e0b',
     logo: '/pennhyperloop.jpg',
     photos: [
+      { src: '/hyperloop-tbm.mov', caption: 'TBM in Action', type: 'video' as const },
       { src: '/hyperloop-1.jpg', caption: 'VFDs' },
       { src: '/hyperloop-2.JPG', caption: 'PLC System' },
       { src: '/hyperloop-3.jpg'},
