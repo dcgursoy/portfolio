@@ -54,6 +54,8 @@ const clubs = [
       { src: '/adapt-4.png', caption: 'Sensor PCB' },
       { src: '/adapt-3.png', caption: 'Main PCB' },
       { src: '/penn_adapt_video.MOV', caption: 'Board Demo', type: 'video' as const },
+      { src: '/adapt-emg-raw.webp', caption: 'Raw ADS1291 Electrode Capture' },
+      { src: '/adapt-emg-filtered.webp', caption: 'Filtered EMG & Activity Envelope' },
     ] as Photo[],
   },
   {
