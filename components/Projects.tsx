@@ -6,6 +6,8 @@ import Image from 'next/image'
 
 type Photo = string | { src: string; caption?: string }
 const toPhoto = (p: Photo) => typeof p === 'string' ? { src: p, caption: undefined } : p
+// animated GIFs and SVG figures are served as-is so they keep animating / stay crisp
+const isRawAsset = (src: string) => /\.(gif|svg)$/i.test(src)
 
 type ProjectLink = { label: string; href: string; icon: 'github' | 'external' }
 
@@ -29,6 +31,86 @@ type Project = {
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const projects: Project[] = [
+  {
+    id: 'can-ecu-sim',
+    title: 'Two-ECU CAN Network on Zephyr RTOS',
+    subtitle: 'E2E-Protected C++17 Firmware · Fault-Injection Gateway · Rust Sensor Port',
+    period: 'Oct 2026 · Embedded Firmware',
+    description:
+      'Two simulated ECUs on Zephyr RTOS exchanging CRC- and counter-protected CAN frames over a Linux virtual bus — with a Python fault-injection gateway, a 23-test system suite that measures every reaction on the bus, CI that also builds for an STM32 Nucleo, and the sensor ECU ported to Rust as a cross-language conformance check.',
+    longDescription:
+      'One C++17 codebase with the ECU role chosen by Kconfig: the sensor publishes SENSOR_DATA every 10 ms plus battery status and a heartbeat, and the controller answers with commands every 20 ms. Safety-relevant messages carry a 4-bit rolling counter and a CRC-8 that also covers the identifier (polynomial chosen by measured Hamming distance). Each node runs per-message timeout monitors, a BOOT / RUNNING / DEGRADED / SAFE_STATE / FAULT node state machine, bus-off recovery with escalating backoff, and a watchdog fed only while every thread has checked in; a link-time guard turns any heap allocation after boot into a fatal error. A Python gateway between the two bus segments drops, delays, duplicates, reorders, corrupts and floods frames per direction and ID, and the pytest suite measures every reaction on the bus: SAFE_STATE 375 ms after the last heartbeat, 4,000 unknown frames/s absorbed with zero drops, every corrupted or replayed frame rejected. The firmware runs at 90.5% line coverage under the suite (libraries 100% under 77 GoogleTests), clang-tidy and cppcheck clean, and CI builds all four images including the Nucleo-F446RE targets. A Rust port of the sensor ECU — a no_std, allocation-free core under a thin std SocketCAN adapter — passes the same 23-test suite against the C++ controller.',
+    tags: ['Zephyr RTOS', 'C++17', 'CAN / SocketCAN', 'DBC Codegen', 'Rust (no_std)', 'STM32', 'Fault Injection', 'pytest', 'GoogleTest', 'Docker', 'GitHub Actions'],
+    accent: '#2dd4bf',
+    accentAlt: '#fb7185',
+    stats: [
+      { label: 'Tests Pass (C++ & Rust)', value: '23 / 23' },
+      { label: 'FW Line Coverage', value: '90.5%' },
+      { label: 'Flood, 0 Dropped', value: '4,000 fr/s' },
+      { label: 'HB Loss → Safe State', value: '375 ms' },
+    ],
+    visual: 'canbus',
+    photos: [
+      { src: '/can-demo.gif', caption: 'Recorded demo (10 s): heartbeat loss on vcan0, SAFE_STATE and recovery read live off the bus' },
+      { src: '/can-fault-timeline.svg', caption: 'Heartbeat loss: the controller\'s command mode goes SAFE_STATE after the 350 ms timeout and back to NORMAL after the 500 ms hold' },
+      { src: '/can-watchdog-timeline.svg', caption: 'Stalled transmit thread → watchdog reset, C++ sensor vs Rust sensor' },
+      { src: '/can-period-histograms.svg', caption: 'Transmit period histograms: 10 ms sensor, 20 ms controller' },
+      { src: '/can-echo-rtt.svg', caption: 'Echo round-trip latency, host → ECU → host' },
+    ],
+    link: { label: 'GitHub', href: 'https://github.com/dcgursoy/can-ecu-sim', icon: 'github' },
+  },
+  {
+    id: 'quotedesk',
+    title: 'QuoteDesk',
+    subtitle: 'Voice-Agent Manufacturing Quoting · Google DeepMind New Agentic Economy Hackathon',
+    period: 'Oct 2026 · Google DeepMind Hackathon',
+    description:
+      'An AI quoting assistant for machine shops: Gemini reads a buyer\'s email and PDF drawing, a Gemini Live voice agent collects the missing specs in a browser call, and the estimator reviews three priced delivery options — all kept in sync through Supabase.',
+    longDescription:
+      'Built as a team at the Google DeepMind New Agentic Economy Hackathon 2026. Intake extracts specifications with cited evidence from an email and a PDF drawing, and application code — not the model — decides which fields are missing. A quote-specific QR code opens a Gemini Live session where the buyer supplies material, quantity and finish by voice or typing; the agent is instructed to explain terminology neutrally and to leave engineering decisions to the buyer\'s engineer or vendor. Validated answers are written to Supabase with version checks so conflicting updates are detected rather than overwritten, and unique call IDs make a replayed tool call return its saved result instead of applying twice. Deterministic pricing code (illustrative rates, not a machining estimator) then produces economy, standard and rush options for the estimator to approve. I built the intake side — the Gemini extraction pipeline that turns the email and PDF into spec fields with cited evidence, the gap detection that decides what is still missing, the Supabase client wiring and the quote create/read/reset API routes — while the rest of the team built the Gemini Live voice flow and buyer call UI, the answer-validation, pricing and approval routes, and the estimator workspace.',
+    tags: ['Next.js', 'TypeScript', 'Gemini Live', 'Gemini API', 'Supabase', 'Zod', 'Tailwind CSS', 'Voice Agents', 'Vercel'],
+    accent: '#f472b6',
+    accentAlt: '#38bdf8',
+    stats: [
+      { label: 'Hackathon Build', value: '1 day' },
+      { label: 'Spec Fields Extracted', value: '10' },
+      { label: 'Gemini Live Tools', value: '3' },
+      { label: 'Priced Options', value: '3 tiers' },
+    ],
+    visual: 'quote',
+    photos: [
+      { src: '/quotedesk-intake.webp', caption: 'Estimator intake: the buyer\'s email and PDF drawing before extraction' },
+    ],
+    link: { label: 'GitHub', href: 'https://github.com/dcgursoy/QuoteDesk', icon: 'github' },
+    demoLink: { label: 'Live Demo', href: 'https://quote-desk-hack.vercel.app', icon: 'external' },
+  },
+  {
+    id: 'panda-pick-place-il',
+    title: 'Imitation Learning for Robot Pick-and-Place',
+    subtitle: 'Behavior Cloning vs Diffusion Policy vs SAC on a Simulated Franka Panda',
+    period: 'Oct 2026 – Present · In Progress',
+    description:
+      'An imitation-learning study on a simulated Franka Panda: cube pick-and-place learned by behavior cloning and a from-scratch Diffusion Policy in PyTorch, benchmarked against an untuned SAC baseline that did not solve the task in 1M steps — with custom multi-rate dataset tooling and a gamepad teleop pipeline, the imitation policies trained on a laptop iGPU.',
+    longDescription:
+      'The environment is a MuJoCo Menagerie Panda with a scripted expert, a keyboard/gamepad teleop recorder, and a multi-rate logger that writes Zarr datasets with timestamp sync, a validator, bit-exact replay and LeRobot export. The policies are plain PyTorch: a chunked BC-MLP, a BC-ResNet18 with spatial softmax over two cameras, and a Diffusion Policy (ConditionalUNet1D with DDPM/DDIM schedulers matched to diffusers to 1e-5). The imitation policies train on an Intel Arc 140V iGPU through PyTorch\'s XPU backend — 13–29× faster per training step than the CPU for the ResNet18/UNet models — behind a self-check that refuses the device on a driver that once returned silently wrong results; the SAC baseline runs on the CPU. On the scripted dataset, a single-seed, 20-episode dev-set pipeline check (which the milestone log itself calls "not a result") had every IL method at 90–100% success after 2.5–120 minutes of training, while SB3 SAC with the plan\'s shaped reward reached 0% after 1M env steps on each of three seeds (about 9.5 h apiece) — it settles into the grasp-term local optimum, which is reported rather than tuned away. Evaluation runs ten environments in lockstep with per-episode seeding, so reports are reproducible regardless of batch size. The remaining milestones — multi-seed held-out evaluation with bootstrap confidence intervals, a success-vs-demos curve, a robustness test, the LeRobot Diffusion Policy cross-check and the final write-up — are next (7 and 8 of 8).',
+    tags: ['Imitation Learning', 'Diffusion Policy', 'Behavior Cloning', 'MuJoCo', 'PyTorch (XPU)', 'Stable-Baselines3', 'SAC', 'Zarr', 'LeRobot', 'Python'],
+    accent: '#38bdf8',
+    accentAlt: '#fb923c',
+    stats: [
+      { label: 'Dev-Set Check (1 seed · 20 ep)', value: '90–100%' },
+      { label: 'Untuned SAC @ 1M Steps', value: '0 / 3 seeds' },
+      { label: 'iGPU vs CPU (train step)', value: '13–29×' },
+      { label: 'Tests Passing', value: '126' },
+    ],
+    visual: 'arm',
+    media: '/panda-env-demo.mp4',
+    photos: [
+      { src: '/panda-dp-rollout.gif', caption: 'Diffusion Policy (state) rollout: third-person, front and wrist cameras' },
+      { src: '/panda-teleop.gif', caption: 'Human teleop episode with a PS4 controller, 4× speed' },
+      { src: '/panda-sac-curves.png', caption: 'SAC baseline learning curves, 3 seeds × 1M env steps' },
+    ],
+    link: { label: 'GitHub', href: 'https://github.com/dcgursoy/panda-pick-place-il', icon: 'github' },
+  },
   {
     id: 'quadruped-rl',
     title: 'Quadruped Learns to Walk with RL',
@@ -120,6 +202,35 @@ const projects: Project[] = [
     link: { label: 'View on AI Valley', href: 'https://www.aivalley.io/hackathons/hud-frontier-rsi-rl-environments-hackathon/projects/014a2d37-a6f7-4336-a1f0-09bce706d471', icon: 'external' },
   },
   {
+    id: 'bms-simulator',
+    title: '48-Cell Battery Management System Simulator',
+    subtitle: 'UKF SOC/SOH Estimation · LP Active Balancing · Electro-Thermal Faults · Live Dashboard',
+    period: 'Jul 2026 · Battery Systems · 7 / 8 Phases',
+    description:
+      'A simulation testbed for battery management: a 48-cell NMC pack of second-order Thevenin (2-RC) cells with hysteresis and aging, estimated over a bandwidth-limited telemetry bus by a UKF that holds SOC error to 0.44% RMSE, balanced by LP-scheduled DC-DC transfers, and guarded by residual-based fault detection — streamed to a live FastAPI dashboard.',
+    longDescription:
+      'Seven of eight planned phases are built — the results write-up is still pending — and the first six each closed with a committed pass/fail validation suite. The cell model (2.5 Ah NMC with R0, two RC branches, hysteresis, temperature and cycle aging) feeds a 6-module × 8s pack whose telemetry arrives noisy, quantized and stale over a 20-frame/s bus with a 0.9 s full-pack refresh. From that telemetry alone, a joint SOC/SOH UKF recovers from a 45% cold-boot error to under 2% in 2 s and tracks all 48 cells at 0.44% RMSE (EKF: 0.71%; Coulomb counting: 41.7%), while adapting R0 and capacity to within 1–2%. An LP-scheduled 1 A cell-to-pack balancer, running purely on those estimates, closes a 10.5% SOC spread in 473 s losing 1.03 Wh — 12× faster than passive bleeding at 5% of the energy. A coupled electro-thermal model simulates 3C self-heating (48 °C peak) and an internal short that drives one cell to 120 °C while its neighbours rise 22 K and the far corner stays cold. The residual detector diagnosed 4/4 injected faults (internal short, frozen sensor, offset sensor, impedance growth) with zero false positives over 96 cell-hours and applied the right derate or shutdown. A FastAPI + WebSocket dashboard runs the whole loop live at up to 20× real time with fault injection from the browser.',
+    tags: ['Python', 'NumPy', 'UKF / EKF', 'Linear Programming', 'Thevenin Cell Model', 'Thermal Modeling', 'Fault Detection', 'FastAPI', 'WebSocket'],
+    accent: '#a3e635',
+    accentAlt: '#f87171',
+    stats: [
+      { label: 'UKF SOC RMSE', value: '0.44%' },
+      { label: 'Cold-Boot Convergence', value: '2 s' },
+      { label: 'vs Passive Balancing', value: '12× faster' },
+      { label: 'Faults Caught, 0 FP', value: '4 / 4' },
+    ],
+    visual: 'battery',
+    photos: [
+      { src: '/bms-dashboard.webp', caption: 'Live console: pack grid, thermal map, UKF SOC estimates and balancing, fault injection' },
+      { src: '/bms-soc-tracking.png', caption: 'UKF SOC tracking from bandwidth-limited bus telemetry' },
+      { src: '/bms-ukf-vs-ekf.png', caption: 'UKF vs EKF estimation error' },
+      { src: '/bms-balancing.png', caption: 'LP active balancing vs passive bleed: 473 s vs 5,667 s to <1% spread' },
+      { src: '/bms-short-propagation.png', caption: 'Internal short: heat propagation to neighbouring cells' },
+      { src: '/bms-fault-short.png', caption: 'Fault detection: internal short diagnosed in 9 s → shutdown' },
+    ],
+    link: { label: 'GitHub', href: 'https://github.com/dcgursoy/bms-simulator', icon: 'github' },
+  },
+  {
     id: 'naviglass',
     title: 'NaviGlass',
     subtitle: 'AI-powered Assistive Wearable for the Visually Impaired',
@@ -139,6 +250,27 @@ const projects: Project[] = [
     visual: 'eye',
     photos: [],
     link: { label: 'View on Devpost', href: 'https://devpost.com/software/naviglass', icon: 'external' },
+  },
+  {
+    id: 'expense-tracker',
+    title: 'Smart Expense Tracker',
+    subtitle: 'Full-Stack MERN Personal Finance App',
+    period: 'Aug 2025 · Full-Stack Web',
+    description:
+      'A MERN personal-finance app with JWT auth, categorized income and expense tracking, Excel export and interactive Recharts dashboards, plus a client-side analytics layer that spots common subscriptions, flags unusual charges and awards achievement badges.',
+    longDescription:
+      'React 19 + Vite + Tailwind frontend over an Express 5 / MongoDB REST API — 13 endpoints across auth, income, expense and dashboard routes — with JWT authentication, bcrypt password hashing and Multer profile-photo uploads; both ledgers export to Excel. A client-side analytics layer on top of the 30-day dashboard data flags recurring charges that match common subscriptions, marks charges above 2× the category average, projects next month\'s spend per category from the monthly average, rolls savings rate and spending mix into a heuristic 0–100 health score, and awards achievement badges for logging habits.',
+    tags: ['React', 'Vite', 'Tailwind CSS', 'Node.js', 'Express', 'MongoDB', 'JWT', 'Recharts'],
+    accent: '#fbbf24',
+    accentAlt: '#818cf8',
+    stats: [
+      { label: 'REST Endpoints', value: '13' },
+      { label: 'Data Models', value: '3' },
+      { label: 'Chart Types', value: '3' },
+    ],
+    visual: 'wallet',
+    photos: [],
+    link: { label: 'GitHub', href: 'https://github.com/dcgursoy/expense_tracker', icon: 'github' },
   },
   {
     id: 'fpga-trading',
@@ -214,6 +346,239 @@ const projects: Project[] = [
 
 // ─── Visuals ──────────────────────────────────────────────────────────────────
 const VisualMap: Record<string, React.FC<{ accent: string; accentAlt: string }>> = {
+  canbus: ({ accent, accentAlt }) => (
+    // two ECUs on a bus through the fault gateway; every 6 s the gateway drops a
+    // heartbeat and the controller falls into SAFE_STATE until the next one arrives
+    <svg viewBox="0 0 200 200" className="w-full h-full opacity-65">
+      <defs>
+        <radialGradient id="g-can" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stopColor={accent} stopOpacity="0.18" />
+          <stop offset="100%" stopColor={accentAlt} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <ellipse cx="100" cy="100" rx="78" ry="60" fill="url(#g-can)" />
+
+      {/* bus segments either side of the gateway */}
+      <line x1="52" y1="100" x2="86" y2="100" stroke={accent} strokeWidth="1.2" strokeOpacity="0.5" />
+      <line x1="114" y1="100" x2="148" y2="100" stroke={accent} strokeWidth="1.2" strokeOpacity="0.5" />
+      <text x="69" y="124" fontSize="5" textAnchor="middle" fill={accent} fillOpacity="0.45" fontFamily="monospace">vcan0</text>
+      <text x="131" y="124" fontSize="5" textAnchor="middle" fill={accent} fillOpacity="0.45" fontFamily="monospace">vcan1</text>
+
+      {/* sensor ECU */}
+      <rect x="14" y="84" width="38" height="32" rx="4" fill={accent} fillOpacity="0.1" stroke={accent} strokeWidth="1.2" strokeOpacity="0.8" />
+      <text x="33" y="98" fontSize="6" textAnchor="middle" fill={accent} fillOpacity="0.85" fontFamily="monospace" fontWeight="bold">SENSOR</text>
+      <text x="33" y="108" fontSize="5" textAnchor="middle" fill={accent} fillOpacity="0.5" fontFamily="monospace">10 ms</text>
+
+      {/* controller ECU: RUNNING until the heartbeat stops, then SAFE_STATE */}
+      <rect x="148" y="84" width="38" height="32" rx="4" fill={accent} fillOpacity="0.1" stroke={accent} strokeWidth="1.2" strokeOpacity="0.8">
+        <animate attributeName="stroke" values={`${accent};${accent};${accentAlt};${accentAlt};${accent}`}
+          keyTimes="0;0.6;0.63;0.9;1" dur="6s" repeatCount="indefinite" />
+      </rect>
+      <text x="167" y="98" fontSize="6" textAnchor="middle" fill={accent} fillOpacity="0.85" fontFamily="monospace" fontWeight="bold">CTRL</text>
+      <text x="167" y="108" fontSize="5" textAnchor="middle" fill={accent} fillOpacity="0.6" fontFamily="monospace">
+        RUNNING
+        <animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;0.6;0.63;0.9;1" dur="6s" repeatCount="indefinite" />
+      </text>
+      <text x="167" y="108" fontSize="5" textAnchor="middle" fill={accentAlt} fillOpacity="0.95" fontFamily="monospace" opacity="0">
+        SAFE_STATE
+        <animate attributeName="opacity" values="0;0;1;1;0" keyTimes="0;0.6;0.63;0.9;1" dur="6s" repeatCount="indefinite" />
+      </text>
+
+      {/* fault-injection gateway, flashes while it swallows the heartbeat */}
+      <rect x="86" y="88" width="28" height="24" rx="3" fill={accentAlt} fillOpacity="0.08" stroke={accentAlt} strokeWidth="1" strokeOpacity="0.6">
+        <animate attributeName="fill-opacity" values="0.08;0.08;0.4;0.08;0.08" keyTimes="0;0.5;0.55;0.62;1" dur="6s" repeatCount="indefinite" />
+      </rect>
+      <text x="100" y="98" fontSize="5" textAnchor="middle" fill={accentAlt} fillOpacity="0.8" fontFamily="monospace" fontWeight="bold">GW</text>
+      <text x="100" y="106" fontSize="4" textAnchor="middle" fill={accentAlt} fillOpacity="0.6" fontFamily="monospace">drop·delay</text>
+
+      {/* sensor frames → controller, command frames ← controller */}
+      {Array.from({ length: 3 }, (_, i) => (
+        <rect key={`s${i}`} x="52" y="96" width="7" height="5" rx="1.5" fill={accent} fillOpacity="0.9">
+          <animate attributeName="x" from="52" to="141" dur="1.5s" begin={`${i * 0.5}s`} repeatCount="indefinite" />
+        </rect>
+      ))}
+      {Array.from({ length: 2 }, (_, i) => (
+        <rect key={`c${i}`} x="141" y="102" width="7" height="5" rx="1.5" fill={accent} fillOpacity="0.45">
+          <animate attributeName="x" from="141" to="52" dur="1.5s" begin={`${0.3 + i * 0.75}s`} repeatCount="indefinite" />
+        </rect>
+      ))}
+      {/* the heartbeat the gateway drops: stops inside it and fades */}
+      <rect y="96" width="7" height="5" rx="1.5" fill="#ef4444" opacity="0">
+        <animate attributeName="x" values="52;52;96;96;96" keyTimes="0;0.45;0.55;0.62;1" dur="6s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.45;0.46;0.55;0.62;1" dur="6s" repeatCount="indefinite" />
+      </rect>
+
+      {/* labels */}
+      <text x="100" y="44" fontSize="6" textAnchor="middle" fill={accent} fillOpacity="0.55" fontFamily="monospace">ZEPHYR RTOS · C++17 / RUST</text>
+      <text x="14" y="166" fontSize="5.5" fill={accent} fillOpacity="0.5" fontFamily="monospace">CRC-8 + ROLLING CNT</text>
+      <text x="186" y="166" fontSize="5.5" textAnchor="end" fill={accentAlt} fillOpacity="0.55" fontFamily="monospace">HB TIMEOUT 350 ms</text>
+    </svg>
+  ),
+  quote: ({ accent, accentAlt }) => {
+    // email + PDF → Gemini Live call → three priced options, all on one Supabase quote
+    const bars = [6, 14, 22, 12, 28, 10, 20, 14, 8]
+    const tiers = [{ name: 'ECON', w: 9 }, { name: 'STD', w: 12 }, { name: 'RUSH', w: 16 }]
+    return (
+      <svg viewBox="0 0 200 200" className="w-full h-full opacity-65">
+        <defs>
+          <radialGradient id="g-quote" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor={accent} stopOpacity="0.18" />
+            <stop offset="100%" stopColor={accentAlt} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="100" cy="100" rx="78" ry="62" fill="url(#g-quote)" />
+
+        {/* buyer's email + PDF drawing (a bracket) */}
+        <rect x="16" y="64" width="36" height="46" rx="3" fill={accent} fillOpacity="0.08" stroke={accent} strokeWidth="1.1" strokeOpacity="0.7" />
+        <path d="M 22,72 h 20 M 22,78 h 24 M 22,84 h 14" stroke={accent} strokeWidth="1" strokeOpacity="0.45" strokeLinecap="round" />
+        <path d="M 23,104 v -10 h 8 v 6 h 12 v 4 z" fill="none" stroke={accentAlt} strokeWidth="1" strokeOpacity="0.85" strokeLinejoin="round" />
+        <circle cx="27" cy="100" r="1" fill="none" stroke={accentAlt} strokeWidth="0.6" strokeOpacity="0.8" />
+        <text x="34" y="120" fontSize="5" textAnchor="middle" fill={accent} fillOpacity="0.5" fontFamily="monospace">EMAIL + PDF</text>
+
+        <path d="M 56,87 H 64 M 61.5,84.5 L 64,87 L 61.5,89.5" fill="none" stroke={accent} strokeWidth="0.9" strokeOpacity="0.45" strokeLinecap="round" />
+
+        {/* Gemini Live voice call */}
+        {bars.map((h, i) => {
+          const x = 70 + i * 7
+          const lo = h * 0.3 + 3
+          const dur = `${0.7 + (i % 3) * 0.2}s`
+          return (
+            <rect key={i} x={x} y={87 - h / 2} width="3.5" height={h} rx="1.75" fill={accentAlt} fillOpacity="0.85">
+              <animate attributeName="height" values={`${h};${lo};${h}`} dur={dur} begin={`${i * 0.08}s`} repeatCount="indefinite" />
+              <animate attributeName="y" values={`${87 - h / 2};${87 - lo / 2};${87 - h / 2}`} dur={dur} begin={`${i * 0.08}s`} repeatCount="indefinite" />
+            </rect>
+          )
+        })}
+        <text x="100" y="120" fontSize="5" textAnchor="middle" fill={accentAlt} fillOpacity="0.6" fontFamily="monospace">GEMINI LIVE</text>
+
+        <path d="M 136,87 H 144 M 141.5,84.5 L 144,87 L 141.5,89.5" fill="none" stroke={accent} strokeWidth="0.9" strokeOpacity="0.45" strokeLinecap="round" />
+
+        {/* three priced delivery options, highlighted in turn */}
+        {tiers.map((t, i) => (
+          <g key={t.name}>
+            <rect x="148" y={68 + i * 14} width="38" height="10" rx="2" fill={accent} fillOpacity="0.06" stroke={accent} strokeWidth="0.8" strokeOpacity="0.45">
+              <animate attributeName="fill-opacity" values="0.06;0.28;0.06" dur="4.5s" begin={`${i * 1.5}s`} repeatCount="indefinite" />
+            </rect>
+            <text x="151" y={75.3 + i * 14} fontSize="4.5" fill={accent} fillOpacity="0.85" fontFamily="monospace">{t.name}</text>
+            <rect x="167" y={71 + i * 14} width={t.w} height="4" rx="1" fill={accent} fillOpacity="0.55" />
+          </g>
+        ))}
+        <text x="167" y="120" fontSize="5" textAnchor="middle" fill={accent} fillOpacity="0.5" fontFamily="monospace">3 QUOTES</text>
+
+        {/* Supabase keeps buyer and estimator on one quote record */}
+        <rect x="28" y="138" width="144" height="12" rx="6" fill="none" stroke={accent} strokeWidth="0.8" strokeOpacity="0.3" />
+        <circle r="2" cy="144" fill={accentAlt} fillOpacity="0.9">
+          <animate attributeName="cx" from="32" to="168" dur="3s" repeatCount="indefinite" />
+          <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;0.08;0.92;1" dur="3s" repeatCount="indefinite" />
+        </circle>
+        <text x="100" y="161" fontSize="5" textAnchor="middle" fill={accent} fillOpacity="0.5" fontFamily="monospace">SUPABASE · SHARED QUOTE STATE</text>
+      </svg>
+    )
+  },
+  arm: ({ accent, accentAlt }) => (
+    // fallback only: the panda card shows its environment video instead
+    <svg viewBox="0 0 200 200" className="w-full h-full opacity-65">
+      <defs>
+        <radialGradient id="g-arm" cx="50%" cy="50%" r="55%">
+          <stop offset="0%" stopColor={accent} stopOpacity="0.18" />
+          <stop offset="100%" stopColor={accentAlt} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <ellipse cx="100" cy="104" rx="72" ry="62" fill="url(#g-arm)" />
+      <line x1="20" y1="150" x2="180" y2="150" stroke={accent} strokeWidth="0.8" strokeOpacity="0.35" />
+      <path d="M 138,150 v -14 h 30 v 14" fill={accent} fillOpacity="0.06" stroke={accent} strokeWidth="1" strokeOpacity="0.5" />
+      <rect x="40" y="138" width="28" height="12" rx="3" fill={accent} fillOpacity="0.14" stroke={accent} strokeWidth="1.2" strokeOpacity="0.8" />
+      <g>
+        <animateTransform attributeName="transform" type="rotate" values="-8 54 138; 14 54 138; -8 54 138" dur="4s" repeatCount="indefinite" />
+        <line x1="54" y1="138" x2="54" y2="86" stroke={accent} strokeWidth="3" strokeLinecap="round" strokeOpacity="0.85" />
+        <g>
+          <animateTransform attributeName="transform" type="rotate" values="70 54 86; 96 54 86; 70 54 86" dur="4s" repeatCount="indefinite" />
+          <line x1="54" y1="86" x2="54" y2="40" stroke={accent} strokeWidth="2.6" strokeLinecap="round" strokeOpacity="0.85" />
+          <path d="M 50,40 v 8 M 58,40 v 8" stroke={accentAlt} strokeWidth="2" strokeLinecap="round" />
+        </g>
+      </g>
+      <rect x="98" y="138" width="12" height="12" rx="1.5" fill={accentAlt} fillOpacity="0.25" stroke={accentAlt} strokeWidth="1.2" strokeOpacity="0.9" />
+      <text x="20" y="172" fontSize="6" fill={accent} fillOpacity="0.55" fontFamily="monospace">BC · DIFFUSION POLICY</text>
+    </svg>
+  ),
+  battery: ({ accent, accentAlt }) => {
+    // 6 modules × 8s: the LP balancer pulls every cell's SOC to the pack mean
+    // while cell 20 (the README's internal-short scenario) flags red
+    const cols = 8, rows = 6, w = 14, h = 16, gx = 4, gy = 4, ox = 36, oy = 46
+    const target = 0.62
+    const fillH = (lvl: number) => (h - 4) * lvl
+    return (
+      <svg viewBox="0 0 200 200" className="w-full h-full opacity-65">
+        <defs>
+          <radialGradient id="g-bms" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor={accent} stopOpacity="0.18" />
+            <stop offset="100%" stopColor={accentAlt} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="100" cy="104" rx="76" ry="64" fill="url(#g-bms)" />
+        {Array.from({ length: cols * rows }, (_, i) => {
+          const r = Math.floor(i / cols), c = i % cols
+          const x = ox + c * (w + gx), y = oy + r * (h + gy)
+          const soc = 0.35 + 0.5 * (((i * 37) % 11) / 10)
+          const fault = i === 20
+          const top = (lvl: number) => y + h - 2 - fillH(lvl)
+          return (
+            <g key={i}>
+              <rect x={x} y={y} width={w} height={h} rx="2" fill={accent} fillOpacity="0.05"
+                stroke={fault ? accentAlt : accent} strokeWidth="0.8" strokeOpacity={fault ? 0.9 : 0.4}>
+                {fault && <animate attributeName="stroke-opacity" values="0.9;0.3;0.9" dur="1s" repeatCount="indefinite" />}
+              </rect>
+              <rect x={x + 2} y={top(soc)} width={w - 4} height={fillH(soc)} rx="1"
+                fill={fault ? accentAlt : accent} fillOpacity={fault ? 0.6 : 0.45}>
+                <animate attributeName="height" values={`${fillH(soc)};${fillH(target)};${fillH(target)};${fillH(soc)}`}
+                  keyTimes="0;0.5;0.9;1" dur="7s" repeatCount="indefinite" />
+                <animate attributeName="y" values={`${top(soc)};${top(target)};${top(target)};${top(soc)}`}
+                  keyTimes="0;0.5;0.9;1" dur="7s" repeatCount="indefinite" />
+              </rect>
+            </g>
+          )
+        })}
+        <text x="36" y="38" fontSize="5.5" fill={accent} fillOpacity="0.55" fontFamily="monospace">6 × 8s · 48 CELLS</text>
+        <text x="176" y="38" fontSize="5.5" textAnchor="end" fill={accentAlt} fillOpacity="0.7" fontFamily="monospace">SHORT: CELL 20</text>
+        <text x="36" y="176" fontSize="5.5" fill={accent} fillOpacity="0.55" fontFamily="monospace">UKF SOC / SOH</text>
+        <text x="176" y="176" fontSize="5.5" textAnchor="end" fill={accent} fillOpacity="0.55" fontFamily="monospace">LP BALANCING</text>
+      </svg>
+    )
+  },
+  wallet: ({ accent, accentAlt }) => {
+    const bars = [34, 52, 40, 70, 58, 86, 64]
+    return (
+      <svg viewBox="0 0 200 200" className="w-full h-full opacity-65">
+        <defs>
+          <radialGradient id="g-wallet" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor={accent} stopOpacity="0.18" />
+            <stop offset="100%" stopColor={accentAlt} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="100" cy="104" rx="72" ry="62" fill="url(#g-wallet)" />
+        <line x1="34" y1="150" x2="170" y2="150" stroke={accent} strokeWidth="0.8" strokeOpacity="0.35" />
+        {bars.map((b, i) => {
+          const x = 42 + i * 18
+          return (
+            <rect key={i} x={x} y={150 - b} width="10" height={b} rx="2" fill={accent} fillOpacity="0.5">
+              <animate attributeName="height" values={`${b};${b};${b * 0.6};${b}`} keyTimes="0;0.6;0.7;1" dur="4s" begin={`${i * 0.12}s`} repeatCount="indefinite" />
+              <animate attributeName="y" values={`${150 - b};${150 - b};${150 - b * 0.6};${150 - b}`} keyTimes="0;0.6;0.7;1" dur="4s" begin={`${i * 0.12}s`} repeatCount="indefinite" />
+            </rect>
+          )
+        })}
+        <polyline points={bars.map((b, i) => `${47 + i * 18},${144 - b}`).join(' ')} fill="none" stroke={accentAlt} strokeWidth="1.2" strokeOpacity="0.7" />
+        {bars.map((b, i) => (
+          <circle key={i} cx={47 + i * 18} cy={144 - b} r="2" fill={accentAlt} fillOpacity="0.9" />
+        ))}
+        <circle cx="160" cy="48" r="12" fill={accent} fillOpacity="0.12" stroke={accent} strokeWidth="1.2" strokeOpacity="0.7">
+          <animate attributeName="r" values="12;13.5;12" dur="2.5s" repeatCount="indefinite" />
+        </circle>
+        <text x="160" y="52" fontSize="11" textAnchor="middle" fill={accent} fillOpacity="0.85" fontFamily="monospace" fontWeight="bold">$</text>
+        <text x="34" y="170" fontSize="6" fill={accent} fillOpacity="0.55" fontFamily="monospace">INCOME · EXPENSES</text>
+        <text x="170" y="170" fontSize="6" textAnchor="end" fill={accentAlt} fillOpacity="0.55" fontFamily="monospace">FORECAST ↗</text>
+      </svg>
+    )
+  },
   quadruped: ({ accent, accentAlt }) => {
     // side-view trot: diagonal leg pairs swing in antiphase around their hips
     const legs = [
@@ -653,7 +1018,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                     className="relative shrink-0 w-36 h-24 rounded-xl overflow-hidden border border-white/8 hover:border-white/20 transition-colors duration-300 group"
                     style={{ boxShadow: `0 0 20px ${project.accent}15` }}
                   >
-                    <Image src={p.src} alt={p.caption ?? `${project.title} photo ${i + 1}`} fill className="object-cover" />
+                    <Image src={p.src} alt={p.caption ?? `${project.title} photo ${i + 1}`} fill className="object-cover" unoptimized={isRawAsset(p.src)} />
                     {p.caption && (
                       <div className="absolute inset-x-0 bottom-0 px-2 py-1.5 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         <p className="text-[10px] text-white/90 leading-tight truncate">{p.caption}</p>
@@ -685,7 +1050,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               className="relative max-w-4xl rounded-2xl overflow-hidden border border-white/10"
               onClick={(e) => e.stopPropagation()}
             >
-              <Image src={lightbox.src} alt={lightbox.caption ?? 'Photo'} width={1200} height={800} className="object-contain max-h-[80vh]" />
+              <Image src={lightbox.src} alt={lightbox.caption ?? 'Photo'} width={1200} height={800} className="object-contain max-h-[80vh]" unoptimized={isRawAsset(lightbox.src)} />
               {lightbox.caption && (
                 <div className="px-5 py-3 bg-black/60 border-t border-white/8">
                   <p className="text-sm text-white/75 text-center">{lightbox.caption}</p>
