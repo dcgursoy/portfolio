@@ -32,6 +32,30 @@ type Project = {
 // ─── Data ─────────────────────────────────────────────────────────────────────
 const projects: Project[] = [
   {
+    id: 'freertos-can-node',
+    title: 'FreeRTOS Battery-Module CAN Node',
+    subtitle: 'FreeRTOS POSIX Port · AUTOSAR E2E · UDS Diagnostics · Fail-Safe A/B Updates (Planned)',
+    period: 'Nov 2026 – Present · In Progress',
+    description:
+      'A FreeRTOS telemetry node for one module of a battery pack, simulated on a laptop: five statically allocated tasks measure the module, publish AUTOSAR E2E-protected telemetry on CAN, and track faults as UDS-style trouble codes under two watchdogs — with fail-safe A/B firmware updates over the same bus still to come.',
+    longDescription:
+      'The node runs as a Linux process on the FreeRTOS POSIX port (kernel V11.3.3, unmodified), with its CAN controller, sensors, flash and watchdog simulated around it so everything builds and is tested in CI. A host platform layer locks the FreeRTOS tick to CLOCK_MONOTONIC, delivers simulated interrupts through lock-free rings, and measures real task stack peaks. The CAN path models arbitration, exact stuffed frame lengths and Bosch fault confinement (error passive, bus off, recovery) over SocketCAN or a UDP virtual bus. Seven cyclic messages come from a DBC through a generated C codec; four carry AUTOSAR E2E Profile 11 protection, checked against published vectors and an independent Python implementation on 20,000+ requests. Sixteen faults map to 24-bit DTCs with ISO 14229-1 status bits and AUTOSAR-style debouncing, reported in a protected fault frame; an AUTOSAR-style watchdog manager gates an STM32 IWDG model, and the reset cause survives in a CRC-checked retained-RAM cell. The code is C11 under -Werror, cppcheck with the MISRA C:2012 addon (documented deviations) and clang-tidy, and every analyzer run also checks a file of planted defects so "no findings" is verified. Phases 0–3 of 8 are done; next come the simulated NOR flash and A/B bootloader, ISO-TP/UDS download, measurements, and a Cortex-M3 build in QEMU.',
+    tags: ['FreeRTOS', 'C11', 'CAN / SocketCAN', 'AUTOSAR E2E', 'UDS / DTCs', 'MISRA C:2012', 'DBC Codegen', 'Unity', 'pytest', 'GitHub Actions'],
+    accent: '#60a5fa',
+    accentAlt: '#fbbf24',
+    stats: [
+      { label: 'Phases Done', value: '0–3 of 8' },
+      { label: 'Static FreeRTOS Tasks', value: '5' },
+      { label: 'CAN Messages (4 E2E)', value: '7' },
+      { label: 'Faults → DTCs', value: '16' },
+    ],
+    visual: 'rtos',
+    photos: [
+      { src: '/fcn-platform-timing.png', caption: 'Host platform layer: tick accuracy and simulated interrupt latency (host timing, not target timing)' },
+    ],
+    link: { label: 'GitHub', href: 'https://github.com/dcgursoy/freertos-can-node', icon: 'github' },
+  },
+  {
     id: 'can-ecu-sim',
     title: 'Two-ECU CAN Network on Zephyr RTOS',
     subtitle: 'E2E-Protected C++17 Firmware · Fault-Injection Gateway · Rust Sensor Port',
@@ -92,7 +116,7 @@ const projects: Project[] = [
     description:
       'An imitation-learning study on a simulated Franka Panda: cube pick-and-place learned by behavior cloning and a from-scratch Diffusion Policy in PyTorch, benchmarked against an untuned SAC baseline that did not solve the task in 1M steps — with custom multi-rate dataset tooling and a gamepad teleop pipeline, the imitation policies trained on a laptop iGPU.',
     longDescription:
-      'The environment is a MuJoCo Menagerie Panda with a scripted expert, a keyboard/gamepad teleop recorder, and a multi-rate logger that writes Zarr datasets with timestamp sync, a validator, bit-exact replay and LeRobot export. The policies are plain PyTorch: a chunked BC-MLP, a BC-ResNet18 with spatial softmax over two cameras, and a Diffusion Policy (ConditionalUNet1D with DDPM/DDIM schedulers matched to diffusers to 1e-5). The imitation policies train on an Intel Arc 140V iGPU through PyTorch\'s XPU backend — 13–29× faster per training step than the CPU for the ResNet18/UNet models — behind a self-check that refuses the device on a driver that once returned silently wrong results; the SAC baseline runs on the CPU. On the scripted dataset, a single-seed, 20-episode dev-set pipeline check (which the milestone log itself calls "not a result") had every IL method at 90–100% success after 2.5–120 minutes of training, while SB3 SAC with the plan\'s shaped reward reached 0% after 1M env steps on each of three seeds (about 9.5 h apiece) — it settles into the grasp-term local optimum, which is reported rather than tuned away. Evaluation runs ten environments in lockstep with per-episode seeding, so reports are reproducible regardless of batch size. The remaining milestones — multi-seed held-out evaluation with bootstrap confidence intervals, a success-vs-demos curve, a robustness test, the LeRobot Diffusion Policy cross-check and the final write-up — are next (7 and 8 of 8).',
+      'The environment is a MuJoCo Menagerie Panda with a scripted expert, a keyboard/gamepad teleop recorder, and a multi-rate logger that writes Zarr datasets with timestamp sync, a validator, bit-exact replay and LeRobot export. The policies are plain PyTorch: a chunked BC-MLP, a BC-ResNet18 with spatial softmax over two cameras, and a Diffusion Policy (ConditionalUNet1D with DDPM/DDIM schedulers matched to diffusers to 1e-5). The imitation policies train on an Intel Arc 140V iGPU through PyTorch\'s XPU backend — 13–29× faster per training step than the CPU for the ResNet18/UNet models — behind a self-check that refuses the device on a driver that once returned silently wrong results; the SAC baseline runs on the CPU. On the scripted dataset, a single-seed, 20-episode dev-set pipeline check (which the milestone log itself calls "not a result") had every IL method at 90–100% success after 2.5–120 minutes of training, while SB3 SAC with the plan\'s shaped reward reached 0% after 1M env steps on each of three seeds (about 9.5 h apiece) — it settles into the grasp-term local optimum, which is reported rather than tuned away. Evaluation runs ten environments in lockstep with per-episode seeding, so reports are reproducible regardless of batch size. The remaining milestones — multi-seed held-out evaluation with bootstrap confidence intervals, a success-vs-demos curve, a robustness test, the LeRobot Diffusion Policy cross-check and the final write-up — make up milestones 7 and 8; the milestone 7 experiment matrix (109 training runs, 169 held-out evaluations, about 90 hours on the iGPU) is running, with its analysis plan fixed in advance, and no held-out result is reported yet.',
     tags: ['Imitation Learning', 'Diffusion Policy', 'Behavior Cloning', 'MuJoCo', 'PyTorch (XPU)', 'Stable-Baselines3', 'SAC', 'Zarr', 'LeRobot', 'Python'],
     accent: '#38bdf8',
     accentAlt: '#fb923c',
@@ -346,6 +370,59 @@ const projects: Project[] = [
 
 // ─── Visuals ──────────────────────────────────────────────────────────────────
 const VisualMap: Record<string, React.FC<{ accent: string; accentAlt: string }>> = {
+  rtos: ({ accent, accentAlt }) => {
+    // five tasks by priority take turns on the CPU; can_tx pushes frames onto the bus,
+    // and the A/B flash slots below hint at the planned fail-safe updates
+    const tasks = [
+      { name: 'can_rx', prio: 6 }, { name: 'sensor', prio: 5 }, { name: 'process', prio: 4 },
+      { name: 'can_tx', prio: 3 }, { name: 'health', prio: 2 },
+    ]
+    return (
+      <svg viewBox="0 0 200 200" className="w-full h-full opacity-65">
+        <defs>
+          <radialGradient id="g-rtos" cx="50%" cy="50%" r="55%">
+            <stop offset="0%" stopColor={accent} stopOpacity="0.18" />
+            <stop offset="100%" stopColor={accentAlt} stopOpacity="0" />
+          </radialGradient>
+        </defs>
+        <ellipse cx="100" cy="100" rx="78" ry="64" fill="url(#g-rtos)" />
+        <text x="100" y="34" fontSize="6" textAnchor="middle" fill={accent} fillOpacity="0.55" fontFamily="monospace">FREERTOS · 5 STATIC TASKS</text>
+
+        {tasks.map((t, i) => {
+          const y = 44 + i * 15
+          return (
+            <g key={t.name}>
+              <text x="22" y={y + 7.5} fontSize="5.5" fill={accent} fillOpacity="0.75" fontFamily="monospace">{t.name}</text>
+              <text x="56" y={y + 7.5} fontSize="5" fill={accent} fillOpacity="0.4" fontFamily="monospace">p{t.prio}</text>
+              <rect x="68" y={y} width="110" height="10" rx="2" fill={accent} fillOpacity="0.04" stroke={accent} strokeWidth="0.5" strokeOpacity="0.25" />
+              {/* each task gets one running slice per 5 s cycle, highest priority first */}
+              <rect x={68 + i * 20} y={y + 1.5} width="18" height="7" rx="1.5" fill={i === 3 ? accentAlt : accent} fillOpacity="0.08">
+                <animate attributeName="fill-opacity" values="0.08;0.08;0.7;0.08;0.08"
+                  keyTimes={`0;${(i * 0.2).toFixed(2)};${(i * 0.2 + 0.1).toFixed(2)};${(i * 0.2 + 0.2).toFixed(2)};1`}
+                  dur="5s" repeatCount="indefinite" />
+              </rect>
+            </g>
+          )
+        })}
+
+        {/* CAN bus with frames leaving the node */}
+        <line x1="22" y1="128" x2="178" y2="128" stroke={accentAlt} strokeWidth="1.2" strokeOpacity="0.5" />
+        <text x="22" y="124" fontSize="5" fill={accentAlt} fillOpacity="0.6" fontFamily="monospace">CAN · E2E P11</text>
+        {Array.from({ length: 3 }, (_, i) => (
+          <rect key={i} x="22" y="126" width="8" height="4" rx="1" fill={accentAlt} fillOpacity="0.9">
+            <animate attributeName="x" from="22" to="170" dur="2.4s" begin={`${i * 0.8}s`} repeatCount="indefinite" />
+          </rect>
+        ))}
+
+        {/* A/B firmware slots (planned) */}
+        <rect x="60" y="142" width="36" height="14" rx="2" fill={accent} fillOpacity="0.15" stroke={accent} strokeWidth="0.9" strokeOpacity="0.7" />
+        <text x="78" y="151.5" fontSize="5.5" textAnchor="middle" fill={accent} fillOpacity="0.85" fontFamily="monospace">SLOT A</text>
+        <rect x="104" y="142" width="36" height="14" rx="2" fill="none" stroke={accent} strokeWidth="0.9" strokeOpacity="0.4" strokeDasharray="2 2" />
+        <text x="122" y="151.5" fontSize="5.5" textAnchor="middle" fill={accent} fillOpacity="0.5" fontFamily="monospace">SLOT B</text>
+        <text x="100" y="168" fontSize="5" textAnchor="middle" fill={accent} fillOpacity="0.45" fontFamily="monospace">A/B UPDATES · PLANNED</text>
+      </svg>
+    )
+  },
   canbus: ({ accent, accentAlt }) => (
     // two ECUs on a bus through the fault gateway; every 6 s the gateway drops a
     // heartbeat and the controller falls into SAFE_STATE until the next one arrives
