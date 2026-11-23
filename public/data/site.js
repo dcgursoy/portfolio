@@ -3,7 +3,7 @@ window.SITE = {
  "profile": {
   "name": "Deniz Gursoy",
   "tagline": "Electrical Engineering at UPenn · Hardware Design, Robotics, and Embedded Systems",
-  "headline": "I take hardware from schematic to working system: boards, firmware and controls.",
+  "headline": "I like building hardware end to end, from designing the first schematic to validation testing the final product.",
   "intro": [
    "I'm an electrical engineering student at the University of Pennsylvania, class of 2028, with a minor in computer science. Most of my work is embedded hardware and controls: sensor boards, control panels, PLC logic and firmware.",
    "In summer 2026 at SpaceX I designed, wired and commissioned four 480 V control panels on the Raptor engine program. At Penn I lead controls on Penn Hyperloop's tunnel boring machine and co-lead the prosthetic arm project at Penn ADAPT. I'm looking for internships and research for spring or summer 2027 in embedded systems, robotics, controls and hardware."
