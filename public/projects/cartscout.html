@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CartScout: an RL environment for browser shopping agents · Deniz Gursoy</title>
+<meta name="description" content="Team hackathon build: a small model browses real retailer pages and returns a cited pick without buying. 22 of 40 held-out tasks scored 0.70 or more.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="CartScout: an RL environment for browser shopping agents · Deniz Gursoy">
+<meta property="og:description" content="Team hackathon build: a small model browses real retailer pages and returns a cited pick without buying. 22 of 40 held-out tasks scored 0.70 or more.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>(function(){var t;try{t=localStorage.getItem('dg-theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@400..600&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/ask.css">
+
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<div class="wrap">
+  <header class="top">
+  <div class="who">
+    <a class="who__name" href="../index.html">Deniz Gursoy</a>
+    <span class="who__line"><span class="nw">Electrical Engineering at UPenn ·</span> <span class="nw">Hardware Design, Robotics, and Embedded Systems</span></span>
+  </div>
+  <nav class="actions" aria-label="Site">
+    <div class="seg" role="group" aria-label="View"><a href="../index.html">Board</a><a href="../list.html">List</a></div>
+    <a class="btn" href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <button class="btn icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <a class="btn btn--ink" href="mailto:dcgursoy07@gmail.com">Email me</a>
+  </nav>
+</header>
+
+
+  <main id="main">
+    <a class="crumb" href="../list.html#projects"><span aria-hidden="true">&larr;</span> All projects</a>
+
+    <div class="proj-top">
+    <header class="proj-head">
+      <p class="eyebrow">Software</p>
+      <h1 class="h1">CartScout: an RL environment for browser shopping agents</h1>
+      <p class="lead">CartScout is a reinforcement learning (RL) environment where a small model browses real retailer pages and returns a cited pick without checking out. It was a four-person hackathon build, and I did most of the development.</p>
+      <dl class="proj-meta">
+        <div><dt class="sr-only">Dates</dt><dd><b>Jun 2026</b></dd></div>
+        <div><dt class="sr-only">Context</dt><dd>HUD Frontier / RSI RL Environments Hackathon</dd></div>
+        <div><dt class="sr-only">Role</dt><dd>Team of 4: most of the development</dd></div>
+        <div><dt class="sr-only">Status</dt><dd><span class="status status--live">Finished</span></dd></div>
+      </dl>
+      <div class="proj-links">
+<a class="btn btn--ink" href="https://github.com/exemplary-citizen/CartScout" target="_blank" rel="noopener">Team code on GitHub <span class="arrow" aria-hidden="true">&#8599;</span></a><a class="link" href="https://www.hud.ai/shared/trace/7f0d44d3-e247-4b98-9d3b-52808542a71c" target="_blank" rel="noopener">Example rollout trace on HUD <span class="arrow" aria-hidden="true">&#8599;</span></a><a class="link" href="https://cartscoutrl.vercel.app/" target="_blank" rel="noopener">Team demo site <span class="arrow" aria-hidden="true">&#8599;</span></a><a class="link" href="https://youtu.be/ghwLYJP49DA" target="_blank" rel="noopener">Team demo video <span class="arrow" aria-hidden="true">&#8599;</span></a><a class="link" href="https://www.aivalley.io/events/hud-frontier-rsi-rl-environments-hackathon/projects/014a2d37-a6f7-4336-a1f0-09bce706d471" target="_blank" rel="noopener">Hackathon listing on AI Valley <span class="arrow" aria-hidden="true">&#8599;</span></a>      </div>
+    </header>
+
+    <figure class="frame proj-hero frame--paper" style="--ar:1600/1150;--arn:1.3913;--w:1600">
+<a href="../media/p/cartscout/hud-trace-emit-packet-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: HUD trace viewer: the agent&#39;s final packet JSON recommending a 24-pack of AA batteries at $13.49, beside the Amazon results page it read, scored 88%."><img src="../media/p/cartscout/hud-trace-emit-packet-1600.webp" srcset="../media/p/cartscout/hud-trace-emit-packet-800.webp 800w, ../media/p/cartscout/hud-trace-emit-packet-1600.webp 1600w" sizes="(max-width: 1248px) 100vw, 1152px" width="1600" height="1150" alt="HUD trace viewer: the agent&#39;s final packet JSON recommending a 24-pack of AA batteries at $13.49, beside the Amazon results page it read, scored 88%." decoding="async"></a>    </figure>
+    </div>
+
+    <section class="stats-band" aria-label="Key numbers">
+      <div class="stats">
+<div class="stat"><b>22 / 40</b><span>held-out eval runs scoring 0.70 or more on the environment&#39;s own scorer</span></div><div class="stat"><b>0.4956</b><span>mean eval score on those 40 tasks, errors counted as zero</span></div><div class="stat"><b>220</b><span>real-browser rollouts in our GRPO training run</span></div><div class="stat"><b>45.9%</b><span>of those training rollouts scored exactly zero</span></div>      </div>
+    </section>
+
+    <div class="proj-body" style="--aside-rows:3">
+      <div class="proj-main">
+        <div class="prose proj-more"><p>We fine-tuned Qwen3-8B on 220 real-browser task attempts (rollouts), and 22 of 40 held-out eval runs then scored 0.70 or more on the environment&#39;s own scorer.</p></div>
+        <section aria-labelledby="s-problem">
+          <h2 class="h2" id="s-problem">The problem</h2>
+          <div class="prose">
+<p>On live pages, a shopping agent has to check a product against a price cap, required and excluded features and allowed retailers. Our first baseline drove the browser by screenshots and mouse, and in smoke tests it did not reliably return an answer.</p><p>CartScout narrows the job to research. The agent returns a JSON packet with the product, price and quoted evidence, then stops before checkout.</p>          </div>
+        </section>
+        <section aria-labelledby="s-built">
+          <h2 class="h2" id="s-built">What we built</h2>
+          <div class="prose">
+<p>I did most of the development on our four-person team. As a team we built the main environment on HUD, where it drives a real Chromium browser through 12 JSON actions over the Chrome DevTools Protocol (CDP).</p><p>Our training reward returns zero for invalid JSON, a claimed checkout or a regulated product, then sums eight weighted components under caps. Our task sets hold 1,000 training and 200 eval tasks.</p><p>On my own I built an offline Gymnasium environment for testing agent logic without Docker or a browser: 44 hard-coded products, 8 tasks and 5 text actions. Its reward weights must-have terms at 0.40, price at 0.25, excluded terms at 0.20 and retailer at 0.15, with whole-word matching. I added a rule-based agent, a random baseline and a FastAPI server.</p><p>Last, I tried a fine-tuning launch on Fireworks AI, separate from the HUD run behind the results. On my laptop I started the rollout server, opened an ngrok tunnel and ran the launch script. It died at dataset upload on a Windows encoding error, so I patched the launcher to force UTF-8 and reran it.</p>          </div>
+        </section>
+        <section aria-labelledby="s-results" class="has-figs">
+          <h2 class="h2" id="s-results">Results</h2>
+          <div class="prose">
+<p>We trained Qwen3-8B with GRPO (group relative policy optimization) on HUD&#39;s trainer: 220 real-browser rollouts over 50 tasks. Mean reward was 0.2918 on the 20-rollout smoke test, then 0.4195 and 0.3658 on two 100-rollout chunks.</p><p>The eval ran 40 held-out tasks in the HUD environment, whose scoring function differs from the training reward. The trained policy averaged 0.4956 with errors counted as zero. Of the 40 runs, 22 scored 0.70 or more, 2 scored zero and 16 errored: 9 never emitted a packet, 6 named a retailer the search action does not support and 1 lost its connection.</p><p>My rule-based agent scores 1.0 on 5 of the 8 offline tasks.</p>          </div>
+          <div class="figs">
+            <div class="figrow figrow--pair" style="--cols:minmax(0, 2000fr) minmax(0, 1333fr);--rw:1152px">
+              <figure class="fig" style="--ar:1600/800;--cap:1280px">
+<figcaption class="fig__label">Team plot: reward per rollout at each GRPO step</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/cartscout/reward-per-step-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Box plot of per-rollout reward at eight optimizer steps: steps 1 to 3 each span 0 to 0.90 or more, with means near 0.29, 0.42 and 0.37; steps 4 to 8 use one task each."><img src="../media/p/cartscout/reward-per-step-1600.webp" srcset="../media/p/cartscout/reward-per-step-800.webp 800w, ../media/p/cartscout/reward-per-step-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 682px" width="1600" height="800" alt="Box plot of per-rollout reward at eight optimizer steps: steps 1 to 3 each span 0 to 0.90 or more, with means near 0.29, 0.42 and 0.37; steps 4 to 8 use one task each." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+              <figure class="fig" style="--ar:900/675;--cap:853px">
+<figcaption class="fig__label">Team plot: share of training rollouts scoring zero, by stage</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/cartscout/hard-zero-rate-900.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Bar chart of the share of training rollouts that scored zero: 60.0% in the smoke test, 41.0% in chunk 1 and 48.0% in chunk 2."><img src="../media/p/cartscout/hard-zero-rate-900.webp" srcset="../media/p/cartscout/hard-zero-rate-800.webp 800w, ../media/p/cartscout/hard-zero-rate-900.webp 900w" sizes="(max-width: 720px) 100vw, 454px" width="900" height="675" alt="Bar chart of the share of training rollouts that scored zero: 60.0% in the smoke test, 41.0% in chunk 1 and 48.0% in chunk 2." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow figrow--pair" style="--cols:minmax(0, 1400fr) minmax(0, 1218fr);--rw:1152px">
+              <figure class="fig" style="--ar:1050/750;--cap:896px">
+<figcaption class="fig__label">Team plot: reward components that still score zero after the gates</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/cartscout/component-zero-rate-1050.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Bar chart: among rollouts that passed the gates, 42.0% scored zero on the must_not component and 7.6% on domain; every other component shows 0.0%."><img src="../media/p/cartscout/component-zero-rate-1050.webp" srcset="../media/p/cartscout/component-zero-rate-800.webp 800w, ../media/p/cartscout/component-zero-rate-1050.webp 1050w" sizes="(max-width: 720px) 100vw, 608px" width="1050" height="750" alt="Bar chart: among rollouts that passed the gates, 42.0% scored zero on the must_not component and 7.6% on domain; every other component shows 0.0%." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+              <figure class="fig" style="--ar:1600/1314;--cap:779px">
+<figcaption class="fig__label">My offline environment: rule agent on task charger_001, console text</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/cartscout/mini-env-rule-agent-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Console text from my offline environment: the rule agent searches, opens a 30 W USB-C charger at $15.99 and stops without buying, reward 1.000."><img src="../media/p/cartscout/mini-env-rule-agent-1600.webp" srcset="../media/p/cartscout/mini-env-rule-agent-800.webp 800w, ../media/p/cartscout/mini-env-rule-agent-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 528px" width="1600" height="1314" alt="Console text from my offline environment: the rule agent searches, opens a 30 W USB-C charger at $15.99 and stops without buying, reward 1.000." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+          </div>
+        </section>
+        <section aria-labelledby="s-limits">
+          <h2 class="h2" id="s-limits">Limits and next steps</h2>
+          <div class="prose">
+<p>We did not run the untrained model on those 40 tasks, so I quote no improvement factor. We also did not measure speed or cost against frontier models.</p><p>Neither scorer checks a quote against the page yet. The two scales also differ: the packet in the first figure scores 0.875 in the eval and 0.50 under the training reward without its judge model.</p><p>I have no record that a Fireworks job ever ran. My offline environment is also easy: picking at random from the top five search results averages 0.76 or more on every task.</p>          </div>
+        </section>
+        <section aria-labelledby="s-team">
+          <h2 class="h2" id="s-team">The team</h2>
+          <div class="prose">
+<p>Four of us built CartScout. My teammates ran the HUD eval job and made the training report and the three plots labeled as team plots.</p>          </div>
+        </section>
+      </div>
+
+      <aside class="proj-aside" aria-labelledby="built-h">
+        <div class="proj-aside__in">
+          <h2 id="built-h">Built with</h2>
+          <ul class="tags"><li class="tag">Python</li><li class="tag">HUD</li><li class="tag">Chromium CDP</li><li class="tag">GRPO</li><li class="tag">Qwen3-8B</li><li class="tag">Fireworks AI</li><li class="tag">Gymnasium</li><li class="tag">FastAPI</li><li class="tag">pytest</li></ul>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="proj-nav" aria-label="More projects">
+      <a href="systolic-mnist.html"><span><span aria-hidden="true">&larr;</span> Previous project</span><b>Simulated systolic-array MNIST accelerator in SystemVerilog</b></a>
+      <a href="pennair-flight-controller.html"><span>Next project <span aria-hidden="true">&rarr;</span></span><b>STM32 flight controller PCB design for competition UAVs</b></a>
+    </nav>
+  </main>
+
+  <footer class="foot">
+  <span>Deniz Gursoy · B.S.E. in electrical engineering, Penn, class of 2028</span>
+  <nav aria-label="Footer">
+    <a href="../index.html">Board</a>
+    <a href="../list.html#projects">Projects</a>
+    <a href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <a href="https://github.com/dcgursoy" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/dgursoy/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:dcgursoy07@gmail.com">dcgursoy07@gmail.com</a>
+  </nav>
+</footer>
+
+</div>
+<button class="ask-fab" type="button" data-ask-open><span aria-hidden="true">&gt;_</span> Ask me anything</button>
+<script src="../data/site.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/ask.js"></script>
+
+</body>
+</html>

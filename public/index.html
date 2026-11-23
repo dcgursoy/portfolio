@@ -1,0 +1,802 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Deniz Gursoy: electrical engineering at Penn</title>
+<meta name="description" content="Deniz Gursoy takes hardware from schematic to working system: boards, firmware and controls. His portfolio is drawn as a circuit board: each part opens a section.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Deniz Gursoy: electrical engineering at Penn">
+<meta property="og:description" content="Boards, firmware and controls, from schematic to working system. Each part of the board opens a section: projects, experience, teams, awards, coursework, skills, resume and contact.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<script>(function(){var t;try{t=localStorage.getItem('dg-theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@400..600&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/ask.css">
+<style>
+body { background-image: radial-gradient(var(--dot) 1.1px, transparent 1.3px); background-size: 22px 22px; }
+
+/* the line above the board: what he does, and how the board works */
+.opener { display: flex; align-items: baseline; justify-content: space-between; gap: 8px 32px; flex-wrap: wrap; padding-block: 8px 14px; }
+.opener .lead { font-size: clamp(18px, 1.7vw, 23px); line-height: 1.3; color: var(--ink); letter-spacing: -0.01em; max-width: none; }
+.hint { font-size: 14px; color: var(--muted); }
+.hint--touch { display: none; }
+@media (hover: none) { .hint--fine { display: none; } .hint--touch { display: inline; } }
+
+/* the board: as wide as the column, but never taller than the window allows */
+.stage { position: relative; margin-inline: auto; max-width: max(800px, calc((100dvh - 236px) * 1200 / 762)); }
+svg.board { display: block; width: 100%; height: auto; overflow: visible; -webkit-tap-highlight-color: transparent; }
+.pcb { fill: var(--board); stroke: var(--board-edge); stroke-width: 1.5; }
+.f-part { fill: var(--part); stroke: var(--part-edge); stroke-width: 1; }
+.f-dark { fill: var(--part-2); }
+.f-pad { fill: var(--pad); }
+.f-glass { fill: #0a0a0a; }
+.f-metal { fill: url(#metal); stroke: var(--metal-edge); stroke-width: 1; }
+.s-pad { fill: none; stroke: var(--pad); }
+.mount { fill: var(--bg); stroke: var(--board-edge); stroke-width: 1.5; }
+.tex { opacity: .45; pointer-events: none; }
+:root[data-theme="dark"] .tex .f-dark { fill: var(--silk-muted); }
+.nohit { pointer-events: none; }
+
+.net { pointer-events: none; }
+.trace { fill: none; stroke: var(--trace); stroke-linecap: round; stroke-linejoin: round; transition: stroke .2s ease; }
+.sig { fill: none; stroke: var(--live); stroke-linecap: round; stroke-dasharray: 6 44; opacity: 0; }
+.net.hot .trace { stroke: var(--live-soft); }
+.net.hot .sig { opacity: 1; animation: run 1.2s linear infinite; }
+.net.boot .sig { opacity: 1; animation: run 1s linear 1; }
+@keyframes run { from { stroke-dashoffset: 50; } to { stroke-dashoffset: 0; } }
+
+.part, .switch { cursor: pointer; outline: none; }
+.part .outline, .switch .outline { fill: transparent; stroke: transparent; stroke-width: 1.5; transition: stroke .2s ease; }
+.part:hover .outline, .part.hot .outline, .switch:hover .outline { stroke: var(--line-strong); }
+.part:focus-visible .outline, .switch:focus-visible .outline { stroke: var(--live); stroke-width: 2; }
+.part .lift { transition: transform .25s var(--ease); }
+.part:not(.nolift):hover .lift, .part:not(.nolift).hot .lift { transform: translateY(-2px); }
+.switch .knob { transition: transform .22s var(--ease); }
+.switch[aria-checked="false"] .knob { transform: translateX(-26px); }
+@media (forced-colors: active) {
+  .part:focus-visible, .switch:focus-visible { outline: 2px solid Highlight; outline-offset: 2px; }
+  .part .outline, .switch .outline { transition: none; }
+}
+
+.label { font: 500 16px var(--font); fill: var(--silk); }
+.label-sub { font: 400 13px var(--font); fill: var(--silk-muted); }
+.silk { font: 400 10.5px var(--mono); fill: var(--silk-muted); letter-spacing: .04em; }
+.on-part { fill: var(--part-ink); }
+.on-part-muted { fill: var(--part-muted); }
+.pin .hit, .leds .hit { fill: transparent; }
+.pin:hover .label { text-decoration: underline; }
+
+/* small live details: they move only while their part is hovered, focused or open */
+.cursor { fill: var(--live); animation: blink 1.1s steps(2, jump-none) infinite; }
+@keyframes blink { 50% { opacity: 0; } }
+.logo-tile { fill: #ffffff; }
+.xlogo { clip-path: inset(0 round 5px); }
+.xlogo-edge { fill: none; stroke: var(--part-edge-soft, rgba(128, 128, 128, .35)); stroke-width: 1; }
+.coin { fill: var(--pad); }
+.coin-ring { fill: none; stroke: rgba(0, 0, 0, .22); stroke-width: 1.5; }
+.coin-star { fill: rgba(0, 0, 0, .34); }
+.dot { fill: #5a5a58; transition: fill .2s ease; }
+.dot.on { fill: #fff; }
+.ledc { opacity: .16; transition: opacity .18s ease; }
+.ledg { opacity: 0; transition: opacity .18s ease; }
+.lit.ledc { opacity: 1; }
+.lit.ledg { opacity: .2; }
+.pulse.ledc { animation: blink .3s steps(2, jump-none) infinite; opacity: 1; }
+.pulse.ledg { opacity: .2; }
+
+/* a section is open, or the board is switched off: everything on the board holds still */
+.board.paused .sig, .board.paused .cursor { animation-play-state: paused; }
+.board.off .sig { animation: none; opacity: 0; }
+.board.off .cursor { animation: none; opacity: .18; }
+.board.off .net.hot .trace { stroke: var(--trace); }
+.board.off .dot.on { fill: #5a5a58; }
+.screen { width: 100%; height: 100%; border-radius: 10px; overflow: hidden; background: #000; position: relative; }
+.screen video, .screen img { width: 100%; height: 100%; object-fit: cover; display: block; transition: opacity .4s ease; }
+.screen__cap {
+  position: absolute; left: 0; right: 0; bottom: 0; padding: 22px 11px 9px; color: #fff; font: 500 12.5px/1.25 var(--font);
+  background: linear-gradient(to top, rgba(0, 0, 0, .78), transparent);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.screen__boot { position: absolute; inset: 0; display: grid; place-content: center; gap: 4px; text-align: center; background: #000; color: #d8d8d4; font: 11px/1.4 var(--mono); opacity: 0; pointer-events: none; transition: opacity .35s ease; }
+.screen__boot b { font: 500 15px var(--font); color: #fff; letter-spacing: -0.01em; }
+.screen.booting .screen__boot { opacity: 1; }
+.board.off .screen video, .board.off .screen img, .board.off .screen__cap { opacity: 0; }
+
+/* hover preview */
+.peek {
+  position: absolute; left: 0; top: 0; z-index: 5; pointer-events: none; width: max-content; max-width: 300px; padding: 10px 12px 11px; border-radius: 12px;
+  background: var(--inverse); color: var(--inverse-ink); box-shadow: 0 10px 28px rgba(0, 0, 0, .2);
+  opacity: 0; transition: opacity .15s ease;
+}
+.peek.on { opacity: 1; }
+.peek b { display: block; font-weight: 500; font-size: 14px; line-height: 1.3; }
+.peek span { display: block; margin-top: 2px; font-size: 13px; line-height: 1.35; opacity: .75; }
+
+/* the same sections as plain buttons: a row of names on a desktop, a full list on a phone */
+.partlist { justify-content: center; gap: 6px; margin: 14px 0 36px; }
+.partlist .chip { height: 38px; padding-inline: 13px; font-size: 14.5px; }
+.partlist .chip span { display: none; }
+@media (min-width: 721px) and (max-width: 1200px) { .partlist { gap: 4px; } .partlist .chip { height: 34px; padding-inline: 9px; font-size: 13.5px; } }
+@media (min-width: 721px) and (max-height: 780px) { .partlist { margin-bottom: 20px; } }
+
+/* the section sheet */
+.scrim { position: fixed; inset: 0; background: rgba(10, 10, 10, .28); z-index: 20; animation: fade .2s ease; }
+.sheet {
+  position: fixed; top: 12px; right: 12px; bottom: 12px; width: min(720px, calc(100vw - 24px)); z-index: 21;
+  background: var(--raised); border-radius: var(--r-xl); border: 1px solid var(--line); box-shadow: var(--shadow);
+  overflow-y: auto; overscroll-behavior: contain; animation: slide .32s var(--ease);
+}
+:root[data-theme="dark"] .sheet { --surface: #1f1f1e; --surface-2: #2a2a28; }
+@keyframes slide { from { transform: translateX(24px); opacity: 0; } }
+@keyframes fade { from { opacity: 0; } }
+.sheet__in { padding: 28px 32px 40px; display: grid; gap: 24px; }
+.sheet__head { padding-right: 56px; }
+.sheet__head h2 { font-weight: 500; font-size: clamp(28px, 4vw, 40px); letter-spacing: -0.03em; line-height: 1.05; text-wrap: balance; }
+.sheet__head p { margin-top: 8px; color: var(--muted); font-size: 16px; line-height: 1.5; max-width: 54ch; }
+.sheet__logo { display: block; width: max-content; height: 48px; padding: 7px 10px; margin-bottom: 14px; border-radius: 10px; background: #fff; border: 1px solid var(--line); }
+.sheet__logo img { display: block; height: 100%; width: auto; max-width: 150px; object-fit: contain; }
+.close { position: sticky; top: 16px; z-index: 2; margin: 28px 32px -68px auto; width: 40px; height: 40px; border-radius: 999px; border: 1px solid var(--line); background: var(--raised); color: var(--ink); cursor: pointer; display: grid; place-items: center; transition: border-color .15s ease; }
+.close:hover { border-color: var(--line-strong); }
+.sheet .cards > * { grid-column: span 6; }
+.sheet .pcard__title { font-size: 17px; }
+.sheet .pcard__line { font-size: 14.5px; }
+.roles { display: grid; }
+.role { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 16px; padding-block: 18px; scroll-margin-top: 16px; }
+.role + .role { border-top: 1px solid var(--line); }
+.role h3 { transition: color .6s ease; }
+.role.flash h3 { color: var(--live); }
+.role h3 { display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 500; letter-spacing: -0.01em; }
+.role h3 img { flex: none; width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--line); }
+.role .when { font: 13px/1.7 var(--mono); color: var(--muted); white-space: nowrap; text-align: right; }
+.role .what { grid-column: 1 / -1; color: var(--ink-2); }
+.role ul { grid-column: 1 / -1; margin: 8px 0 0; padding-left: 18px; display: grid; gap: 6px; list-style: disc; color: var(--ink-2); font-size: 15px; line-height: 1.5; }
+.role li::marker { color: var(--muted); }
+.row-btns { display: flex; flex-wrap: wrap; gap: 8px; }
+.me { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 18px; align-items: center; }
+.me img { width: 96px; height: 96px; border-radius: 22px; object-fit: cover; }
+.me p { font-size: 17px; line-height: 1.5; color: var(--ink-2); }
+.said { display: grid; gap: 12px; font-size: 16.5px; line-height: 1.6; color: var(--ink-2); }
+.said ul { display: grid; gap: 8px; padding-left: 20px; margin: 0; list-style: disc; }
+.mediagrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-items: start; }
+.mediagrid > .frame { width: 100%; max-height: 440px; }
+.mediagrid > .frame > img, .mediagrid > .frame > video { width: 100%; height: 100%; object-fit: cover; }
+.mediagrid > .frame--paper > img { object-fit: contain; }
+.mediagrid > :first-child:nth-last-child(odd) { grid-column: 1 / -1; }
+.groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.group { display: grid; gap: 12px; align-content: start; padding: 18px; border-radius: 16px; background: var(--surface); }
+.group h3 { font-size: 16px; font-weight: 500; }
+.sh-terms { display: grid; gap: 12px; }
+.sh-term { display: grid; gap: 12px; padding: 18px; border-radius: 16px; background: var(--surface); }
+.sh-term h3 { font-size: 16px; font-weight: 500; }
+.sh-term h3 span { margin-left: 10px; font-weight: 400; font-size: 13.5px; color: var(--muted); }
+.sh-term ul { display: grid; gap: 9px; margin: 0; padding: 0; list-style: none; }
+.sh-term li { display: grid; grid-template-columns: 84px minmax(0, 1fr); gap: 12px; align-items: baseline; font-size: 15.5px; line-height: 1.4; color: var(--ink-2); }
+.sh-term code { font: 13px/1.6 var(--mono); color: var(--muted); white-space: nowrap; }
+.sh-year { display: grid; grid-template-columns: 56px minmax(0, 1fr); gap: 0 16px; }
+.sh-year + .sh-year { border-top: 1px solid var(--line); }
+.sh-year > h3 { padding-top: 17px; font: 13px/1.7 var(--mono); font-weight: 400; color: var(--muted); }
+.sh-award { padding-block: 15px; }
+.sh-award + .sh-award { border-top: 1px solid var(--line); }
+.sh-award h4 { font-size: 17px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; text-wrap: balance; }
+.sh-award .by { margin-top: 3px; font-size: 14px; line-height: 1.45; color: var(--muted); }
+.sh-award p { margin-top: 7px; font-size: 15px; line-height: 1.5; color: var(--ink-2); }
+.sh-award .link { display: inline-block; margin-top: 7px; font-size: 15px; }
+.sh-keep { white-space: nowrap; }
+.sh-unit { display: inline-block; max-width: 100%; }
+.mail { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 12px 12px 12px 16px; border-radius: 14px; background: var(--surface); font: 15px var(--mono); overflow-wrap: anywhere; }
+.also { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; border-radius: 16px; background: var(--surface); font-size: 15px; color: var(--ink-2); }
+
+@media (max-width: 720px) {
+  .stage { max-width: none; }
+  .opener { padding-block: 4px 12px; }
+  .partlist { display: grid; gap: 8px; margin: 16px 0 40px; }
+  .partlist .chip { width: 100%; height: auto; min-height: 58px; padding: 10px 16px; border-radius: 16px; display: grid; justify-items: start; align-content: center; gap: 2px; text-align: left; white-space: normal; font-size: 16px; }
+  .partlist .chip span { display: block; font-weight: 400; font-size: 13.5px; line-height: 1.35; color: var(--muted); }
+  .sheet { top: auto; left: 8px; right: 8px; bottom: 8px; width: auto; max-height: 88vh; max-height: 88dvh; border-radius: 20px; }
+  .sheet__in { padding: 22px 18px 32px; }
+  .close { top: 12px; margin: 22px 18px -62px auto; }
+  .sheet .cards > * { grid-column: 1 / -1; }
+  .groups, .mediagrid { grid-template-columns: minmax(0, 1fr); }
+  .me { grid-template-columns: 72px minmax(0, 1fr); }
+  .me img { width: 72px; height: 72px; border-radius: 18px; }
+  .role { grid-template-columns: minmax(0, 1fr); }
+  .role .when { text-align: left; }
+  .sh-year { grid-template-columns: minmax(0, 1fr); }
+  .sh-year > h3 { padding-top: 16px; }
+  .sh-year > h3 + div > .sh-award:first-child { padding-top: 6px; }
+  .sh-term li { grid-template-columns: 78px minmax(0, 1fr); }
+}
+/* a phone is narrower than one role with its machine: the line flows as plain text again */
+@media (max-width: 480px) {
+  .sh-unit { display: inline; }
+  .sh-unit:last-child { display: inline-block; }   /* the last unit never leaves one word alone on a line */
+}
+@media (max-width: 360px) {
+  .sh-term li { grid-template-columns: minmax(0, 1fr); gap: 0; }
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#partlist">Skip to the list of sections</a>
+<div class="wrap">
+  <header class="top">
+    <div class="who">
+      <a class="who__name" href="index.html">Deniz Gursoy</a>
+      <span class="who__line"><span class="nw">Electrical Engineering at UPenn ·</span> <span class="nw">Hardware Design, Robotics, and Embedded Systems</span></span>
+    </div>
+    <nav class="actions" aria-label="Site">
+      <div class="seg" role="group" aria-label="View"><a href="index.html" aria-current="page">Board</a><a href="list.html">List</a></div>
+      <a class="btn" id="resume-top" href="resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+      <button class="btn icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode">
+        <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>
+        <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+      </button>
+      <a class="btn btn--ink" href="mailto:dcgursoy07@gmail.com">Email me</a>
+    </nav>
+  </header>
+
+  <main>
+    <div class="opener">
+      <h1 class="lead" id="headline">I take hardware from schematic to working system: boards, firmware and controls.</h1>
+      <p class="hint"><span class="hint--fine">Each part of this board opens a section. Hover to preview, click to open.</span><span class="hint--touch">Tap a part of the board, or a section below.</span></p>
+    </div>
+    <div class="stage" id="stage">
+      <svg class="board" id="board" viewBox="0 0 1200 762" role="group" aria-label="Circuit board. Each part is a button that opens a section of the portfolio."></svg>
+      <div class="peek" id="peek" aria-hidden="true"></div>
+    </div>
+    <ul class="chips partlist" id="partlist" aria-label="Sections"></ul>
+    <noscript><p class="hint">This page needs JavaScript. The same content is in the <a href="list.html">list view</a>.</p></noscript>
+  </main>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-h" hidden>
+  <button class="close" type="button" data-close aria-label="Close"><svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M2 2l10 10M12 2 2 12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+  <div class="sheet__in" id="sheet-in"></div>
+</aside>
+
+<script src="data/site.js"></script>
+<script src="js/site.js"></script>
+<script src="js/ask.js"></script>
+<script>
+(() => {
+  const S = window.SITE, P = S.profile;
+  const NS = 'http://www.w3.org/2000/svg';
+  const svg = document.getElementById('board'), stage = document.getElementById('stage'), peek = document.getElementById('peek');
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const canHover = matchMedia('(hover: hover)').matches;
+  const small = matchMedia('(max-width: 720px)').matches;
+  const el = (tag, attrs = {}, parent) => { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); if (parent) parent.appendChild(n); return n; };
+  const txt = (parent, x, y, s, cls, anchor = 'start', extra = {}) => Object.assign(el('text', { x, y, class: cls, 'text-anchor': anchor, ...extra }, parent), { textContent: s });
+  const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const byId = (list, id) => list.find(x => x.id === id);
+
+  document.getElementById('resume-top').href = P.resume.href;
+  document.getElementById('headline').textContent = P.headline;
+
+  /* ── board ───────────────────────────────────────────────────────────── */
+  const defs = el('defs', {}, svg);
+  const sh = el('filter', { id: 'soft', x: '-10%', y: '-10%', width: '120%', height: '130%' }, defs);
+  el('feDropShadow', { dx: 0, dy: 10, stdDeviation: 16, 'flood-color': '#000', 'flood-opacity': '.07' }, sh);
+  const ps = el('filter', { id: 'partshadow', x: '-20%', y: '-20%', width: '140%', height: '150%' }, defs);
+  el('feDropShadow', { dx: 0, dy: 3, stdDeviation: 3, 'flood-color': '#000', 'flood-opacity': '.2' }, ps);
+  const gl = el('linearGradient', { id: 'sheen', x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
+  el('stop', { offset: '0', 'stop-color': '#fff', 'stop-opacity': '.10' }, gl);
+  el('stop', { offset: '.5', 'stop-color': '#fff', 'stop-opacity': '0' }, gl);
+  const metal = el('linearGradient', { id: 'metal', x1: 0, y1: 0, x2: 0, y2: 1 }, defs);
+  el('stop', { offset: '0', style: 'stop-color: var(--metal-a)' }, metal);
+  el('stop', { offset: '1', style: 'stop-color: var(--metal-b)' }, metal);
+
+  el('rect', { x: 40, y: 36, width: 1120, height: 664, rx: 28, class: 'pcb', filter: 'url(#soft)' }, svg);
+  for (const [x, y] of [[64, 60], [1136, 60], [64, 676], [1136, 676]]) el('circle', { cx: x, cy: y, r: 7, class: 'mount' }, svg);
+  const L = { traces: el('g', {}, svg), tex: el('g', { class: 'tex' }, svg), parts: el('g', {}, svg), top: el('g', { class: 'nohit' }, svg) };
+
+  /* ── traces: right-angle routes with 45-degree corners ───────────────── */
+  function route(pts, c = 12) {
+    let d = `M${pts[0][0]},${pts[0][1]}`;
+    for (let i = 1; i < pts.length - 1; i++) {
+      const [px, py] = pts[i - 1], [x, y] = pts[i], [nx, ny] = pts[i + 1];
+      const a = Math.hypot(x - px, y - py), b = Math.hypot(nx - x, ny - y), k = Math.min(c, a / 2, b / 2);
+      d += `L${x - (x - px) / a * k},${y - (y - py) / a * k}L${x + (nx - x) / b * k},${y + (ny - y) / b * k}`;
+    }
+    const e = pts[pts.length - 1];
+    return d + `L${e[0]},${e[1]}`;
+  }
+  const nets = {};
+  function net(id, list, w = 2.5) {
+    const g = nets[id] || el('g', { class: 'net', 'data-net': id }, L.traces);
+    for (const r of list) {
+      const d = route(r.pts, r.c), sw = r.w || w;
+      el('path', { d, class: 'trace', 'stroke-width': sw }, g);
+      el('path', { d, class: 'sig', 'stroke-width': Math.max(2, sw - 0.5) }, g);
+    }
+    nets[id] = g;
+  }
+
+  const M = { x: 520, y: 270, s: 200 };            // the central chip
+  const pin = k => 23 + k * 14;                    // 12 pins a side, pitch 14
+  const top = k => [M.x + pin(k), M.y - 10], bot = k => [M.x + pin(k), M.y + M.s + 10];
+  const lef = k => [M.x - 10, M.y + pin(k)], rig = k => [M.x + M.s + 10, M.y + pin(k)];
+  const EX = 956;                                  // left edge of the Experience header
+
+  net('projects', [0, 1, 2, 3].map(i => ({ pts: [lef(i), [500 - 7 * i, lef(i)[1]], [500 - 7 * i, 214 + i * 18], [474, 214 + i * 18]] })));
+  net('experience', [0, 1, 2, 3, 4, 5].map(i => ({ pts: [rig(i), [790 + 22 * i, rig(i)[1]], [790 + 22 * i, 127 + 34 * i], [EX + 2, 127 + 34 * i]] })));
+  net('ask', [4, 5, 6, 7].map((k, i) => ({ pts: [top(k), [top(k)[0], 216], [596 + 16 * i, 200], [596 + 16 * i, 174]] })));
+  // teams: two lines each, into the same two pads on the top edge of every module.
+  // The lower pin of a pair turns first, so no two traces ever cross.
+  [['hyperloop', 5], ['adapt', 7], ['ieee', 9]].forEach(([id, k0], n) => net(id, [0, 1].map(i =>
+    ({ pts: [lef(k0 + i), [160 + 128 * n + 16 * i, lef(k0 + i)[1]], [160 + 128 * n + 16 * i, 440]] }))));
+  net('skills', [11, 10, 9].map((k, i) => ({ pts: [bot(k), [bot(k)[0], 486 + 16 * i], [808, 486 + 16 * i]] })));
+  net('coursework', [6, 7].map(k => ({ pts: [rig(k), [952, rig(k)[1]]] })));
+  net('awards', [8, 9].map((k, i) => ({ pts: [rig(k), [938 - 14 * i, rig(k)[1]], [938 - 14 * i, 424 + 12 * i], [1084 - 16 * i, 424 + 12 * i], [1084 - 16 * i, 464]] })));
+  net('resume', [8, 7].map((k, i) => ({ pts: [bot(k), [bot(k)[0], 590 + 14 * i], [954 - 14 * i, 590 + 14 * i], [954 - 14 * i, 640]] })));
+  net('contact', [3, 4, 5, 6].map((k, i) => ({ pts: [bot(k), [bot(k)[0], 611 - 2 * i], [586 + 16 * i, 612], [586 + 16 * i, 638]], c: 0, w: (i === 0 || i === 3) ? 6 : 2.5 })));
+  net('power', [{ pts: [[672, 668], [764, 668]], w: 6 }]);
+
+  /* ── parts ───────────────────────────────────────────────────────────── */
+  const parts = {};
+  function part(id, name, box, o = {}) {
+    const g = el('g', { class: 'part' + (o.nolift ? ' nolift' : ''), tabindex: 0, role: o.role || 'button', 'aria-label': o.aria || `${name}: open`, 'data-part': id }, L.parts);
+    const out = el('rect', { class: 'outline', x: box[0], y: box[1], width: box[2], height: box[3], rx: 14 }, g);
+    parts[id] = { g, out, name, peek: o.peek, side: o.side, act: o.act, href: o.href };
+    return el('g', { class: 'lift' }, g);
+  }
+  const pads = (g, list) => list.forEach(([x, y, w, h]) => el('rect', { x, y, width: w, height: h, rx: 1.5, class: 'f-pad' }, g));
+  const body = (g, x, y, w, h, rx = 10, sheen = true) => {
+    el('rect', { x, y, width: w, height: h, rx, class: 'f-part', filter: 'url(#partshadow)' }, g);
+    if (sheen) el('rect', { x, y, width: w, height: h, rx, fill: 'url(#sheen)' }, g);
+  };
+
+  // About: the central chip, with his name on it
+  {
+    const g = part('about', 'About me', [M.x - 26, M.y - 26, M.s + 52, M.s + 52], { side: 'below',
+      peek: () => ['About me', `${ED.degree}${ED.minor ? `, minor in ${ED.minor.toLowerCase()}` : ''}`] });
+    const pp = [];
+    for (let k = 0; k < 12; k++) { const o = pin(k); pp.push([M.x + o - 2.5, M.y - 10, 5, 10], [M.x + o - 2.5, M.y + M.s, 5, 10], [M.x - 10, M.y + o - 2.5, 10, 5], [M.x + M.s, M.y + o - 2.5, 10, 5]); }
+    pads(g, pp);
+    body(g, M.x, M.y, M.s, M.s, 12);
+    el('circle', { cx: M.x + 22, cy: M.y + 22, r: 5, class: 'f-dark' }, g);
+    txt(g, M.x + 100, M.y + 90, 'Deniz', 'label on-part', 'middle', { style: 'font-size:27px;letter-spacing:-0.02em' });
+    txt(g, M.x + 100, M.y + 123, 'Gursoy', 'label on-part', 'middle', { style: 'font-size:27px;letter-spacing:-0.02em' });
+    txt(g, M.x + 100, M.y + 160, 'About me', 'label on-part', 'middle', { style: 'font-size:15px;font-weight:400;opacity:.82' });
+  }
+
+  // Projects: a display that plays project videos, the real machine first
+  const isClip = p => p && p.hero && p.hero.type === 'video';
+  const listed = (S.display || []).map(s => S.projects.find(p => p.slug === s)).filter(isClip);
+  const clips = (listed.length ? listed : S.projects.filter(isClip)).slice(0, 4)
+    .sort((a, b) => (b.slug === 'hyperloop-tbm') - (a.slug === 'hyperloop-tbm'));
+  const firstImg = S.projects.find(p => p.hero && p.hero.type === 'image');
+  // "latest" = the project started most recently, read from its dates ("Nov 2026 to now", "Jun to Aug 2025")
+  const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+  const started = p => { const y = (p.dates.match(/\d{4}/g) || ['0']).pop(), m = MONTHS.findIndex(k => p.dates.toLowerCase().includes(k)); return +y * 12 + Math.max(0, m); };
+  const latest = S.projects.reduce((a, b) => (started(b) > started(a) ? b : a));
+  let video = null, screen = null, dots = [];
+  {
+    const g = part('projects', 'Projects', [90, 80, 386, 268], { nolift: true, side: 'below',
+      peek: () => ['Projects', `${S.projects.length} projects, each with its own page. Latest: ${latest.title}`] });
+    pads(g, [0, 1, 2, 3].map(i => [460, 209 + i * 18, 14, 10]));
+    body(g, 104, 94, 356, 240, 18, false);
+    const fo = el('foreignObject', { x: 118, y: 108, width: 328, height: 184 }, g);
+    screen = document.createElement('div'); screen.className = 'screen';
+    if (clips.length && !small) {
+      video = document.createElement('video');
+      Object.assign(video, { muted: true, playsInline: true, preload: 'auto' });
+      video.setAttribute('muted', ''); video.setAttribute('playsinline', ''); video.setAttribute('aria-hidden', 'true'); video.tabIndex = -1;
+      screen.appendChild(video);
+    } else {
+      const still = clips[0] ? clips[0].hero.poster : (firstImg ? firstImg.hero.src : '');
+      if (still) { const im = document.createElement('img'); im.src = still; im.alt = ''; screen.appendChild(im); }
+    }
+    const cap = document.createElement('div'); cap.className = 'screen__cap'; screen.appendChild(cap);
+    const bootEl = document.createElement('div'); bootEl.className = 'screen__boot'; bootEl.innerHTML = '<b>Deniz Gursoy</b><span>starting up</span>'; screen.appendChild(bootEl);
+    fo.appendChild(screen);
+    let ci = -1;
+    const next = () => {
+      if (!video) { cap.textContent = clips[0] ? clips[0].title : (firstImg ? firstImg.title : ''); return; }
+      ci = (ci + 1) % clips.length;
+      video.poster = clips[ci].hero.poster || ''; video.src = clips[ci].hero.src; cap.textContent = clips[ci].title;
+      dots.forEach((d, i) => d.classList.toggle('on', i === ci));
+      if (!reduce && powered && !current) video.play().catch(() => {});
+    };
+    if (video) video.addEventListener('ended', next);
+    screen.next = next;
+    txt(g, 124, 319, 'Projects', 'label on-part', 'start', { style: 'font-size:17px' });
+    if (video && clips.length > 1) dots = clips.map((c, i) => el('circle', { cx: 262 + 12 * i, cy: 313, r: 3, class: 'dot' }, g));
+    txt(g, 440, 319, `See all ${S.projects.length}`, 'label on-part', 'end', { style: 'font-size:14px;font-weight:400;opacity:.82' });
+  }
+
+  // Ask me anything: a small serial display wired to the chip
+  {
+    const g = part('ask', 'Ask me anything', [522, 64, 196, 122], { side: 'below', aria: 'Ask me anything: open the assistant',
+      peek: () => ['Ask me anything', 'An AI assistant answers questions from this site'], act: from => askOpen(from) });
+    for (let i = 0; i < 4; i++) el('rect', { x: 591 + 16 * i, y: 158, width: 10, height: 16, rx: 2, class: 'f-pad' }, g);
+    body(g, 536, 78, 168, 84, 10, false);
+    el('rect', { x: 544, y: 86, width: 152, height: 44, rx: 6, class: 'f-glass' }, g);
+    txt(g, 554, 113, '> Ask me anything', 'mono', 'start', { style: 'font: 500 12.5px var(--mono); fill: #f1f1ee' });
+    el('rect', { x: 554 + 17 * 7.55 + 4, y: 102, width: 7, height: 14, class: 'cursor' }, g);
+    txt(g, 554, 150, 'AI answers about my work', 'label-sub on-part-muted', 'start', { style: 'font-size:11.5px' });
+  }
+
+  // Experience: a pin header, one pin per role, with the kind of role and the year
+  const X = S.experience;
+  const KIND = { 'Internship': 'Intern', 'Research': 'Research', 'Summer program': 'Program' };
+  {
+    const g = part('experience', 'Experience', [EX - 16, 76, 216, 256], { side: 'left',
+      peek: () => ['Experience', `${X.length} roles, ${X[X.length - 1].year} to ${X[0].year}. Most recent: ${X[0].org}`] });
+    txt(g, EX, 98, 'Experience', 'label');
+    el('rect', { x: EX, y: 108, width: 36, height: 208, rx: 7, class: 'f-part', filter: 'url(#partshadow)' }, g);
+    X.forEach((r, i) => {
+      const cy = 127 + 34 * i;
+      const row = el('g', { class: 'pin', 'data-pin': r.id }, g);
+      el('rect', { class: 'hit', x: EX - 8, y: cy - 17, width: 204, height: 34 }, row);
+      el('circle', { cx: EX + 18, cy, r: 8, class: 'f-pad' }, row);
+      el('circle', { cx: EX + 18, cy, r: 3.2, class: 'f-dark' }, row);
+      if (r.logo) {
+        el('image', { href: r.logo, x: EX + 46, y: cy - 12, width: 24, height: 24, preserveAspectRatio: 'xMidYMid slice', class: 'xlogo' }, row);
+        el('rect', { x: EX + 46, y: cy - 12, width: 24, height: 24, rx: 5, class: 'xlogo-edge' }, row);
+      }
+      const tx = EX + (r.logo ? 78 : 48);
+      txt(row, tx, cy - 1, r.short, 'label', 'start', { style: 'font-size:14px' });
+      txt(row, tx, cy + 13, `${KIND[r.kind] || r.kind} · ${r.year}`, 'label-sub mono', 'start', { style: 'font-size:11px' });
+    });
+  }
+
+  // Teams at Penn: three plug-in modules, each carrying its team's own logo
+  const T = id => byId(S.teams, id);
+  const TEAM_SUB = { hyperloop: 'Controls lead', adapt: 'Project co-lead', ieee: 'President, co-chair' };
+  txt(L.top, 188, 420, 'TEAMS AT PENN', 'silk');
+  ['hyperloop', 'adapt', 'ieee'].forEach((id, n) => {
+    const t = T(id), x0 = 104 + 128 * n, y0 = 444, w = 116, h = 88;
+    const g = part(id, t.short, [x0 - 6, 428, 128, 160], { side: 'below', peek: () => [t.short, t.peek] });
+    pads(g, [0, 1].map(i => [x0 + 51 + 16 * i, 432, 10, 14]));
+    body(g, x0, y0, w, h, 10, false);
+    el('rect', { x: x0 + 7, y: y0 + 7, width: w - 14, height: h - 14, rx: 6, class: 'logo-tile' }, g);
+    el('image', { href: t.logo, x: x0 + 15, y: y0 + 14, width: w - 30, height: h - 28, preserveAspectRatio: 'xMidYMid meet', class: 'logo' }, g);
+    txt(g, x0, 557, t.short, 'label', 'start', { style: 'font-size:15px' });
+    txt(g, x0, 575, TEAM_SUB[id], 'label-sub');
+  });
+
+  // Relevant coursework: a memory chip marked with the departments of the courses on it
+  const ED = P.education, COURSES = ED.courses.flatMap(t => t.items);
+  {
+    const depts = [...new Set(COURSES.map(c => c.split(' ')[0]))];
+    const g = part('coursework', 'Coursework', [944, 348, 204, 68], { side: 'left',
+      peek: () => ['Relevant coursework', `${COURSES.length} courses at Penn`] });
+    pads(g, [0, 1].flatMap(i => [[950, 373 + 14 * i, 12, 8], [1130, 373 + 14 * i, 12, 8]]));
+    body(g, 962, 358, 168, 52, 8);
+    el('circle', { cx: 975, cy: 370, r: 3, class: 'f-dark' }, g);
+    txt(g, 1046, 382, 'Coursework', 'label on-part', 'middle', { style: 'font-size:16px' });
+    txt(g, 1046, 399, depts.join(' · '), 'silk', 'middle', { style: 'fill: var(--part-muted)' });
+  }
+
+  // Skills: a chip marked with the tools he uses
+  {
+    const first = n => (S.skills[n] ? S.skills[n].items : []);
+    const SHORT = { 'C++17': 'C++', 'Altium Designer': 'Altium', 'Siemens S7-1200 PLC': 'PLCs', 'Siemens TIA Portal': 'PLCs', 'TIA Portal': 'PLCs', 'Raspberry Pi Pico': 'Pico', 'Stable-Baselines3': 'SB3', 'SystemVerilog': 'Verilog', 'Zephyr RTOS': 'Zephyr' };
+    const mark = a => { const m = [...new Set(a.filter(Boolean).map(s => SHORT[s] || s))].filter(s => s.length <= 8); while (m.join(' · ').length > 22) m.pop(); return m.join(' · ').toUpperCase(); };
+    const g = part('skills', 'Skills', [804, 444, 202, 138], { side: 'below',
+      peek: () => ['Skills', S.skills.map((s, i) => (i ? s.group.toLowerCase() : s.group)).join(', ')] });
+    pads(g, [0, 1, 2].flatMap(i => [[808, 482 + 16 * i, 12, 8], [990, 482 + 16 * i, 12, 8]]));
+    body(g, 820, 452, 170, 122, 10);
+    el('circle', { cx: 836, cy: 468, r: 4, class: 'f-dark' }, g);
+    txt(g, 905, 502, 'Skills', 'label on-part', 'middle', { style: 'font-size:19px' });
+    txt(g, 905, 526, mark(first(0).slice(0, 4)), 'silk', 'middle', { style: 'fill: var(--part-muted)' });
+    txt(g, 905, 543, mark([first(1)[0], first(2)[0], first(3)[0]]), 'silk', 'middle', { style: 'fill: var(--part-muted)' });
+  }
+
+  // Awards: a gold medal held in a coin-cell clip
+  const A = S.awards || [];
+  {
+    const cx = 1076, cy = 508;
+    const g = part('awards', 'Awards', [1022, 452, 110, 144], { side: 'below',
+      peek: () => ['Awards', A.length ? `${A.length} awards and honors, ${A[A.length - 1].year} to ${A[0].year}` : ''] });
+    pads(g, [[1063, 460, 10, 14], [1079, 460, 10, 14]]);
+    for (const x of [1030, 1110]) el('rect', { x, y: cy - 9, width: 12, height: 18, rx: 3, class: 'f-metal' }, g);
+    el('circle', { cx, cy, r: 38, class: 'f-metal', filter: 'url(#partshadow)' }, g);
+    el('circle', { cx, cy, r: 31, class: 'coin' }, g);
+    el('circle', { cx, cy, r: 25, class: 'coin-ring' }, g);
+    const star = Array.from({ length: 10 }, (_, i) => { const r = i % 2 ? 6 : 14, a = -Math.PI / 2 + i * Math.PI / 5; return `${(cx + r * Math.cos(a)).toFixed(1)},${(cy + r * Math.sin(a)).toFixed(1)}`; }).join(' ');
+    el('polygon', { points: star, class: 'coin-star' }, g);
+    txt(g, cx, 568, 'Awards', 'label', 'middle');
+    txt(g, cx, 586, A.length ? `${A.length} since ${A[A.length - 1].year}` : '', 'label-sub', 'middle');
+  }
+
+  // Contact: a USB-C port on the board edge
+  {
+    const g = part('contact', 'Contact', [540, 624, 160, 132], { peek: () => ['Contact', P.email] });
+    pads(g, [0, 1, 2, 3].map(i => [582 + 16 * i, 634, 8, 14]));
+    el('rect', { x: 570, y: 648, width: 100, height: 58, rx: 14, class: 'f-metal', filter: 'url(#partshadow)' }, g);
+    el('rect', { x: 592, y: 670, width: 56, height: 18, rx: 9, class: 'f-glass' }, g);
+    el('rect', { x: 604, y: 677, width: 32, height: 4, rx: 2, class: 'f-pad' }, g);
+    txt(g, 620, 730, 'Contact', 'label', 'middle');
+    txt(g, 620, 748, 'Email, GitHub, LinkedIn', 'label-sub', 'middle');
+  }
+
+  // Power switch and status lights
+  const sw = el('g', { class: 'switch', tabindex: 0, role: 'switch', 'aria-checked': 'true', 'aria-label': 'Board power: switches the board animation off and on' }, L.parts);
+  {
+    el('rect', { class: 'outline', x: 716, y: 632, width: 166, height: 124, rx: 14 }, sw);
+    el('rect', { x: 764, y: 652, width: 72, height: 32, rx: 6, class: 'f-metal', filter: 'url(#partshadow)' }, sw);
+    el('rect', { x: 771, y: 660, width: 58, height: 16, rx: 5, class: 'f-glass' }, sw);
+    const k = el('g', { class: 'knob' }, sw);
+    el('rect', { x: 801, y: 656, width: 26, height: 24, rx: 4, class: 'f-part' }, k);
+    for (const x of [808, 814, 820]) el('path', { d: `M${x},662 V674`, stroke: 'var(--part-muted)', 'stroke-width': 1.5, 'stroke-linecap': 'round' }, k);
+    txt(sw, 772, 646, 'OFF', 'silk');
+    txt(sw, 828, 646, 'ON', 'silk', 'end');
+    txt(sw, 800, 730, 'Power', 'label', 'middle');
+    txt(sw, 800, 748, 'Turns the board off and on', 'label-sub', 'middle');
+  }
+
+  // Resume: a memory card in a slot on the board edge, with the PDF on it
+  {
+    const g = part('resume', 'Resume', [893, 622, 108, 134], { role: 'link', aria: 'Resume, a PDF that opens in a new tab', href: P.resume.href,
+      peek: () => ['Resume', 'Opens in a new tab'], act: () => window.open(P.resume.href, '_blank', 'noopener') });
+    pads(g, [[935, 630, 10, 16], [949, 630, 10, 16]]);
+    el('rect', { x: 903, y: 646, width: 88, height: 60, rx: 8, class: 'f-metal', filter: 'url(#partshadow)' }, g);
+    el('path', { d: 'M911,654 H969 L983,668 V706 H911 Z', class: 'f-part', 'stroke-linejoin': 'round' }, g);
+    for (let i = 0; i < 5; i++) el('rect', { x: 917 + 9 * i, y: 659, width: 5, height: 11, rx: 1, class: 'f-pad' }, g);
+    txt(g, 947, 693, 'PDF', 'silk', 'middle', { style: 'fill: var(--part-muted)' });
+    txt(g, 947, 730, 'Resume', 'label', 'middle');
+    txt(g, 947, 748, 'Opens the PDF', 'label-sub', 'middle');
+  }
+
+  const leds = {};
+  const ledg = el('g', { class: 'leds' }, L.parts);
+  el('rect', { class: 'hit', x: 432, y: 648, width: 100, height: 44 }, ledg);
+  [['pwr', '#22c55e', 'PWR'], ['act', '#f59e0b', 'ACT'], ['ai', '#3b82f6', 'AI']].forEach(([id, c, name], i) => {
+    const x = 452 + 30 * i;
+    el('rect', { x: x - 8, y: 660, width: 16, height: 9, rx: 2, class: 'f-pad' }, ledg);
+    const core = el('rect', { x: x - 5, y: 661.5, width: 10, height: 6, rx: 1.5, fill: c, class: 'ledc' }, ledg);
+    const glow = el('circle', { cx: x, cy: 664.5, r: 11, fill: c, class: 'ledg' }, ledg);
+    txt(ledg, x, 685, name, 'silk', 'middle');
+    leds[id] = [core, glow];
+  });
+  const led = (id, cls, on) => leds[id].forEach(n => n.classList.toggle(cls, on));
+  let actTimer = 0;
+  const activity = (ms = 420, blink = false) => {
+    if (!powered) return;
+    led('act', blink ? 'pulse' : 'lit', true); clearTimeout(actTimer);
+    actTimer = setTimeout(() => { led('act', 'lit', false); led('act', 'pulse', false); }, ms);
+  };
+
+  // texture: a few passives, drawn faint so they read as background
+  for (const [x, y, r] of [[236, 632, 0], [352, 628, 0], [1096, 640, 0], [848, 618, 0], [1060, 624, 1]]) {
+    const g = el('g', { transform: `translate(${x},${y}) rotate(${r ? 90 : 0})` }, L.tex);
+    el('rect', { x: -9, y: -3.5, width: 5, height: 7, rx: 1, class: 'f-pad' }, g);
+    el('rect', { x: 4, y: -3.5, width: 5, height: 7, rx: 1, class: 'f-pad' }, g);
+    el('rect', { x: -4.5, y: -3, width: 9, height: 6, rx: 1, class: 'f-dark' }, g);
+  }
+  txt(L.top, 1106, 690, 'DG-01 · REV 3', 'silk', 'end', { style: 'opacity:.7' });
+
+  /* ── section sheets ──────────────────────────────────────────────────── */
+  // `raw`: the sub line is already escaped HTML (a team's line of roles and dates)
+  const head = (h, sub, logo, raw) => `<div class="sheet__head">${logo ? `<span class="sheet__logo"><img src="${esc(logo)}" alt=""></span>` : ''}<h2 id="sheet-h">${esc(h)}</h2>${sub ? `<p>${raw ? sub : esc(sub)}</p>` : ''}</div>`;
+  const ext = 'target="_blank" rel="noopener"';
+  const links = dl => `<div class="row-btns"><a class="btn btn--ink" href="mailto:${esc(P.email)}">Email me</a>` +
+    (dl ? `<a class="btn" href="${esc(P.resume.href)}" download>Download resume (PDF)</a>` : `<a class="btn" href="${esc(P.resume.href)}" ${ext}>Resume</a>`) +
+    `<a class="btn" href="${esc(P.github)}" ${ext}>GitHub</a><a class="btn" href="${esc(P.linkedin)}" ${ext}>LinkedIn</a></div>`;
+  const facts = rows => `<dl class="facts">${rows.map(f => `<div><dt>${esc(f.k)}</dt><dd>${esc(f.v)}</dd></div>`).join('')}</dl>`;
+  const mediaEl = m => m.type === 'video'
+    ? `<div class="frame" style="aspect-ratio:${m.w}/${m.h}"><video src="${esc(m.src)}" poster="${esc(m.poster || '')}" controls muted playsinline preload="none" aria-label="${esc(m.alt)}"></video></div>`
+    : `<div class="frame${m.paper ? ' frame--paper' : ''}" style="aspect-ratio:${m.w}/${m.h}"><img src="${esc(m.src)}"${m.srcset && m.srcset.length ? ` srcset="${m.srcset.map(s => `${esc(s[0])} ${s[1]}w`).join(', ')}" sizes="(max-width: 720px) calc(100vw - 52px), 660px"` : ''} alt="${esc(m.alt)}" loading="lazy"></div>`;
+  const pcard = p => {
+    const h = p.hero;
+    const m = !h ? `<div class="pcard__tile"><b>${esc(p.stat ? p.stat.value : '')}</b><span>${esc(p.stat ? p.stat.label : '')}</span></div>`
+      : h.type === 'video' ? `<video src="${esc(h.src)}" poster="${esc(h.poster || '')}" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>`
+      : `<img src="${esc(h.src)}" alt="" loading="lazy">`;
+    return `<a class="pcard" href="projects/${esc(p.slug)}.html"${h && h.type === 'video' ? ' data-hover-video' : ''}>
+      <div class="pcard__media">${m}</div>
+      <div class="pcard__body"><h3 class="pcard__title">${esc(p.title)}</h3><p class="pcard__line">${esc(p.card)}</p></div>
+      <div class="pcard__meta"><span>${esc(p.kind)}</span><span>${esc(p.dates)}</span></div></a>`;
+  };
+  const hasPage = slug => slug && S.projects.some(q => q.slug === slug);
+  // every "Read the project page" link names its project for screen readers, as the list view does
+  const pageLink = (slug, cls, arrow = '') => `<a class="${cls}" href="projects/${esc(slug)}.html" aria-label="Read the project page: ${esc(S.projects.find(q => q.slug === slug).title)}">Read the project page${arrow}</a>`;
+  // each role and the dates are one wrap unit, so a line ends between two roles and never inside one
+  const teamLine = t => [...t.role.split(', '), .../\b20\d\d\b/.test(t.role) ? [] : [t.dates]].map((s, i, a) => `<span class="sh-unit">${esc(s)}${i < a.length - 1 ? ',' : ''}</span>`).join(' ');
+  const team = id => { const t = T(id); return head(t.short, teamLine(t), t.logo, true) +
+    `<div class="said"><p>${esc(t.summary)}</p>${t.bullets.length ? `<ul>${t.bullets.map(b => `<li>${esc(b)}</li>`).join('')}</ul>` : ''}</div>` +
+    (t.media.length ? `<div class="mediagrid">${t.media.map(mediaEl).join('')}</div>` : '') +
+    (hasPage(t.project) ? `<div class="row-btns">${pageLink(t.project, 'btn', ' <span class="arrow" aria-hidden="true">↗</span>')}</div>` : ''); };
+
+  const sections = {
+    about: () => head(P.name, P.tagline) +
+      `<div class="me"><img src="${esc(P.photo.src)}" alt="${esc(P.photo.alt)}" width="96" height="96"><p>${esc(P.intro[0])}</p></div>` +
+      (P.intro[1] ? `<div class="said"><p>${esc(P.intro[1])}</p></div>` : '') + facts(P.facts) + links(false),
+    projects: () => head('Projects', `${S.projects.length} projects in firmware, robotics, FPGA design and controls. Each one opens its own page.`) +
+      `<div class="cards">${S.projects.map(pcard).join('')}</div>` +
+      `<div class="also"><span>The list view has the same projects with filters.</span><a class="btn btn--sm" href="list.html#projects">Open the list view</a></div>`,
+    experience: () => head('Experience', `Internships and research, ${X[X.length - 1].year} to ${X[0].year}.`) +
+      `<div class="roles">${X.map(r => `<div class="role" id="xp-${esc(r.id)}">
+        <h3>${r.logo ? `<img src="${esc(r.logo)}" alt="" width="34" height="34">` : ''}<span>${esc(r.org)}</span></h3><div class="when">${esc(r.dates)}</div>
+        <div class="what">${esc(r.role)}, ${esc(r.place)}</div>
+        <ul>${r.bullets.map(b => `<li>${esc(b)}</li>`).join('')}${hasPage(r.project) ? `<li>${pageLink(r.project, 'link')}</li>` : ''}${r.link ? `<li><a class="link" href="${esc(r.link.href)}" ${ext}>${esc(r.link.text)}</a></li>` : ''}</ul>
+      </div>`).join('')}</div>`,
+    hyperloop: () => team('hyperloop'),
+    adapt: () => team('adapt'),
+    ieee: () => team('ieee'),
+    coursework: () => head('Relevant coursework', `${ED.degree}${ED.minor ? `, minor in ${ED.minor.toLowerCase()}` : ''}, ${ED.school}.`) +
+      `<div class="sh-terms">${ED.courses.map(t => `<div class="sh-term"><h3>${esc(t.term)}${t.in_progress ? '<span>in progress</span>' : ''}</h3><ul>${t.items.map(c => {
+        const m = c.match(/^(\S+ \S+)\s+(.*)$/);
+        return `<li><code>${esc(m ? m[1] : '')}</code><span>${esc(m ? m[2] : c)}</span></li>`; }).join('')}</ul></div>`).join('')}</div>` +
+      `<div class="also"><span>The projects show where this coursework was put to use.</span><button class="btn btn--sm" type="button" data-open="projects">See the projects</button></div>`,
+    awards: () => {
+      const years = [...new Set(A.map(a => a.year))];
+      // a name such as Not-a-Boring never breaks at its hyphens; the last word of the issuer stays with the date
+      const keepName = s => esc(s).replace(/\w+(?:-\w+){2,}/g, m => `<span class="sh-keep">${m}</span>`);
+      const by = a => { const i = a.issuer.lastIndexOf(' '); return `${esc(a.issuer.slice(0, i + 1))}<span class="sh-keep">${esc(a.issuer.slice(i + 1))} · ${esc(a.date)}</span>`; };
+      return head('Awards', `${A.length} awards and honors, ${years[years.length - 1]} to ${years[0]}.`) +
+        `<div class="sh-years">${years.map(y => `<div class="sh-year"><h3>${esc(y)}</h3><div>${A.filter(a => a.year === y).map(a => `<div class="sh-award">
+          <h4>${keepName(a.title)}</h4><div class="by">${by(a)}</div>${a.note ? `<p>${esc(a.note)}</p>` : ''}
+          ${hasPage(a.project) ? pageLink(a.project, 'link') : ''}</div>`).join('')}</div></div>`).join('')}</div>`;
+    },
+    skills: () => head('Skills', 'The tools I have used in the projects and roles on this site.') +
+      `<div class="groups">${S.skills.map(s => `<div class="group"><h3>${esc(s.group)}</h3><div class="tags">${s.items.map(i => `<span class="tag">${esc(i)}</span>`).join('')}</div></div>`).join('')}</div>`,
+    contact: () => head('Contact', 'Email is the fastest way to reach me about internships and research.') +
+      `<div class="mail"><span>${esc(P.email)}</span><button class="btn btn--sm" type="button" data-copy="${esc(P.email)}">Copy</button></div>` + links(true) +
+      `<div class="also"><span>The assistant can answer quick questions about my work.</span><button class="btn btn--sm" type="button" data-ask>Ask the assistant</button></div>`,
+  };
+
+  /* ── interaction ─────────────────────────────────────────────────────── */
+  const sheet = document.getElementById('sheet'), inner = document.getElementById('sheet-in'), scrim = document.getElementById('scrim');
+  let last = null, current = null, powered = true;
+  const hot = (id, on) => { if (parts[id]) parts[id].g.classList.toggle('hot', on); if (nets[id]) nets[id].classList.toggle('hot', on); };
+  const askOpen = from => { hidePeek(); if (window.Ask) window.Ask.open(from); else open('contact', from); };
+
+  function open(id, from, o = {}) {
+    if (!sections[id]) return;
+    if (window.Ask && window.Ask.isOpen && window.Ask.isOpen()) window.Ask.close();   // one thing open at a time
+    if (current) hot(current, false);
+    if (sheet.hidden) last = from || document.activeElement;
+    current = id;
+    inner.innerHTML = sections[id]();
+    sheet.hidden = false; scrim.hidden = false; sheet.scrollTop = 0;
+    hot(id, true); hidePeek(); activity(900, true);
+    svg.classList.add('paused'); if (video) video.pause();
+    if (window.DG) window.DG.wireHoverVideos(inner);
+    history.replaceState(null, '', '#' + id);
+    sheet.querySelector('[data-close]').focus();
+    if (o.row) { const r = document.getElementById('xp-' + o.row); if (r) { sheet.scrollTop = Math.max(0, r.offsetTop - 16); r.classList.add('flash'); setTimeout(() => r.classList.remove('flash'), 1400); } }
+  }
+  function close() {
+    if (sheet.hidden) return;
+    sheet.hidden = true; scrim.hidden = true; hot(current, false); current = null;
+    svg.classList.remove('paused'); if (video && powered && !reduce) video.play().catch(() => {});
+    history.replaceState(null, '', location.pathname + location.search);
+    if (last && document.contains(last)) last.focus();
+  }
+  // previews sit beside their part, inside the board's edge, and never over the part itself
+  function showPeek(target, pair, side) {
+    if (!pair || (!canHover && !target.closest(':focus-visible'))) return;
+    peek.innerHTML = `<b>${esc(pair[0])}</b><span>${esc(pair[1])}</span>`;
+    peek.style.left = '0px'; peek.style.top = '0px';
+    const st = stage.getBoundingClientRect(), r = target.getBoundingClientRect();
+    const pw = peek.offsetWidth, ph = peek.offsetHeight, gap = 10;
+    const inset = Math.max(0, Math.min(st.width * 40 / 1200 + 8, (st.width - pw) / 2));   // the board edge is 40 units in
+    const cx = Math.max(inset, Math.min(st.width - pw - inset, r.left - st.left + r.width / 2 - pw / 2));
+    let x = cx, y = r.top - st.top - ph - gap;
+    if (side === 'left' && r.left - st.left - pw - gap > inset) { x = r.left - st.left - pw - gap; y = r.top - st.top + r.height / 2 - ph / 2; }
+    else if (side === 'below' || y < 0) y = r.bottom - st.top + gap;
+    peek.style.left = x + 'px'; peek.style.top = y + 'px'; peek.classList.add('on');
+  }
+  function hidePeek() { peek.classList.remove('on'); }
+
+  // A part lights up from focus only when the focus came from the keyboard. A click, a tap, or closing a sheet with
+  // the pointer hands focus back to its part and leaves the board quiet.
+  let byKey = false;
+  addEventListener('keydown', () => { byKey = true; }, true);
+  addEventListener('pointerdown', () => { byKey = false; }, true);
+  for (const id in parts) {
+    const p = parts[id], g = p.g;
+    const act = (from, o) => p.act ? p.act(from) : open(id, from, o);
+    g.addEventListener('pointerenter', () => { hot(id, true); showPeek(p.out, p.peek && p.peek(), p.side); activity(); });
+    g.addEventListener('pointerleave', () => { if (current !== id) hot(id, false); hidePeek(); });
+    g.addEventListener('focus', () => { if (byKey && g.matches(':focus-visible')) { hot(id, true); showPeek(p.out, p.peek && p.peek(), p.side); } });
+    g.addEventListener('blur', () => { if (current !== id) hot(id, false); hidePeek(); });
+    g.addEventListener('click', e => { const row = e.target.closest('[data-pin]'); act(g, row ? { row: row.dataset.pin } : {}); });
+    g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); act(g, {}); } });
+  }
+  // each header pin previews its own role
+  svg.querySelectorAll('.pin').forEach(row => {
+    const r = byId(X, row.dataset.pin);
+    row.addEventListener('pointerenter', () => showPeek(row, [`${r.org}, ${r.dates}`, r.peek || r.role], 'left'));
+    row.addEventListener('pointerleave', () => showPeek(parts.experience.out, parts.experience.peek(), 'left'));
+  });
+  ledg.addEventListener('pointerenter', () => showPeek(ledg.querySelector('.hit'), ['Status lights', 'Power, activity, and the assistant at work']));
+  ledg.addEventListener('pointerleave', hidePeek);
+
+  // the same sections as plain buttons: names on a desktop, names with a line each on a phone
+  const list = document.getElementById('partlist');
+  ['about', 'projects', 'experience', 'hyperloop', 'adapt', 'ieee', 'awards', 'coursework', 'skills', 'ask', 'contact'].forEach(id => {
+    const p = parts[id], li = document.createElement('li');
+    const b = document.createElement(p.href ? 'a' : 'button');
+    b.className = 'chip';
+    b.innerHTML = `${esc(p.name)}<span>${esc(p.peek ? p.peek()[1] : '')}</span>`;
+    if (p.href) { b.href = p.href; b.target = '_blank'; b.rel = 'noopener'; }
+    else { b.type = 'button'; b.addEventListener('click', () => (p.act ? p.act(b) : open(id, b))); }
+    b.addEventListener('pointerenter', () => hot(id, true));
+    b.addEventListener('pointerleave', () => { if (current !== id) hot(id, false); });
+    li.appendChild(b); list.appendChild(li);
+  });
+
+  scrim.addEventListener('click', close);
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') hidePeek();
+    if (sheet.hidden) return;
+    if (e.key === 'Escape' && !(window.Ask && window.Ask.isOpen && window.Ask.isOpen())) return close();
+    if (e.key === 'Tab') {                                   // keep focus inside the open sheet
+      if (window.Ask && window.Ask.isOpen && window.Ask.isOpen()) return;   // the assistant keeps its own focus
+      const f = [...sheet.querySelectorAll('a[href], button, video[controls], [tabindex]:not([tabindex="-1"])')].filter(n => n.offsetParent !== null);
+      if (!f.length) return;
+      const first = f[0], end = f[f.length - 1];
+      if (!sheet.contains(document.activeElement)) { e.preventDefault(); (e.shiftKey ? end : first).focus(); }   // after a click on plain text
+      else if (e.shiftKey && document.activeElement === first) { e.preventDefault(); end.focus(); }
+      else if (!e.shiftKey && document.activeElement === end) { e.preventDefault(); first.focus(); }
+    }
+  });
+  sheet.addEventListener('click', e => {
+    if (e.target.closest('[data-close]')) return close();
+    const a = e.target.closest('[data-ask]');
+    if (a) { const from = last; close(); askOpen(from); }
+    const o = e.target.closest('[data-open]');
+    if (o) open(o.dataset.open, last);
+  });
+
+  /* ── power ───────────────────────────────────────────────────────────── */
+  const bootOrder = ['contact', 'power', 'ask', 'projects', 'experience', 'coursework', 'awards', 'skills', 'resume', 'hyperloop', 'adapt', 'ieee'];
+  let bootTimers = [];
+  // On page load the traces light once, quickly. The full start-up (splash on the display) is for the switch.
+  function boot(full) {
+    bootTimers.forEach(clearTimeout); bootTimers = [];
+    led('pwr', 'lit', true);
+    if (reduce) { screen.next(); return; }
+    if (full) screen.classList.add('booting'); else screen.next();
+    const step = full ? 230 : 110;
+    bootOrder.forEach((id, i) => bootTimers.push(setTimeout(() => {
+      if (!nets[id]) return;
+      nets[id].classList.add('boot'); if (full) activity(180);
+      bootTimers.push(setTimeout(() => nets[id].classList.remove('boot'), 1050));
+    }, 150 + i * step)));
+    if (full) bootTimers.push(setTimeout(() => { screen.classList.remove('booting'); screen.next(); }, 1500));
+  }
+  function setPower(on) {
+    powered = on;
+    svg.classList.toggle('off', !on);
+    sw.setAttribute('aria-checked', String(on));
+    if (on) boot(true);
+    else { bootTimers.forEach(clearTimeout); for (const id in nets) nets[id].classList.remove('boot'); ['pwr', 'act', 'ai'].forEach(id => { led(id, 'lit', false); led(id, 'pulse', false); }); if (video) video.pause(); screen.classList.remove('booting'); }
+  }
+  const toggle = () => { setPower(!powered); swPeek(); };
+  const swPeek = () => showPeek(sw.querySelector('.outline'), ['Power', powered ? 'Switch the board off' : 'Switch the board back on']);
+  sw.addEventListener('click', toggle);
+  sw.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); } });
+  sw.addEventListener('pointerenter', swPeek);
+  sw.addEventListener('pointerleave', hidePeek);
+  sw.addEventListener('focus', () => { if (sw.matches(':focus-visible')) swPeek(); });
+  sw.addEventListener('blur', hidePeek);
+
+  document.addEventListener('ask:busy', e => led('ai', 'pulse', powered && !!e.detail));
+  document.addEventListener('ask:open', () => { hot('ask', true); activity(900, true); if (!current) history.replaceState(null, '', '#ask'); });
+  document.addEventListener('ask:close', () => { hot('ask', false); if (location.hash === '#ask') history.replaceState(null, '', location.pathname + location.search); });
+  document.addEventListener('visibilitychange', () => { if (video && powered && !reduce && !current) (document.hidden ? video.pause() : video.play().catch(() => {})); });
+
+  boot(false);
+  const want = location.hash.slice(1);
+  if (sections[want]) setTimeout(() => open(want, parts[want] ? parts[want].g : null), reduce ? 0 : 300);
+  else if (want === 'ask') setTimeout(() => askOpen(parts.ask.g), 300);
+  // a deep link pasted into a tab that already shows the board. open() and close() use replaceState, which fires no hashchange.
+  addEventListener('hashchange', () => {
+    const w = location.hash.slice(1);
+    if (sections[w]) open(w, parts[w] ? parts[w].g : null);
+    else if (w === 'ask') { close(); askOpen(parts.ask.g); }
+    else if (!w) close();
+  });
+})();
+</script>
+</body>
+</html>

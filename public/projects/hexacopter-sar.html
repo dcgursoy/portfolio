@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hexacopter for synthetic aperture radar imaging · Deniz Gursoy</title>
+<meta name="description" content="A team-built six-rotor drone that carries a PulsON 440 radar. My Python code forms SAR images by backprojection, at a resolution under 10 cm.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Hexacopter for synthetic aperture radar imaging · Deniz Gursoy">
+<meta property="og:description" content="A team-built six-rotor drone that carries a PulsON 440 radar. My Python code forms SAR images by backprojection, at a resolution under 10 cm.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>(function(){var t;try{t=localStorage.getItem('dg-theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@400..600&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/ask.css">
+
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<div class="wrap">
+  <header class="top">
+  <div class="who">
+    <a class="who__name" href="../index.html">Deniz Gursoy</a>
+    <span class="who__line"><span class="nw">Electrical Engineering at UPenn ·</span> <span class="nw">Hardware Design, Robotics, and Embedded Systems</span></span>
+  </div>
+  <nav class="actions" aria-label="Site">
+    <div class="seg" role="group" aria-label="View"><a href="../index.html">Board</a><a href="../list.html">List</a></div>
+    <a class="btn" href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <button class="btn icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <a class="btn btn--ink" href="mailto:dcgursoy07@gmail.com">Email me</a>
+  </nav>
+</header>
+
+
+  <main id="main">
+    <a class="crumb" href="../list.html#projects"><span aria-hidden="true">&larr;</span> All projects</a>
+
+    <div class="proj-top">
+    <header class="proj-head">
+      <p class="eyebrow">Robotics · Hardware build</p>
+      <h1 class="h1">Hexacopter for synthetic aperture radar imaging</h1>
+      <p class="lead">With a team at Syracuse University&#39;s College of Engineering in summer 2025, I built a hexacopter that carries a PulsON 440 ultra-wideband radar, a Pixhawk flight stack and a Raspberry Pi.</p>
+      <dl class="proj-meta">
+        <div><dt class="sr-only">Dates</dt><dd><b>Jun to Aug 2025</b></dd></div>
+        <div><dt class="sr-only">Context</dt><dd>Syracuse University College of Engineering</dd></div>
+        <div><dt class="sr-only">Role</dt><dd>Team project: radar integration, powertrain and SAR processing</dd></div>
+        <div><dt class="sr-only">Status</dt><dd><span class="status status--live">Finished</span></dd></div>
+      </dl>
+    </header>
+
+    <figure class="frame proj-hero" style="--ar:1600/1000;--arn:1.6000;--w:1600">
+<a href="../media/p/hexacopter-sar/airframe-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: The hexacopter standing on a chair&#39;s fold-out desk: six motors on red, white and black arms, with two green antenna boards hanging below the frame."><img src="../media/p/hexacopter-sar/airframe-1600.webp" srcset="../media/p/hexacopter-sar/airframe-800.webp 800w, ../media/p/hexacopter-sar/airframe-1600.webp 1600w" sizes="(max-width: 1248px) 100vw, 1152px" width="1600" height="1000" alt="The hexacopter standing on a chair&#39;s fold-out desk: six motors on red, white and black arms, with two green antenna boards hanging below the frame." decoding="async"></a>    </figure>
+    </div>
+
+    <section class="stats-band" aria-label="Key numbers">
+      <div class="stats">
+<div class="stat"><b>&lt; 10 cm</b><span>SAR image resolution</span></div><div class="stat"><b>40%</b><span>drop in image reconstruction latency</span></div><div class="stat"><b>20%</b><span>gain in flight stability during autonomous data collection</span></div>      </div>
+    </section>
+
+    <div class="proj-body" style="--aside-rows:3">
+      <div class="proj-main">
+        <div class="prose proj-more"><p>I wrote the Python that forms radar images by backprojection with motion compensation, and the images reached a resolution under 10 cm.</p></div>
+        <section aria-labelledby="s-problem">
+          <h2 class="h2" id="s-problem">The problem</h2>
+          <div class="prose">
+<p>A radar small enough for a drone has a small antenna, so one pulse gives range and almost no sideways detail. Synthetic aperture radar (SAR) recovers that detail from motion: the radar records pulses along a flight path, and software combines them as if one long antenna had taken them.</p><p>That only works if the radar&#39;s position at every pulse is known to a fraction of a wavelength. The PulsON 440 transmits from 3.1 to 4.8 GHz, where a wavelength is about 6 to 10 cm. Its low transmit power limits radar range to a few tens of meters, so the aircraft has to fly close to the scene.</p><p>Wobble or drift on the scale of a wavelength smears the image, so the result depends on how steadily the aircraft flies and how well the software corrects for where it really was.</p>          </div>
+        </section>
+        <section aria-labelledby="s-built">
+          <h2 class="h2" id="s-built">What I built</h2>
+          <div class="prose">
+<p>I built this with a team in summer 2025 at Syracuse University&#39;s College of Engineering. My parts were the radar integration, the powertrain and the image processing.</p><p>The aircraft is a hexacopter on an F550 frame. A Pixhawk flight stack flies it autonomously during data collection, and a Raspberry Pi is the onboard computer. In radar mode the PulsON 440 transmits on one antenna and receives on a second. The photos show two green antenna boards hanging below the frame.</p><p>I integrated the radar with the Pixhawk and the Pi, and tuned the powertrain so the aircraft flew more steadily during autonomous data collection.</p><p>The processing is Python. Backprojection builds the image pixel by pixel: for each pixel it works out the round-trip distance to every radar position, picks the matching sample from each pulse and adds them up. Echoes from a real reflector add in phase and the rest averages toward zero.</p><p>Motion compensation corrects each pulse for the aircraft&#39;s actual position. The whole computation scales with pixels times pulses, so reconstruction time is worth tracking.</p>          </div>
+        </section>
+        <section aria-labelledby="s-results" class="has-figs">
+          <h2 class="h2" id="s-results">Results</h2>
+          <div class="prose">
+<p>The SAR images reached a resolution under 10 cm, and image reconstruction latency fell by 40%. After the powertrain changes, flight stability during autonomous data collection improved by 20%.</p><p>The photos, taken on August 1, 2025, show the aircraft on the bench and inside a netted indoor flight area.</p>          </div>
+          <div class="figs">
+            <div class="figrow figrow--pair" style="--cols:minmax(0, 1319fr) minmax(0, 1250fr);--rw:1152px">
+              <figure class="fig" style="--ar:1600/1213;--cap:844px">
+                <div class="frame">
+<a href="../media/p/hexacopter-sar/bench-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: The hexacopter seen from above on a white table beside a laptop, with carbon-fiber propellers and five gray spheres on its top plate. A seated person is partly in frame."><img src="../media/p/hexacopter-sar/bench-1600.webp" srcset="../media/p/hexacopter-sar/bench-800.webp 800w, ../media/p/hexacopter-sar/bench-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 583px" width="1600" height="1213" alt="The hexacopter seen from above on a white table beside a laptop, with carbon-fiber propellers and five gray spheres on its top plate. A seated person is partly in frame." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+              <figure class="fig" style="--ar:1500/1200;--cap:800px">
+                <div class="frame">
+<a href="../media/p/hexacopter-sar/hub-1500.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Close-up of the center plates, marked F550: wiring, gray spheres on posts, one green antenna board and a lit green LED in the black box under the frame."><img src="../media/p/hexacopter-sar/hub-1500.webp" srcset="../media/p/hexacopter-sar/hub-800.webp 800w, ../media/p/hexacopter-sar/hub-1500.webp 1500w" sizes="(max-width: 720px) 100vw, 553px" width="1500" height="1200" alt="Close-up of the center plates, marked F550: wiring, gray spheres on posts, one green antenna board and a lit green LED in the black box under the frame." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow" style="--cols:minmax(0, 1333fr);--rw:693px">
+              <figure class="fig" style="--ar:1600/1200;--cap:693px">
+                <div class="frame">
+<a href="../media/p/hexacopter-sar/cage-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: The hexacopter sitting on a foam pad on a cart inside an indoor flight area, photographed through black safety netting."><img src="../media/p/hexacopter-sar/cage-1600.webp" srcset="../media/p/hexacopter-sar/cage-800.webp 800w, ../media/p/hexacopter-sar/cage-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 693px" width="1600" height="1200" alt="The hexacopter sitting on a foam pad on a cart inside an indoor flight area, photographed through black safety netting." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+          </div>
+        </section>
+        <section aria-labelledby="s-limits">
+          <h2 class="h2" id="s-limits">Limits and next steps</h2>
+          <div class="prose">
+<p>I have no radar images, flight logs or code published from this project, so the figures above come without their test conditions.</p><p>The airframe is a standard F550 frame. A radar image of a known target, with the conditions behind each figure, would make the results checkable.</p>          </div>
+        </section>
+      </div>
+
+      <aside class="proj-aside" aria-labelledby="built-h">
+        <div class="proj-aside__in">
+          <h2 id="built-h">Built with</h2>
+          <ul class="tags"><li class="tag">PulsON 440 UWB radar</li><li class="tag">Pixhawk</li><li class="tag">Raspberry Pi</li><li class="tag">Python</li><li class="tag">SAR backprojection</li></ul>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="proj-nav" aria-label="More projects">
+      <a href="naviglass.html"><span><span aria-hidden="true">&larr;</span> Previous project</span><b>NaviGlass: head-worn object alerts on a Raspberry Pi 4</b></a>
+      <a href="expense-tracker.html"><span>Next project <span aria-hidden="true">&rarr;</span></span><b>MERN expense tracker with rule-based analytics</b></a>
+    </nav>
+  </main>
+
+  <footer class="foot">
+  <span>Deniz Gursoy · B.S.E. in electrical engineering, Penn, class of 2028</span>
+  <nav aria-label="Footer">
+    <a href="../index.html">Board</a>
+    <a href="../list.html#projects">Projects</a>
+    <a href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <a href="https://github.com/dcgursoy" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/dgursoy/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:dcgursoy07@gmail.com">dcgursoy07@gmail.com</a>
+  </nav>
+</footer>
+
+</div>
+<button class="ask-fab" type="button" data-ask-open><span aria-hidden="true">&gt;_</span> Ask me anything</button>
+<script src="../data/site.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/ask.js"></script>
+
+</body>
+</html>

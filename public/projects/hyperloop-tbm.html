@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Autonomous tunnel boring machine controls · Deniz Gursoy</title>
+<meta name="description" content="PLC logic, three drives and 480 V power for Penn Hyperloop&#39;s 1,000-lb boring machine. We placed second at the 2026 Not-a-Boring Competition.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Autonomous tunnel boring machine controls · Deniz Gursoy">
+<meta property="og:description" content="PLC logic, three drives and 480 V power for Penn Hyperloop&#39;s 1,000-lb boring machine. We placed second at the 2026 Not-a-Boring Competition.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>(function(){var t;try{t=localStorage.getItem('dg-theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@400..600&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/ask.css">
+
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<div class="wrap">
+  <header class="top">
+  <div class="who">
+    <a class="who__name" href="../index.html">Deniz Gursoy</a>
+    <span class="who__line"><span class="nw">Electrical Engineering at UPenn ·</span> <span class="nw">Hardware Design, Robotics, and Embedded Systems</span></span>
+  </div>
+  <nav class="actions" aria-label="Site">
+    <div class="seg" role="group" aria-label="View"><a href="../index.html">Board</a><a href="../list.html">List</a></div>
+    <a class="btn" href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <button class="btn icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <a class="btn btn--ink" href="mailto:dcgursoy07@gmail.com">Email me</a>
+  </nav>
+</header>
+
+
+  <main id="main">
+    <a class="crumb" href="../list.html#projects"><span aria-hidden="true">&larr;</span> All projects</a>
+
+    <div class="proj-top proj-top--side">
+    <header class="proj-head">
+      <p class="eyebrow">Controls · Hardware build</p>
+      <h1 class="h1">Autonomous tunnel boring machine controls</h1>
+      <p class="lead">I joined Penn Hyperloop in September 2025 as a power and controls engineer on its tunnel boring machine. On the 2026 machine I owned the PLC logic and designed the 480 V power distribution and safety chain.</p>
+      <dl class="proj-meta">
+        <div><dt class="sr-only">Dates</dt><dd><b>Sep 2025 to now</b></dd></div>
+        <div><dt class="sr-only">Context</dt><dd>Penn Hyperloop</dd></div>
+        <div><dt class="sr-only">Role</dt><dd>Team project: Controls Engineering Lead (Aug 2026 to now) for the 2027 machine, previously Power and Controls Engineer (Sep 2025 to spring 2026) on the 2026 machine</dd></div>
+        <div><dt class="sr-only">Status</dt><dd><span class="status status--wip">In progress: 2026 machine competed, 2027 machine in design</span></dd></div>
+      </dl>
+      <div class="proj-links">
+<a class="btn btn--ink" href="https://www.pennhyperloop.org/" target="_blank" rel="noopener">Penn Hyperloop team site <span class="arrow" aria-hidden="true">&#8599;</span></a><a class="link" href="https://www.boringcompany.com/competition" target="_blank" rel="noopener">Competition results, The Boring Company <span class="arrow" aria-hidden="true">&#8599;</span></a>      </div>
+    </header>
+
+    <figure class="frame proj-hero" style="--ar:540/960;--arn:0.5625;--w:540">
+<video src="../media/p/hyperloop-tbm/cutterhead-test.mp4" poster="../media/p/hyperloop-tbm/cutterhead-test-poster.webp" width="540" height="960" data-inview muted loop playsinline preload="none" aria-label="The boring machine chained to a pallet above ground, its cutterhead turning while water drains from the cutting face."></video>    </figure>
+    </div>
+
+    <section class="stats-band" aria-label="Key numbers">
+      <div class="stats">
+<div class="stat"><b>2nd</b><span>place at the 2026 Not-a-Boring Competition, 0.457 m of tunnel</span></div><div class="stat"><b>480 V</b><span>three-phase supply, up from 240 V on the 2025 machine</span></div><div class="stat"><b>29.5 kW</b><span>installed drive rating (7.5 + 11 + 11), up from 9.7 kW</span></div><div class="stat"><b>1 m</b><span>design advance per dig cycle, one pipe segment at a time</span></div>      </div>
+    </section>
+
+    <div class="proj-body" style="--aside-rows:3">
+      <div class="proj-main">
+        <div class="prose proj-more"><p>The rebuild moved the supply from 240 V to 480 V three-phase. It raised the installed drive rating from 9.7 kW to 29.5 kW. The team placed second at The Boring Company&#39;s 2026 Not-a-Boring Competition, with 0.457 m of tunnel. In August 2026 I became controls engineering lead for the 2027 machine, which is in design.</p></div>
+        <section aria-labelledby="s-problem">
+          <h2 class="h2" id="s-problem">The problem</h2>
+          <div class="prose">
+<p>Penn Hyperloop builds an autonomous tunnel boring machine for The Boring Company&#39;s Not-a-Boring Competition. The 2025 machine lost dig time to breaker trips near full power. The 2026 rebuild had to deliver about 30 kW and end every fault with drive power off.</p>          </div>
+        </section>
+        <section aria-labelledby="s-built">
+          <h2 class="h2" id="s-built">What I built</h2>
+          <div class="prose">
+<p>Our power and controls subteam built the 2026 system together. I owned the PLC logic and led bring-up and integration testing.</p><p>A Siemens S7-1214C runs the autonomous drilling sequence. I wrote it in TIA Portal as a PackML dig cycle state machine. A fault or emergency stop forces Aborting from any state.</p><p>I configured the three G120 PM250 drives: motor data, ramp times, current limits and telegram setup. I built the PROFINET link that commands them and the Modbus RTU link to sensors and auxiliary devices.</p><p>I designed the 480 V power distribution and safety chain. Power enters through an 80 A GFCI breaker, a disconnect, a 96 A line reactor and the main contactor.</p><p>A safety relay holds the contactor closed only while a two-channel emergency stop and a PLC permissive are healthy. The hardwired stop chain removes drive power independently of the PLC program.</p>          </div>
+        </section>
+        <section aria-labelledby="s-results" class="has-figs">
+          <h2 class="h2" id="s-results">Results</h2>
+          <div class="prose">
+<p>We placed second at the 2026 Not-a-Boring Competition in Bastrop, Texas. The Boring Company lists 0.457 m of tunnel for us and 3.277 m for the winner. We had zero safety incidents across all of our field testing.</p><p>The 2025 breaker trips stopped after we installed the line reactor on the drive input to cut inrush and harmonic current. Our enclosure heat balance called for about 65 CFM, and we fitted a 155 CFM fan.</p><p>On campus we ran only small-scale, unloaded tests. Full-system testing waited for the competition site, where we hit GFCI trips, Modbus communication errors and drive overheating. For the GFCI trips we dried and resealed the machine-side connectors.</p><p>The Modbus errors turned out to be noise from drive switching. The RS-485 line shared a cable path with the motor leads and had no proper termination.</p><p>We rerouted the line in shielded twisted pair and added the missing 120 Ω termination with bias resistors. I slowed the bus down and changed the PLC&#39;s stop rule from one missed poll to three. After these changes, Modbus timeouts stopped aborting the dig.</p><p>Despite that heat balance, the G120 drives overheated under load in direct sun at Bastrop. The PM250 heatsinks hit their temperature limit, and the drives threw overtemperature alarms and then faults.</p><p>The enclosure was not getting enough air, so we improved its airflow. When a drive ran hot we slowed the advance to cut motor current. After that the drives stopped tripping on temperature.</p>          </div>
+          <div class="figs">
+            <div class="figrow figrow--pair" style="--cols:minmax(0, 750fr) minmax(0, 667fr);--rw:923px">
+              <figure class="fig" style="--ar:1215/1620;--cap:480px">
+                <div class="frame">
+<a href="../media/p/hyperloop-tbm/launch-pit-1215.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: The machine on its jacking frame in the competition launch pit, nose against the pit wall, with muddy water pooled beside it and a pipe segment in the foreground."><img src="../media/p/hyperloop-tbm/launch-pit-1215.webp" srcset="../media/p/hyperloop-tbm/launch-pit-800.webp 800w, ../media/p/hyperloop-tbm/launch-pit-1215.webp 1215w" sizes="(max-width: 720px) 100vw, 480px" width="1215" height="1620" alt="The machine on its jacking frame in the competition launch pit, nose against the pit wall, with muddy water pooled beside it and a pipe segment in the foreground." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+              <figure class="fig" style="--ar:480/720;--cap:427px">
+                <div class="frame">
+<a href="../media/p/hyperloop-tbm/drives-480.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Three Siemens SINAMICS drives side by side in the drive enclosure, with blue Ethernet cables plugged in and handwritten paper labels."><img src="../media/p/hyperloop-tbm/drives-480.webp" width="480" height="720" alt="Three Siemens SINAMICS drives side by side in the drive enclosure, with blue Ethernet cables plugged in and handwritten paper labels." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow figrow--pair" style="--cols:minmax(0, 1870fr) minmax(0, 1501fr);--rw:1152px">
+              <figure class="fig" style="--ar:1320/706;--cap:1197px">
+<figcaption class="fig__label">Design drawing: the drives are shown on Modbus RTU through a gateway</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/hyperloop-tbm/architecture-1320.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Design block diagram: a GFCI breaker, disconnect, line reactor and contactor feed three drives, which the PLC reaches over Modbus RTU through a gateway."><img src="../media/p/hyperloop-tbm/architecture-1320.webp" srcset="../media/p/hyperloop-tbm/architecture-800.webp 800w, ../media/p/hyperloop-tbm/architecture-1320.webp 1320w" sizes="(max-width: 720px) 100vw, 630px" width="1320" height="706" alt="Design block diagram: a GFCI breaker, disconnect, line reactor and contactor feed three drives, which the PLC reaches over Modbus RTU through a gateway." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+              <figure class="fig" style="--ar:1280/853;--cap:960px">
+                <div class="frame">
+<a href="../media/p/hyperloop-tbm/line-reactor-1280.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: A three-phase drive reactor wired with blue cable to numbered terminal lugs, beside a contactor and distribution blocks in the enclosure."><img src="../media/p/hyperloop-tbm/line-reactor-1280.webp" srcset="../media/p/hyperloop-tbm/line-reactor-800.webp 800w, ../media/p/hyperloop-tbm/line-reactor-1280.webp 1280w" sizes="(max-width: 720px) 100vw, 506px" width="1280" height="853" alt="A three-phase drive reactor wired with blue cable to numbered terminal lugs, beside a contactor and distribution blocks in the enclosure." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow" style="--cols:minmax(0, 2812fr);--rw:1152px">
+              <figure class="fig" style="--ar:1299/462;--cap:1152px">
+<figcaption class="fig__label">Dig cycle state machine designed for the S7-1214C</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/hyperloop-tbm/state-machine-1299.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: State diagram of the dig cycle: Stopped, Resetting, Idle, Starting, Execute, Completing and Complete, with Holding and Aborting branches."><img src="../media/p/hyperloop-tbm/state-machine-1299.webp" srcset="../media/p/hyperloop-tbm/state-machine-800.webp 800w, ../media/p/hyperloop-tbm/state-machine-1299.webp 1299w" sizes="(max-width: 720px) 100vw, 1152px" width="1299" height="462" alt="State diagram of the dig cycle: Stopped, Resetting, Idle, Starting, Execute, Completing and Complete, with Holding and Aborting branches." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow" style="--cols:minmax(0, 750fr);--rw:480px">
+              <figure class="fig" style="--ar:1600/2133;--cap:480px">
+                <div class="frame">
+<a href="../media/p/hyperloop-tbm/plc-bench-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: A Siemens S7-1200 PLC on a lab bench with its terminal covers open, Ethernet cables and jumper wires attached."><img src="../media/p/hyperloop-tbm/plc-bench-1600.webp" srcset="../media/p/hyperloop-tbm/plc-bench-800.webp 800w, ../media/p/hyperloop-tbm/plc-bench-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 480px" width="1600" height="2133" alt="A Siemens S7-1200 PLC on a lab bench with its terminal covers open, Ethernet cables and jumper wires attached." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+          </div>
+        </section>
+        <section aria-labelledby="s-limits">
+          <h2 class="h2" id="s-limits">Limits and next steps</h2>
+          <div class="prose">
+<p>The tunnel was 0.457 m against a 30 m design length, and the 2025 machine dug 1.5 m.</p><p>The 2027 rules add steering. As controls lead I own the steering electronics, the split between the PLC and an ESP32 layer, and the safety fault responses. Steering uses four Progressive Automations PA-HD3A linear actuators with Hall-effect position feedback.</p>          </div>
+        </section>
+        <section aria-labelledby="s-team">
+          <h2 class="h2" id="s-team">Leading the controls subteam</h2>
+          <div class="prose">
+<p>I lead a controls subteam of five and onboard new members each year. I wrote and taught a 90-minute PLC fundamentals workshop.</p>          </div>
+        </section>
+      </div>
+
+      <aside class="proj-aside" aria-labelledby="built-h">
+        <div class="proj-aside__in">
+          <h2 id="built-h">Built with</h2>
+          <ul class="tags"><li class="tag">Siemens S7-1214C PLC</li><li class="tag">TIA Portal (ladder logic, SCL)</li><li class="tag">Siemens G120 PM250 drives</li><li class="tag">PROFINET</li><li class="tag">Modbus RTU over RS-485</li><li class="tag">480 V three-phase power</li><li class="tag">Safety relay and E-stop circuit</li><li class="tag">ESP32</li><li class="tag">PA-HD3A linear actuators</li></ul>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="proj-nav" aria-label="More projects">
+      <a href="autonomous-racecar.html"><span><span aria-hidden="true">&larr;</span> Previous project</span><b>Autonomous racecar for the MIT Beaver Works Grand Prix</b></a>
+      <a href="quadruped-rl.html"><span>Next project <span aria-hidden="true">&rarr;</span></span><b>Simulated quadruped that learns to walk with PPO</b></a>
+    </nav>
+  </main>
+
+  <footer class="foot">
+  <span>Deniz Gursoy · B.S.E. in electrical engineering, Penn, class of 2028</span>
+  <nav aria-label="Footer">
+    <a href="../index.html">Board</a>
+    <a href="../list.html#projects">Projects</a>
+    <a href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <a href="https://github.com/dcgursoy" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/dgursoy/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:dcgursoy07@gmail.com">dcgursoy07@gmail.com</a>
+  </nav>
+</footer>
+
+</div>
+<button class="ask-fab" type="button" data-ask-open><span aria-hidden="true">&gt;_</span> Ask me anything</button>
+<script src="../data/site.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/ask.js"></script>
+
+</body>
+</html>

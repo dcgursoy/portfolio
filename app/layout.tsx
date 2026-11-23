@@ -1,32 +1,13 @@
-import type { Metadata } from 'next'
-import { Inter, Space_Grotesk } from 'next/font/google'
-import './globals.css'
+// The site itself is the static pages in public/. Next.js needs a root layout to build; the only
+// page that uses it is the "not found" page.
+import type { ReactNode } from "react";
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-})
+export const metadata = { title: "Deniz Gursoy" };
 
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  variable: '--font-space',
-  display: 'swap',
-})
-
-export const metadata: Metadata = {
-  title: 'Deniz Gursoy — Electrical Engineer',
-  description:
-    'Portfolio of Deniz Gursoy — EE student at UPenn, incoming SpaceX intern, robotics engineer, and embedded systems developer.',
-  keywords: ['Deniz Gursoy', 'Electrical Engineer', 'UPenn', 'SpaceX', 'Robotics', 'Embedded Systems'],
-}
-
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${spaceGrotesk.variable} font-sans antialiased bg-[#0a0a0a] text-[#f0f0f0]`}>
-        {children}
-      </body>
+      <body>{children}</body>
     </html>
-  )
+  );
 }

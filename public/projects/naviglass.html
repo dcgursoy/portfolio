@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>NaviGlass: head-worn object alerts on a Raspberry Pi 4 · Deniz Gursoy</title>
+<meta name="description" content="A head-worn Raspberry Pi 4 names the objects its camera detects and vibrates on the side they are on. Team course build from $83 of listed parts.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="NaviGlass: head-worn object alerts on a Raspberry Pi 4 · Deniz Gursoy">
+<meta property="og:description" content="A head-worn Raspberry Pi 4 names the objects its camera detects and vibrates on the side they are on. Team course build from $83 of listed parts.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>(function(){var t;try{t=localStorage.getItem('dg-theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@400..600&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/ask.css">
+
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<div class="wrap">
+  <header class="top">
+  <div class="who">
+    <a class="who__name" href="../index.html">Deniz Gursoy</a>
+    <span class="who__line"><span class="nw">Electrical Engineering at UPenn ·</span> <span class="nw">Hardware Design, Robotics, and Embedded Systems</span></span>
+  </div>
+  <nav class="actions" aria-label="Site">
+    <div class="seg" role="group" aria-label="View"><a href="../index.html">Board</a><a href="../list.html">List</a></div>
+    <a class="btn" href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <button class="btn icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <a class="btn btn--ink" href="mailto:dcgursoy07@gmail.com">Email me</a>
+  </nav>
+</header>
+
+
+  <main id="main">
+    <a class="crumb" href="../list.html#projects"><span aria-hidden="true">&larr;</span> All projects</a>
+
+    <div class="proj-top proj-top--side proj-top--wide">
+    <header class="proj-head">
+      <p class="eyebrow">Embedded · Hardware build</p>
+      <h1 class="h1">NaviGlass: head-worn object alerts on a Raspberry Pi 4</h1>
+      <p class="lead">NaviGlass is a prototype head-worn aid for blind and low-vision users, built by our team of four for ESE 1110 at Penn.</p>
+      <dl class="proj-meta">
+        <div><dt class="sr-only">Dates</dt><dd><b>Nov to Dec 2025</b></dd></div>
+        <div><dt class="sr-only">Context</dt><dd>Penn ESE 1110 course project</dd></div>
+        <div><dt class="sr-only">Role</dt><dd>Team of 4: electrical and vision components</dd></div>
+        <div><dt class="sr-only">Status</dt><dd><span class="status status--live">Finished</span></dd></div>
+      </dl>
+      <div class="proj-links">
+<a class="btn btn--ink" href="https://devpost.com/software/naviglass" target="_blank" rel="noopener">Project on Devpost <span class="arrow" aria-hidden="true">&#8599;</span></a><a class="link" href="https://www.youtube.com/watch?v=5ZPztoGAk7I" target="_blank" rel="noopener">Project video on YouTube <span class="arrow" aria-hidden="true">&#8599;</span></a>      </div>
+    </header>
+
+    <figure class="frame proj-hero" style="--ar:720/540;--arn:1.3333;--w:720">
+<a href="../media/p/naviglass/device-bench-720.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: The NaviGlass headset on a lab bench: a white printed box with four round ultrasonic openings and a camera window, its head strap behind it and a laptop beside it."><img src="../media/p/naviglass/device-bench-720.webp" srcset="../media/p/naviglass/device-bench-720.webp 720w" sizes="(max-width: 1000px) 100vw, 46vw" width="720" height="540" alt="The NaviGlass headset on a lab bench: a white printed box with four round ultrasonic openings and a camera window, its head strap behind it and a laptop beside it." decoding="async"></a>    </figure>
+    </div>
+
+    <section class="stats-band" aria-label="Key numbers">
+      <div class="stats">
+<div class="stat"><b>$83</b><span>listed parts: Pi 4, camera, two ultrasonic sensors, power bank and six motors</span></div><div class="stat"><b>10 classes</b><span>from COCO passed to YOLO11n; detections need 0.70 confidence or more</span></div><div class="stat"><b>2 to 400 cm</b><span>ultrasonic range used, median of three pings per sensor</span></div><div class="stat"><b>6 motors</b><span>in a left and a right vibration group, duty cycle set by distance</span></div>      </div>
+    </section>
+
+    <div class="proj-body" style="--aside-rows:3">
+      <div class="proj-main">
+        <div class="prose proj-more"><p>A Raspberry Pi 4 runs the YOLO11n object detector on a camera feed, ranges with two ultrasonic sensors, speaks a short description and vibrates on the side the object is on. We demonstrated it in December 2025, built from $83 of listed parts.</p></div>
+        <section aria-labelledby="s-problem">
+          <h2 class="h2" id="s-problem">The problem</h2>
+          <div class="prose">
+<p>Our four-person ESE 1110 team at Penn set out to build a wearable that tells a blind or low-vision user what is ahead and how close. The proposal faulted existing aids for cost and bulk, so the build used hobby parts.</p><p>A camera can name an object but cannot range it, and an ultrasonic sensor does the reverse. Everything had to run on a Raspberry Pi 4 in a head-worn enclosure with no custom PCB.</p>          </div>
+        </section>
+        <section aria-labelledby="s-built">
+          <h2 class="h2" id="s-built">What we built</h2>
+          <div class="prose">
+<p>Within our team of four, I worked on the electrical and vision components. The camera sends 640 by 480 frames to YOLO11n, exported to NCNN format to run on the Pi&#39;s CPU. We pass it 10 classes from the COCO dataset: people, vehicles and street fixtures such as stop signs. A detection must reach 0.70 confidence and cover at least 1/16 of the frame, and the largest box becomes the target.</p><p>Two HC-SR04 ultrasonic sensors then range the scene. Each takes three pings 40 ms apart and keeps the median. Readings are valid from 2 to 400 cm, and the nearer one wins.</p><p>Six coin vibration motors form left and right groups on two 100 Hz PWM channels. Base duty cycle rises linearly from 20% at 400 cm to 45% at contact, and the detection box&#39;s horizontal position shifts it toward one side. The motors run for 3 s on a new object and again whenever it comes 10 cm closer.</p><p>Speech comes from the Piper text-to-speech engine&#39;s Amy voice over Bluetooth audio. A narrator picks one of 197 sentence templates by distance band and fills in the object, its distance and its side. It speaks once per new object, and an object under 60 cm cuts off the sentence in progress. An earlier version asked Gemini 2.5 Flash for each sentence.</p><p>A Flask page on the Pi shows the annotated feed and pairs Bluetooth devices. The SOLIDWORKS enclosure prints in two parts and straps on with an elastic band.</p>          </div>
+        </section>
+        <section aria-labelledby="s-results" class="has-figs">
+          <h2 class="h2" id="s-results">Results</h2>
+          <div class="prose">
+<p>We demonstrated the prototype on video in December 2025. A screenshot of the live view shows two people boxed at 0.78 and 0.92 confidence.</p><p>Our parts list totals $83: Pi 4 at $35, camera at $25, two ultrasonic sensors at $10, power bank at $10 and six motors at $3. It omits the enclosure, wiring and Bluetooth speaker.</p><p>We did not log frame rate, detection accuracy or latency, and we did not run a trial with a blind or low-vision user.</p>          </div>
+          <div class="figs">
+            <div class="figrow" style="--cols:minmax(0, 564fr);--rw:361px">
+              <figure class="fig" style="--ar:406/720;--cap:361px">
+<figcaption class="fig__label">Outdoor walk with the headset, December 2025</figcaption>                <div class="frame">
+<video src="../media/p/naviglass/walk.mp4" poster="../media/p/naviglass/walk-poster.webp" width="406" height="720" data-inview muted loop playsinline preload="none" aria-label="A team member wearing the white headset walks along a city sidewalk past a row of parked cars."></video>                </div>
+              </figure>
+            </div>
+            <div class="figrow figrow--pair" style="--cols:minmax(0, 2094fr) minmax(0, 1444fr);--rw:1152px">
+              <figure class="fig" style="--ar:1600/764;--cap:1340px">
+<figcaption class="fig__label">Hardware and software flow, from the team&#39;s slides</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/naviglass/flowchart-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Flowchart: the camera and distance sensors feed a Raspberry Pi running YOLO detection, a nearby-object check, the narrator, Piper speech, a web server and the vibration module."><img src="../media/p/naviglass/flowchart-1600.webp" srcset="../media/p/naviglass/flowchart-800.webp 800w, ../media/p/naviglass/flowchart-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 672px" width="1600" height="764" alt="Flowchart: the camera and distance sensors feed a Raspberry Pi running YOLO detection, a nearby-object check, the narrator, Piper speech, a web server and the vibration module." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+              <figure class="fig" style="--ar:1600/1108;--cap:924px">
+<figcaption class="fig__label">Enclosure CAD, SOLIDWORKS render from the team&#39;s slides</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/naviglass/enclosure-cad-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: SOLIDWORKS render of the enclosure: a long box with four round sensor holes and a camera slot on one face, side slots, and two flat plates extending from one end."><img src="../media/p/naviglass/enclosure-cad-1600.webp" srcset="../media/p/naviglass/enclosure-cad-800.webp 800w, ../media/p/naviglass/enclosure-cad-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 464px" width="1600" height="1108" alt="SOLIDWORKS render of the enclosure: a long box with four round sensor holes and a camera slot on one face, side slots, and two flat plates extending from one end." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow figrow--pair" style="--cols:minmax(0, 1335fr) minmax(0, 1157fr);--rw:1152px">
+              <figure class="fig" style="--ar:1060/794;--cap:854px">
+                <div class="frame">
+<a href="../media/p/naviglass/wiring-prototype-1060.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Bench prototype: a Raspberry Pi beside a power bank, jumper-wired to two ultrasonic sensors and to coin vibration motors through hand-soldered transistors and resistors."><img src="../media/p/naviglass/wiring-prototype-1060.webp" srcset="../media/p/naviglass/wiring-prototype-800.webp 800w, ../media/p/naviglass/wiring-prototype-1060.webp 1060w" sizes="(max-width: 720px) 100vw, 609px" width="1060" height="794" alt="Bench prototype: a Raspberry Pi beside a power bank, jumper-wired to two ultrasonic sensors and to coin vibration motors through hand-soldered transistors and resistors." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+              <figure class="fig" style="--ar:942/814;--cap:741px">
+<figcaption class="fig__label">Live view page with YOLO11n detections, from the team&#39;s slides</figcaption>                <div class="frame">
+<a href="../media/p/naviglass/live-view-942.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: The NaviGlass Live View web page: a camera frame of two people in a lab, each outlined by a blue box labeled person, at 0.78 and 0.92 confidence."><img src="../media/p/naviglass/live-view-942.webp" srcset="../media/p/naviglass/live-view-800.webp 800w, ../media/p/naviglass/live-view-942.webp 942w" sizes="(max-width: 720px) 100vw, 527px" width="942" height="814" alt="The NaviGlass Live View web page: a camera frame of two people in a lab, each outlined by a blue box labeled person, at 0.78 and 0.92 confidence." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+          </div>
+        </section>
+        <section aria-labelledby="s-limits">
+          <h2 class="h2" id="s-limits">Limits and next steps</h2>
+          <div class="prose">
+<p>Ranging and vibration start only after the camera finds one of the 10 classes, so a wall or a pole produces no warning. The label and the distance are also not matched: the sensors return the nearest echo, which may not come from the object named.</p><p>In the last version of the code, inference runs inside the video stream handler, so detection stops when no browser has the live view open. Power banks also overheated during the build.</p><p>The first fix is to range on every loop, then log frame rate and detections on a test walk.</p>          </div>
+        </section>
+      </div>
+
+      <aside class="proj-aside" aria-labelledby="built-h">
+        <div class="proj-aside__in">
+          <h2 id="built-h">Built with</h2>
+          <ul class="tags"><li class="tag">Raspberry Pi 4</li><li class="tag">Python</li><li class="tag">YOLO11n (NCNN)</li><li class="tag">Picamera2</li><li class="tag">OpenCV</li><li class="tag">HC-SR04 ultrasonic sensors</li><li class="tag">Piper TTS</li><li class="tag">Flask</li><li class="tag">SOLIDWORKS</li></ul>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="proj-nav" aria-label="More projects">
+      <a href="pennair-flight-controller.html"><span><span aria-hidden="true">&larr;</span> Previous project</span><b>STM32 flight controller PCB design for competition UAVs</b></a>
+      <a href="hexacopter-sar.html"><span>Next project <span aria-hidden="true">&rarr;</span></span><b>Hexacopter for synthetic aperture radar imaging</b></a>
+    </nav>
+  </main>
+
+  <footer class="foot">
+  <span>Deniz Gursoy · B.S.E. in electrical engineering, Penn, class of 2028</span>
+  <nav aria-label="Footer">
+    <a href="../index.html">Board</a>
+    <a href="../list.html#projects">Projects</a>
+    <a href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <a href="https://github.com/dcgursoy" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/dgursoy/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:dcgursoy07@gmail.com">dcgursoy07@gmail.com</a>
+  </nav>
+</footer>
+
+</div>
+<button class="ask-fab" type="button" data-ask-open><span aria-hidden="true">&gt;_</span> Ask me anything</button>
+<script src="../data/site.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/ask.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>8-channel EMG acquisition system for a prosthetic arm · Deniz Gursoy</title>
+<meta name="description" content="Eight 24-bit ADS1291 modules on one SPI bus, designed to read muscle signals for a prosthetic arm. A one-channel capture holds 20,000 samples in 10 s.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="8-channel EMG acquisition system for a prosthetic arm · Deniz Gursoy">
+<meta property="og:description" content="Eight 24-bit ADS1291 modules on one SPI bus, designed to read muscle signals for a prosthetic arm. A one-channel capture holds 20,000 samples in 10 s.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>(function(){var t;try{t=localStorage.getItem('dg-theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@400..600&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/ask.css">
+
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<div class="wrap">
+  <header class="top">
+  <div class="who">
+    <a class="who__name" href="../index.html">Deniz Gursoy</a>
+    <span class="who__line"><span class="nw">Electrical Engineering at UPenn ·</span> <span class="nw">Hardware Design, Robotics, and Embedded Systems</span></span>
+  </div>
+  <nav class="actions" aria-label="Site">
+    <div class="seg" role="group" aria-label="View"><a href="../index.html">Board</a><a href="../list.html">List</a></div>
+    <a class="btn" href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <button class="btn icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <a class="btn btn--ink" href="mailto:dcgursoy07@gmail.com">Email me</a>
+  </nav>
+</header>
+
+
+  <main id="main">
+    <a class="crumb" href="../list.html#projects"><span aria-hidden="true">&larr;</span> All projects</a>
+
+    <div class="proj-top proj-top--side">
+    <header class="proj-head">
+      <p class="eyebrow">FPGA and hardware · Hardware build</p>
+      <h1 class="h1">8-channel EMG acquisition system for a prosthetic arm</h1>
+      <p class="lead">Penn ADAPT is building a prosthetic arm controlled by surface EMG, the muscle signals in the user&#39;s arm. I co-lead the project and developed its EMG acquisition system.</p>
+      <dl class="proj-meta">
+        <div><dt class="sr-only">Dates</dt><dd><b>Sep 2025 to now</b></dd></div>
+        <div><dt class="sr-only">Context</dt><dd>Penn ADAPT</dd></div>
+        <div><dt class="sr-only">Role</dt><dd>Project co-lead: hardware and firmware</dd></div>
+        <div><dt class="sr-only">Status</dt><dd><span class="status status--wip">In progress: EMG has driven the arm, on-board classifier planned</span></dd></div>
+      </dl>
+    </header>
+
+    <figure class="frame proj-hero frame--paper" style="--ar:853/881;--arn:0.9682;--w:853">
+<a href="../media/p/adapt-emg-board/main-board-853.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Render of the prosthetic arm&#39;s green main board V1, with a large STMicroelectronics chip, a smaller Texas Instruments chip and connectors marked Actuator, Battery and SWD."><img src="../media/p/adapt-emg-board/main-board-853.webp" srcset="../media/p/adapt-emg-board/main-board-800.webp 800w, ../media/p/adapt-emg-board/main-board-853.webp 853w" sizes="(max-width: 1000px) 100vw, 380px" width="853" height="881" alt="Render of the prosthetic arm&#39;s green main board V1, with a large STMicroelectronics chip, a smaller Texas Instruments chip and connectors marked Actuator, Battery and SWD." decoding="async"></a>    </figure>
+    </div>
+
+    <section class="stats-band" aria-label="Key numbers">
+      <div class="stats">
+<div class="stat"><b>8 channels</b><span>in the design, one 24-bit ADS1291 per electrode pair</span></div><div class="stat"><b>57.6 µs</b><span>budgeted to read all eight ADCs at 10 MHz SPI, in a 1 ms period</span></div><div class="stat"><b>20,000</b><span>samples in a 10 s capture from one electrode input, at gain 6</span></div><div class="stat"><b>20 to 450 Hz</b><span>band-pass applied offline, with notches at 60, 120 and 180 Hz</span></div>      </div>
+    </section>
+
+    <div class="proj-body" style="--aside-rows:3">
+      <div class="proj-main">
+        <div class="prose proj-more"><p>The design covers acquisition and actuation: eight sensor modules with a 24-bit ADS1291 each, and an STM32H730 main board. EMG signals have driven the arm. The captures shown are single-channel, and an on-board gesture classifier is planned.</p></div>
+        <section aria-labelledby="s-problem">
+          <h2 class="h2" id="s-problem">The problem</h2>
+          <div class="prose">
+<p>Penn ADAPT is building a prosthetic arm controlled by surface EMG. We wanted eight electrode pairs around the arm, sampled together. Dry-electrode EMG is microvolt-scale and sits beside SPI clocks and amp-level motor current.</p>          </div>
+        </section>
+        <section aria-labelledby="s-built">
+          <h2 class="h2" id="s-built">What I built</h2>
+          <div class="prose">
+<p>The sensing side is designed as eight rigid modules. Each carries two electrode pads, a high-frequency input filter and a 24-bit TI ADS1291 ADC with a built-in programmable-gain amplifier. I contributed to the schematic and layout of the sensor modules in Altium.</p><p>The eight ADCs share one SPI bus and clock, with independent chip-select lines. Their START pins are tied so they sample together. I wrote the acquisition firmware, which configures the ADCs and reads each 48-bit frame into a per-channel data path. At 10 MHz, all eight reads, with overhead, are budgeted at 57.6 µs of the 1 ms period.</p><p>The STM32H730 main board has a DRV8874 H-bridge (up to 6 A peak) for the linear actuator. Its PWM outputs are for a dual-servo joint stage. I implemented the PWM and control interfaces, with current sensing and fault feedback from the H-bridge. I built a modular Raspberry Pi Pico interface for actuator prototyping and per-user calibration.</p><p>A 2S LiPo feeds 12 V actuator and 6 V servo rails, plus a separate 3.3 V sensing and logic rail. A buck converter feeds a TPS7A20 LDO on each module, to keep switching ripple off the analog supply.</p>          </div>
+        </section>
+        <section aria-labelledby="s-results" class="has-figs">
+          <h2 class="h2" id="s-results">Results</h2>
+          <div class="prose">
+<p>A 10 s capture from one ADS1291 input holds 20,000 samples at gain 6. The raw trace rides on a drifting DC offset near 60 mV.</p><p>Offline, a 20 to 450 Hz zero-phase band-pass with 60, 120 and 180 Hz notches removes it. After filtering, a separate capture shows six bursts. Their 100 ms RMS envelope peaks between about 200 and 300 µV and rests near 10 µV between bursts.</p><p>During sensor bring-up I saw a repeating high-frequency artifact on the waveform. With the oscilloscope I traced it to SCLK coupling into the analog front end, near an imperfect ground plane boundary. I rerouted the sensitive traces and tightened the ground isolation there, and the artifact disappeared.</p>          </div>
+          <div class="figs">
+            <div class="figrow figrow--pair" style="--cols:minmax(0, 562fr) minmax(0, 546fr);--rw:725px">
+              <figure class="fig" style="--ar:720/1280;--cap:360px">
+<figcaption class="fig__label">Bench test of the main board, September 2026</figcaption>                <div class="frame">
+<video src="../media/p/adapt-emg-board/board-demo.mp4" poster="../media/p/adapt-emg-board/board-demo-poster.webp" width="720" height="1280" data-inview muted loop playsinline preload="none" aria-label="A small green circuit board on a lab bench, clipped to test leads and wired to two hobby servos and an ST Nucleo board; the camera then pans up to an oscilloscope showing pulses."></video>                </div>
+              </figure>
+              <figure class="fig" style="--ar:482/883;--cap:349px">
+<figcaption class="fig__label">Sensor board, Altium 3D view</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/adapt-emg-board/sensor-module-482.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Render of the prosthetic arm&#39;s narrow green sensor board, with a square chip at its center, two flat-cable connector footprints and the outlines of two large electrode pads."><img src="../media/p/adapt-emg-board/sensor-module-482.webp" srcset="../media/p/adapt-emg-board/sensor-module-482.webp 482w" sizes="(max-width: 720px) 100vw, 349px" width="482" height="883" alt="Render of the prosthetic arm&#39;s narrow green sensor board, with a square chip at its center, two flat-cable connector footprints and the outlines of two large electrode pads." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow figrow--pair" style="--cols:minmax(0, 1550fr) minmax(0, 1292fr);--rw:1152px">
+              <figure class="fig" style="--ar:1268/818;--cap:992px">
+<figcaption class="fig__label">Sensor board schematic: ADS1291, input filter, LDO, cable connectors</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/adapt-emg-board/sensor-schematic-1268.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Altium schematic of one sensor board: an ADS1291 with 1 kΩ resistors and a 470 pF capacitor on its inputs, a TPS7A20 regulator, ESD diode arrays and two 20-pin cable connectors."><img src="../media/p/adapt-emg-board/sensor-schematic-1268.webp" srcset="../media/p/adapt-emg-board/sensor-schematic-800.webp 800w, ../media/p/adapt-emg-board/sensor-schematic-1268.webp 1268w" sizes="(max-width: 720px) 100vw, 619px" width="1268" height="818" alt="Altium schematic of one sensor board: an ADS1291 with 1 kΩ resistors and a 470 pF capacitor on its inputs, a TPS7A20 regulator, ESD diode arrays and two 20-pin cable connectors." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+              <figure class="fig" style="--ar:1600/1238;--cap:827px">
+<figcaption class="fig__label">Planning sketch from the team&#39;s architecture document</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/adapt-emg-board/architecture-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Block drawing of a sensor board: two round electrode pads 20 mm apart on the front, an ADS1291 between two cable connectors on the back, and a main board with an STM32."><img src="../media/p/adapt-emg-board/architecture-1600.webp" srcset="../media/p/adapt-emg-board/architecture-800.webp 800w, ../media/p/adapt-emg-board/architecture-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 517px" width="1600" height="1238" alt="Block drawing of a sensor board: two round electrode pads 20 mm apart on the front, an ADS1291 between two cable connectors on the back, and a main board with an STM32." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow" style="--cols:minmax(0, 2909fr);--rw:1152px">
+              <figure class="fig" style="--ar:1600/550;--cap:1152px">
+<figcaption class="fig__label">Raw capture from one ADS1291 input: 20,000 samples at gain 6</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/adapt-emg-board/emg-raw-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Line plot of raw input voltage over 10 seconds: a baseline near 60 mV that drifts slowly, with seven short bursts of fast oscillation on top of it."><img src="../media/p/adapt-emg-board/emg-raw-1600.webp" srcset="../media/p/adapt-emg-board/emg-raw-800.webp 800w, ../media/p/adapt-emg-board/emg-raw-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 1152px" width="1600" height="550" alt="Line plot of raw input voltage over 10 seconds: a baseline near 60 mV that drifts slowly, with seven short bursts of fast oscillation on top of it." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow" style="--cols:minmax(0, 1149fr);--rw:598px">
+              <figure class="fig" style="--ar:1510/1314;--cap:598px">
+<figcaption class="fig__label">A separate capture after the 20 to 450 Hz band-pass, with RMS envelope</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/adapt-emg-board/emg-filtered-1510.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Four stacked plots of a 10 second recording: raw input with drift, the band-passed signal with six bursts, a 100 ms RMS envelope peaking near 300 µV, and a spectrum up to 450 Hz."><img src="../media/p/adapt-emg-board/emg-filtered-1510.webp" srcset="../media/p/adapt-emg-board/emg-filtered-800.webp 800w, ../media/p/adapt-emg-board/emg-filtered-1510.webp 1510w" sizes="(max-width: 720px) 100vw, 598px" width="1510" height="1314" alt="Four stacked plots of a 10 second recording: raw input with drift, the band-passed signal with six bursts, a 100 ms RMS envelope peaking near 300 µV, and a spectrum up to 450 Hz." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+          </div>
+        </section>
+        <section aria-labelledby="s-limits">
+          <h2 class="h2" id="s-limits">Limits and next steps</h2>
+          <div class="prose">
+<p>Both captures are single-channel, and I have no eight-channel recording yet. The analysis plot warns that bursts are not automatically proven EMG.</p><p>The raw capture works out to 2 kSPS, twice the 1 kSPS in the timing budget. The artifact fix has no before-and-after measurement.</p><p>For the chip alone, the ADS1291 datasheet lists 1.3 µV RMS of input-referred noise at 1 kSPS and gain 6, inputs shorted. I have not measured noise on the boards. With an electrode attached, my filtered one-channel capture rests several times higher.</p><p>By calculation, acquisition adds about 4 ms of delay at the 1 kSPS design rate. The ADS1291 filter settles within four conversions, and the eight reads are budgeted at 57.6 µs. That leaves out the analysis window, the classifier and the actuator, and I have not measured latency.</p><p>EMG signals have driven the arm. The STM32H730 integration and the move to two servos are not finished. Next are on-board TinyML gesture classification and flexible or rigid-flex modules for better skin contact.</p>          </div>
+        </section>
+      </div>
+
+      <aside class="proj-aside" aria-labelledby="built-h">
+        <div class="proj-aside__in">
+          <h2 id="built-h">Built with</h2>
+          <ul class="tags"><li class="tag">Altium Designer</li><li class="tag">4-layer mixed-signal PCB</li><li class="tag">TI ADS1291</li><li class="tag">STM32H730</li><li class="tag">C (STM32CubeIDE)</li><li class="tag">SPI and PWM</li><li class="tag">DRV8874 H-bridge</li><li class="tag">TPS7A20 LDO</li><li class="tag">Raspberry Pi Pico</li></ul>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="proj-nav" aria-label="More projects">
+      <a href="panda-pick-place-il.html"><span><span aria-hidden="true">&larr;</span> Previous project</span><b>Imitation learning study on a simulated Franka Panda</b></a>
+      <a href="quotedesk.html"><span>Next project <span aria-hidden="true">&rarr;</span></span><b>QuoteDesk: a quoting assistant for machine shops</b></a>
+    </nav>
+  </main>
+
+  <footer class="foot">
+  <span>Deniz Gursoy · B.S.E. in electrical engineering, Penn, class of 2028</span>
+  <nav aria-label="Footer">
+    <a href="../index.html">Board</a>
+    <a href="../list.html#projects">Projects</a>
+    <a href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <a href="https://github.com/dcgursoy" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/dgursoy/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:dcgursoy07@gmail.com">dcgursoy07@gmail.com</a>
+  </nav>
+</footer>
+
+</div>
+<button class="ask-fab" type="button" data-ask-open><span aria-hidden="true">&gt;_</span> Ask me anything</button>
+<script src="../data/site.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/ask.js"></script>
+
+</body>
+</html>

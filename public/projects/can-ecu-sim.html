@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Simulated two-ECU CAN network on Zephyr · Deniz Gursoy</title>
+<meta name="description" content="Two simulated Zephyr ECUs trade CRC-protected CAN frames through a gateway that injects faults. 23 of 23 system tests pass, also with a Rust sensor.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Simulated two-ECU CAN network on Zephyr · Deniz Gursoy">
+<meta property="og:description" content="Two simulated Zephyr ECUs trade CRC-protected CAN frames through a gateway that injects faults. 23 of 23 system tests pass, also with a Rust sensor.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>(function(){var t;try{t=localStorage.getItem('dg-theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@400..600&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/ask.css">
+
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<div class="wrap">
+  <header class="top">
+  <div class="who">
+    <a class="who__name" href="../index.html">Deniz Gursoy</a>
+    <span class="who__line"><span class="nw">Electrical Engineering at UPenn ·</span> <span class="nw">Hardware Design, Robotics, and Embedded Systems</span></span>
+  </div>
+  <nav class="actions" aria-label="Site">
+    <div class="seg" role="group" aria-label="View"><a href="../index.html">Board</a><a href="../list.html">List</a></div>
+    <a class="btn" href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <button class="btn icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <a class="btn btn--ink" href="mailto:dcgursoy07@gmail.com">Email me</a>
+  </nav>
+</header>
+
+
+  <main id="main">
+    <a class="crumb" href="../list.html#projects"><span aria-hidden="true">&larr;</span> All projects</a>
+
+    <div class="proj-top">
+    <header class="proj-head">
+      <p class="eyebrow">Embedded · Simulation</p>
+      <h1 class="h1">Simulated two-ECU CAN network on Zephyr</h1>
+      <p class="lead">A sensor ECU (electronic control unit) and a controller ECU run the same C++17 Zephyr firmware as simulated nodes on a Linux virtual CAN bus. No board was involved.</p>
+      <dl class="proj-meta">
+        <div><dt class="sr-only">Dates</dt><dd><b>Oct 2026</b></dd></div>
+        <div><dt class="sr-only">Context</dt><dd>Personal project</dd></div>
+        <div><dt class="sr-only">Role</dt><dd>Solo</dd></div>
+        <div><dt class="sr-only">Status</dt><dd><span class="status status--live">Finished</span></dd></div>
+      </dl>
+      <div class="proj-links">
+<a class="btn btn--ink" href="https://github.com/dcgursoy/can-ecu-sim" target="_blank" rel="noopener">Code on GitHub <span class="arrow" aria-hidden="true">&#8599;</span></a><a class="link" href="https://github.com/dcgursoy/can-ecu-sim/blob/main/DESIGN.md" target="_blank" rel="noopener">Design notes <span class="arrow" aria-hidden="true">&#8599;</span></a><a class="link" href="https://github.com/dcgursoy/can-ecu-sim/blob/main/RESULTS.md" target="_blank" rel="noopener">Raw results <span class="arrow" aria-hidden="true">&#8599;</span></a>      </div>
+    </header>
+
+    <figure class="frame proj-hero" style="--ar:1010/776;--arn:1.3015;--w:1010">
+<video src="../media/p/can-ecu-sim/demo.mp4" poster="../media/p/can-ecu-sim/demo-poster.webp" width="1010" height="776" data-inview muted loop playsinline preload="none" aria-label="Terminal recording of the demo: decoded bus rates, then the controller&#39;s command going SAFE_STATE 364 ms after the last heartbeat and NORMAL 523 ms after it returns."></video>    </figure>
+    </div>
+
+    <section class="stats-band" aria-label="Key numbers">
+      <div class="stats">
+<div class="stat"><b>23 / 23</b><span>system tests pass, with either the C++ or the Rust sensor</span></div><div class="stat"><b>374.8 ms</b><span>from last heartbeat to safe-state command: 350 ms timeout, one local run</span></div><div class="stat"><b>0 dropped</b><span>by the controller&#39;s receive queue in a flood of up to 3,999.4 unknown frames per second</span></div><div class="stat"><b>90.5%</b><span>line coverage of the firmware application under the system suite</span></div>      </div>
+    </section>
+
+    <div class="proj-body" style="--aside-rows:3">
+      <div class="proj-main">
+        <div class="prose proj-more"><p>A Python gateway injects bus faults between them, and a 23-test pytest suite checks each reaction against frames captured on the bus and the ECUs&#39; own counters. All 23 tests pass, and pass again with the sensor rewritten in Rust.</p></div>
+        <section aria-labelledby="s-problem">
+          <h2 class="h2" id="s-problem">The problem</h2>
+          <div class="prose">
+<p>CAN&#39;s 15-bit CRC protects bits on the wire. It cannot see a task resending a stale buffer, a frame lost in a queue, a hung thread or a node gone bus-off (disconnected after too many errors).</p><p>Firmware has to catch each of those in bounded time and fall back to a defined state. I wanted to measure that without a bench of boards, so both ECUs run as Linux processes (Zephyr&#39;s native_sim target) on a virtual CAN bus, in CI as well.</p>          </div>
+        </section>
+        <section aria-labelledby="s-built">
+          <h2 class="h2" id="s-built">What I built</h2>
+          <div class="prose">
+<p>One C++17 codebase builds both ECUs, with the role chosen by Kconfig. The sensor publishes data every 10 ms and the controller answers with a command every 20 ms. One DBC file defines the messages, and my generators emit the C++ and Rust codecs.</p><p>Protected frames carry a 4-bit rolling counter and a CRC-8 that also covers the identifier, so a misrouted frame fails the check. I picked the polynomial by measurement: on the 80-bit codeword, 0x2F detects every triple-bit error and 0x1D misses 362 of 82,160.</p><p>A 5 ms supervisor tracks a timeout per message and drives the node state machine. It feeds the watchdog only while every thread has checked in within 300 ms. Bus-off recovery backs off from 100 ms to 1.6 s, then latches FAULT after five failures. A link-time guard makes heap allocation after start-up a fatal error.</p><p>A Python gateway between the bus segments drops, delays, duplicates, reorders, corrupts and floods frames. Firmware test hooks freeze a counter, break a CRC, force bus-off or stall a thread.</p><p>I then ported the sensor ECU to Rust: a no_std, allocation-free core that takes frames and time as arguments, under a thin SocketCAN adapter.</p>          </div>
+        </section>
+        <section aria-labelledby="s-results" class="has-figs">
+          <h2 class="h2" id="s-results">Results</h2>
+          <div class="prose">
+<p>All timings come from the simulated bus on a desktop OS.</p><p>The pytest suite passes 23 of 23. With the sensor&#39;s heartbeat suppressed, the SAFE_STATE command came 374.8 ms after the last heartbeat. That is the 350 ms timeout plus at most one 5 ms supervisor tick and one 20 ms command period. A stalled transmit thread ended in a watchdog reset 1,301.6 ms after its last frame.</p><p>The controller rejected all 22 frames the gateway corrupted. A flood sweep up to 4,000 unknown frames per second (3,999.4 achieved) dropped nothing.</p><p>The firmware application&#39;s line coverage under the suite is 90.5%, and the libraries reach 100% under 77 GoogleTests. The Rust sensor passes the same 23 tests against the C++ controller.</p>          </div>
+          <div class="figs">
+            <div class="figrow" style="--cols:minmax(0, 2526fr);--rw:1152px">
+              <figure class="fig" style="--ar:922/365;--cap:1152px">
+<figcaption class="fig__label">Heartbeat loss on the bus, drawn from the demo&#39;s own capture</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/can-ecu-sim/fault-timeline.svg" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Timeline of bus frames: SENSOR_HEARTBEAT stops for 701 ms, and the command mode steps to SAFE_STATE 364 ms after the last heartbeat, then to NORMAL 523 ms after it returns."><img src="../media/p/can-ecu-sim/fault-timeline.svg" width="922" height="365" alt="Timeline of bus frames: SENSOR_HEARTBEAT stops for 701 ms, and the command mode steps to SAFE_STATE 364 ms after the last heartbeat, then to NORMAL 523 ms after it returns." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow" style="--cols:minmax(0, 1334fr);--rw:694px">
+              <figure class="fig" style="--ar:922/691;--cap:694px">
+<figcaption class="fig__label">Stalled transmit thread and watchdog reset, C++ and Rust sensor</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/can-ecu-sim/watchdog-timeline.svg" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Two stacked timelines, C++ sensor above and Rust sensor below: a stalled transmit thread silences SENSOR_DATA for 1,312 ms and 1,323 ms, through the watchdog reset and the reboot."><img src="../media/p/can-ecu-sim/watchdog-timeline.svg" width="922" height="691" alt="Two stacked timelines, C++ sensor above and Rust sensor below: a stalled transmit thread silences SENSOR_DATA for 1,312 ms and 1,323 ms, through the watchdog reset and the reboot." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow" style="--cols:minmax(0, 3181fr);--rw:1152px">
+              <figure class="fig" style="--ar:1037/326;--cap:1152px">
+<figcaption class="fig__label">Transmit periods under the system suite, 10 ms and 20 ms nominal</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/can-ecu-sim/period-histograms.svg" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Three log-scale histograms of transmit periods: SENSOR_DATA from the C++ sensor (std 0.068 ms) and the Rust sensor (std 0.045 ms), and CONTROLLER_COMMAND (std 0.073 ms)."><img src="../media/p/can-ecu-sim/period-histograms.svg" width="1037" height="326" alt="Three log-scale histograms of transmit periods: SENSOR_DATA from the C++ sensor (std 0.068 ms) and the Rust sensor (std 0.045 ms), and CONTROLLER_COMMAND (std 0.073 ms)." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow" style="--cols:minmax(0, 2120fr);--rw:864px">
+              <figure class="fig" style="--ar:691/326;--cap:864px">
+<figcaption class="fig__label">Echo round trip, host to ECU and back, from kernel timestamps</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/can-ecu-sim/echo-rtt.svg" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Overlaid histograms of 200 echo round trips per ECU, spread between 0 and 1.2 ms: sensor median 0.55 ms, controller median 0.58 ms."><img src="../media/p/can-ecu-sim/echo-rtt.svg" width="691" height="326" alt="Overlaid histograms of 200 echo round trips per ECU, spread between 0 and 1.2 ms: sensor median 0.55 ms, controller median 0.58 ms." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+          </div>
+        </section>
+        <section aria-labelledby="s-limits">
+          <h2 class="h2" id="s-limits">Limits and next steps</h2>
+          <div class="prose">
+<p>The bus is simulated. A vcan interface has no bit rate, arbitration or error frames, so error-passive and bus-off come from a modeled controller and the flood tests only the receive path. Jitter figures describe the host&#39;s scheduler.</p><p>CI builds the firmware for an STM32 Nucleo-F446RE in both roles. I have not run it on a board, so the bxCAN and hardware watchdog paths are untested. The Rust port covers only the sensor.</p><p>The next steps would be a run on Nucleo boards over a real bus and a Rust port of the controller.</p>          </div>
+        </section>
+      </div>
+
+      <aside class="proj-aside" aria-labelledby="built-h">
+        <div class="proj-aside__in">
+          <h2 id="built-h">Built with</h2>
+          <ul class="tags"><li class="tag">Zephyr RTOS</li><li class="tag">C++17</li><li class="tag">Rust (no_std)</li><li class="tag">SocketCAN</li><li class="tag">cantools</li><li class="tag">pytest</li><li class="tag">GoogleTest</li><li class="tag">Docker</li><li class="tag">GitHub Actions</li></ul>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="proj-nav" aria-label="More projects">
+      <a href="quotedesk.html"><span><span aria-hidden="true">&larr;</span> Previous project</span><b>QuoteDesk: a quoting assistant for machine shops</b></a>
+      <a href="mpc-quadrotor.html"><span>Next project <span aria-hidden="true">&rarr;</span></span><b>Nonlinear MPC for a simulated quadrotor</b></a>
+    </nav>
+  </main>
+
+  <footer class="foot">
+  <span>Deniz Gursoy · B.S.E. in electrical engineering, Penn, class of 2028</span>
+  <nav aria-label="Footer">
+    <a href="../index.html">Board</a>
+    <a href="../list.html#projects">Projects</a>
+    <a href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <a href="https://github.com/dcgursoy" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/dgursoy/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:dcgursoy07@gmail.com">dcgursoy07@gmail.com</a>
+  </nav>
+</footer>
+
+</div>
+<button class="ask-fab" type="button" data-ask-open><span aria-hidden="true">&gt;_</span> Ask me anything</button>
+<script src="../data/site.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/ask.js"></script>
+
+</body>
+</html>

@@ -1,3 +1,13 @@
 node_modules/
 .next/
 *.tsbuildinfo
+
+# secrets: the Gemini key lives in the Vercel project settings, never in a file here
+.env
+.env.*
+*.env
+
+.vercel/
+
+# local tool settings
+.claude/settings.local.json

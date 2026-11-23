@@ -1,0 +1,136 @@
+/* "Ask me anything": the launcher pill and the serial-monitor panel built by js/ask.js.
+   Uses the tokens of css/site.css, so light and dark follow <html data-theme>. */
+
+/* ── launcher ───────────────────────────────────────────────────────────── */
+.ask-fab {
+  position: fixed; z-index: 30;
+  right: max(24px, env(safe-area-inset-right, 0px)); bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  display: inline-flex; align-items: center; gap: 10px; height: 44px; padding: 0 18px 0 15px;
+  border: 1px solid var(--inverse); border-radius: 999px; background: var(--inverse); color: var(--inverse-ink);
+  font: 500 15px/1 var(--font); white-space: nowrap; cursor: pointer;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, .16);
+  transition: transform .12s ease, background-color .15s ease, border-color .15s ease;
+}
+.ask-fab > [aria-hidden="true"] { font: 500 13px/1 var(--mono); letter-spacing: -.04em; opacity: .7; }
+.ask-fab:hover { background: var(--inverse-hover); border-color: var(--inverse-hover); transform: translateY(-1px); }
+.ask-fab:active { transform: translateY(0) scale(.985); }
+.ask-fab:focus-visible { border-radius: 999px; }
+.ask-open .ask-fab { display: none; }
+
+/* ── panel ──────────────────────────────────────────────────────────────── */
+.ask {
+  position: fixed; z-index: 40;
+  right: max(24px, env(safe-area-inset-right, 0px)); bottom: max(24px, env(safe-area-inset-bottom, 0px));
+  width: min(420px, calc(100vw - 32px));
+  height: min(560px, calc(100vh - 48px)); height: min(560px, calc(100dvh - 48px));
+  display: flex; flex-direction: column; overflow: hidden;
+  border: 1px solid var(--line-strong); border-radius: var(--r-m);
+  background: var(--raised); color: var(--ink); box-shadow: var(--shadow);
+  font: 13px/1.6 var(--mono); text-align: left;
+  animation: ask-in .2s var(--ease);
+}
+.ask[hidden], .ask [hidden] { display: none; }
+:where(.ask) p, :where(.ask) h2 { margin: 0; }
+@keyframes ask-in { from { opacity: 0; transform: translateY(10px); } }
+
+.ask__head { flex: none; display: grid; gap: 5px; padding: 10px 10px 12px 16px; border-bottom: 1px solid var(--line); }
+.ask__bar { display: flex; align-items: center; gap: 12px; }
+.ask__title { display: flex; align-items: baseline; gap: 9px; margin-right: auto; font: 500 15px/1.2 var(--mono); letter-spacing: -.01em; }
+.ask__title::before { content: ">_"; color: var(--muted); letter-spacing: -.04em; }
+.ask__state { display: inline-flex; align-items: center; gap: 6px; font: 12px/1 var(--mono); color: var(--muted); }
+.ask__state::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--ok); }
+.ask.is-busy .ask__state::before { background: var(--live); }
+.ask__close {
+  flex: none; display: grid; place-items: center; width: 40px; height: 40px; padding: 0;
+  border: 1px solid var(--line); border-radius: 999px; background: var(--raised); color: var(--ink); cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+.ask__close:hover { border-color: var(--line-strong); background: var(--surface); }
+.ask__close:focus-visible { border-radius: 999px; }
+.ask__note { max-width: 50ch; padding-right: 6px; font-size: 12px; line-height: 1.5; color: var(--muted); }
+.ask__fine { font-size: 11px; line-height: 1.5; color: var(--muted); }
+
+/* transcript */
+.ask__log {
+  flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+  display: flex; flex-direction: column; gap: 16px; padding: 14px 16px 16px; background: var(--surface);
+}
+.ask__log { min-height: 64px; }
+@media (max-height: 520px) { .ask__fine { display: none; } }
+.ask__log:focus-visible { outline-offset: -2px; border-radius: 0; }
+.ask__sys { color: var(--muted); }
+.ask__x { display: grid; gap: 4px; }
+.ask__q { display: flex; gap: 9px; font-weight: 500; color: var(--ink); overflow-wrap: anywhere; }
+.ask__q::before { content: ">"; flex: none; font-weight: 400; color: var(--muted); }
+.ask__a, .ask__err { color: var(--ink-2); overflow-wrap: anywhere; }
+.ask__a a, .ask__err a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--muted); text-underline-offset: 3px; transition: text-decoration-color .15s ease; }
+.ask__a a:hover, .ask__err a:hover { text-decoration-color: var(--live); }
+.ask__err b { font-weight: 500; color: var(--ink); }
+.ask__cursor { display: inline-block; width: .58em; height: 1.15em; margin-left: 1px; vertical-align: text-bottom; background: var(--live); }
+.ask__wait { color: var(--muted); letter-spacing: .12em; }
+.ask__wait span { animation: ask-dot 1.2s linear infinite; }
+.ask__wait span:nth-child(2) { animation-delay: .2s; }
+.ask__wait span:nth-child(3) { animation-delay: .4s; }
+@keyframes ask-dot { 0%, 100% { opacity: .25; } 40% { opacity: 1; } }
+
+/* read out once, complete, by screen readers */
+.ask__live, .ask__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* suggestions */
+.ask__sugg { flex: 0 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; display: grid; gap: 6px; padding: 10px 12px 0; border-top: 1px solid var(--line); }
+.ask__pick {
+  min-height: 40px; padding: 8px 12px; border: 1px solid var(--line); border-radius: var(--r-s);
+  background: var(--raised); color: var(--ink); font: 13px/1.35 var(--mono); text-align: left; cursor: pointer;
+  transition: border-color .15s ease, background-color .15s ease;
+}
+.ask__pick:hover { border-color: var(--line-strong); background: var(--surface); }
+
+/* input row */
+.ask__form { flex: none; display: flex; align-items: center; gap: 8px; padding: 10px 12px 12px; }
+.ask__sugg[hidden] + .ask__form { border-top: 1px solid var(--line); }
+.ask__field {
+  flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 9px; height: 40px; padding: 0 12px;
+  border: 1px solid var(--line-strong); border-radius: var(--r-s); background: var(--bg);
+}
+.ask__field:focus-within { border-color: var(--live); box-shadow: inset 0 0 0 1px var(--live); }
+.ask__prompt { flex: none; font-weight: 500; color: var(--ink); }
+.ask__input {
+  flex: 1 1 auto; min-width: 0; height: 100%; padding: 0; border: 0; border-radius: 0; outline: 0;
+  background: transparent; color: var(--ink); font: 14px/1.2 var(--mono); caret-color: var(--live);
+}
+.ask__input::placeholder { color: var(--muted); opacity: 1; }
+.ask__send {
+  flex: none; height: 40px; padding: 0 16px; border: 1px solid var(--inverse); border-radius: var(--r-s);
+  background: var(--inverse); color: var(--inverse-ink); font: 500 13px/1 var(--mono); cursor: pointer;
+  transition: background-color .15s ease, border-color .15s ease, opacity .15s ease;
+}
+.ask__send:hover { background: var(--inverse-hover); border-color: var(--inverse-hover); }
+.ask__send[aria-disabled="true"] { opacity: .45; cursor: default; }
+
+/* ── phones: a bottom sheet ─────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .ask-fab { right: max(16px, env(safe-area-inset-right, 0px)); bottom: max(16px, env(safe-area-inset-bottom, 0px)); width: 52px; height: 52px; padding: 0; justify-content: center; font-size: 0; gap: 0; }
+  .ask-fab > [aria-hidden="true"] { font-size: 15px; opacity: 1; }
+  .ask {
+    left: 0; right: 0; bottom: var(--ask-bottom, 0px); width: auto;
+    height: min(640px, 85vh); height: min(640px, 85dvh); max-height: var(--ask-max, 85vh);
+    border-width: 1px 0 0; border-radius: var(--r-l) var(--r-l) 0 0;
+    box-shadow: 0 -16px 48px rgba(0, 0, 0, .16);
+    animation-name: ask-up;
+  }
+  .ask__head { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(10px, env(safe-area-inset-right, 0px)); }
+  .ask__log { padding-inline: max(16px, env(safe-area-inset-left, 0px)) max(16px, env(safe-area-inset-right, 0px)); }
+  .ask__sugg { padding-inline: max(12px, env(safe-area-inset-left, 0px)) max(12px, env(safe-area-inset-right, 0px)); }
+  .ask__form {
+    padding: 10px max(12px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(12px, env(safe-area-inset-left, 0px));
+  }
+  .ask__input { font-size: 16px; }            /* below 16px iOS zooms the page on focus */
+}
+@keyframes ask-up { from { opacity: 0; transform: translateY(24px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .ask, .ask__wait span { animation: none; }
+}
+@media print {
+  .ask, .ask-fab { display: none !important; }
+}

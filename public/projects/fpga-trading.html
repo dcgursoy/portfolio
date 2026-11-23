@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Backtested PPO trading agent with an HLS inference draft · Deniz Gursoy</title>
+<meta name="description" content="A PPO agent trades hourly BTCUSDT in a backtest, with an unsynthesized HLS C++ draft of its network. It returned 36.37%; holding BTC returned 35.93%.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Backtested PPO trading agent with an HLS inference draft · Deniz Gursoy">
+<meta property="og:description" content="A PPO agent trades hourly BTCUSDT in a backtest, with an unsynthesized HLS C++ draft of its network. It returned 36.37%; holding BTC returned 35.93%.">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<script>(function(){var t;try{t=localStorage.getItem('dg-theme')}catch(e){}if(t!=='dark'&&t!=='light')t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';document.documentElement.dataset.theme=t})()</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=SUSE:wght@400..600&family=JetBrains+Mono:wght@400..500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/site.css">
+<link rel="stylesheet" href="../css/ask.css">
+
+</head>
+<body>
+<a class="skip" href="#main">Skip to the content</a>
+<div class="wrap">
+  <header class="top">
+  <div class="who">
+    <a class="who__name" href="../index.html">Deniz Gursoy</a>
+    <span class="who__line"><span class="nw">Electrical Engineering at UPenn ·</span> <span class="nw">Hardware Design, Robotics, and Embedded Systems</span></span>
+  </div>
+  <nav class="actions" aria-label="Site">
+    <div class="seg" role="group" aria-label="View"><a href="../index.html">Board</a><a href="../list.html">List</a></div>
+    <a class="btn" href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <button class="btn icon-btn theme-toggle" type="button" data-theme-toggle aria-label="Switch to dark mode">
+      <svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5Z"/></svg>
+      <svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+    </button>
+    <a class="btn btn--ink" href="mailto:dcgursoy07@gmail.com">Email me</a>
+  </nav>
+</header>
+
+
+  <main id="main">
+    <a class="crumb" href="../list.html#projects"><span aria-hidden="true">&larr;</span> All projects</a>
+
+    <div class="proj-top">
+    <header class="proj-head">
+      <p class="eyebrow">Software · Simulation</p>
+      <h1 class="h1">Backtested PPO trading agent with an HLS inference draft</h1>
+      <p class="lead">A reinforcement-learning agent, trained with PPO, trades hourly BTCUSDT in a backtest.</p>
+      <dl class="proj-meta">
+        <div><dt class="sr-only">Dates</dt><dd><b>Jul 2025</b></dd></div>
+        <div><dt class="sr-only">Context</dt><dd>Personal project</dd></div>
+        <div><dt class="sr-only">Role</dt><dd>Solo</dd></div>
+        <div><dt class="sr-only">Status</dt><dd><span class="status">Stopped after the backtest: hardware path not built</span></dd></div>
+      </dl>
+      <div class="proj-links">
+<a class="btn btn--ink" href="https://github.com/dcgursoy/fpga_trading_agent" target="_blank" rel="noopener">Code on GitHub <span class="arrow" aria-hidden="true">&#8599;</span></a><a class="link" href="https://github.com/dcgursoy/fpga_trading_agent/blob/master/notebooks/01-EDA.ipynb" target="_blank" rel="noopener">Notebook: training, backtest and timing <span class="arrow" aria-hidden="true">&#8599;</span></a><a class="link" href="https://github.com/dcgursoy/fpga_trading_agent/blob/master/src/hrc/accelerator.cpp" target="_blank" rel="noopener">HLS source <span class="arrow" aria-hidden="true">&#8599;</span></a><a class="link" href="https://www.kaggle.com/datasets/franoisgeorgesjulien/crypto" target="_blank" rel="noopener">Dataset on Kaggle <span class="arrow" aria-hidden="true">&#8599;</span></a>      </div>
+    </header>
+
+    <figure class="frame proj-hero frame--paper" style="--ar:1600/900;--arn:1.7778;--w:1600">
+<a href="../media/p/fpga-trading/split-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Line plot of BTCUSDT hourly close from 2017 to 2023 in three colored spans: 20,480 hours stepped through in training, 22,700 never reached and 10,795 used for the backtest."><img src="../media/p/fpga-trading/split-1600.webp" srcset="../media/p/fpga-trading/split-800.webp 800w, ../media/p/fpga-trading/split-1600.webp 1600w" sizes="(max-width: 1248px) 100vw, 1152px" width="1600" height="900" alt="Line plot of BTCUSDT hourly close from 2017 to 2023 in three colored spans: 20,480 hours stepped through in training, 22,700 never reached and 10,795 used for the backtest." decoding="async"></a>    </figure>
+    </div>
+
+    <section class="stats-band" aria-label="Key numbers">
+      <div class="stats">
+<div class="stat"><b>36.37%</b><span>return in one backtest run over 10,795 hourly BTCUSDT candles, no fees modeled</span></div><div class="stat"><b>35.93%</b><span>return from buying at the first hour and holding, on the same data and rules</span></div><div class="stat"><b>0.78</b><span>annualized Sharpe ratio of the agent&#39;s hourly returns in that backtest. Holding scores 0.77</span></div><div class="stat"><b>315.89 µs</b><span>mean of 500 Stable-Baselines3 predict calls on a CPU. No FPGA latency was measured</span></div>      </div>
+    </section>
+
+    <div class="proj-body" style="--aside-rows:3">
+      <div class="proj-main">
+        <div class="prose proj-more"><p>Its policy network also exists as a fixed-point C++ draft for high-level synthesis (HLS) that has no trained weights and was never synthesized or run on an FPGA. In one run on about 15 months of held-out data it returned 36.37% with a Sharpe ratio of 0.78, against 35.93% and 0.77 for buying and holding. The only latency measured is software: 315.89 µs per decision on a CPU.</p></div>
+        <section aria-labelledby="s-problem">
+          <h2 class="h2" id="s-problem">The problem</h2>
+          <div class="prose">
+<p>The goal was a reinforcement-learning trading policy whose inference could move from Python to an FPGA, for cases where decision latency matters. That needs two results: a return on data the policy has not seen, and a decision time in hardware that beats software.</p><p>The dataset is hourly price bars (candles), far slower than any latency-bound strategy, so the hardware side is an exercise.</p>          </div>
+        </section>
+        <section aria-labelledby="s-built">
+          <h2 class="h2" id="s-built">What I built</h2>
+          <div class="prose">
+<p>The environment is a Gymnasium class over a Kaggle file of hourly prices: 53,988 BTCUSDT rows from Aug 2017 to Oct 2023. At each step the agent sees a 12-hour moving average, a 14-hour relative strength index (RSI), the hour&#39;s volume and the last price change.</p><p>The agent can hold, buy with all its cash or sell everything. It starts with $10,000 and is rewarded with the hourly change in net worth. Fees and slippage are not modeled.</p><p>The training split is the first 80% of rows in time order. I trained the agent with PPO (proximal policy optimization) from Stable-Baselines3 on the split&#39;s first 20,480 rows; the log shows 73 seconds on a CPU. The policy is the default 4-64-64-3 tanh network, with 4,675 weights and biases on the action path.</p><p>The file accelerator.cpp restates that forward pass for Vitis HLS in 16-bit fixed point with 8 integer bits. It has three pipelined layer loops and an argmax over the three outputs. Inputs, the action and all weights sit on AXI4 master ports.</p>          </div>
+        </section>
+        <section aria-labelledby="s-results" class="has-figs">
+          <h2 class="h2" id="s-results">Results</h2>
+          <div class="prose">
+<p>Every figure comes from one training run with no fixed seed. On the held-out 20%, 10,795 hourly rows from 27 Jul 2022 to 19 Oct 2023, $10,000 became $13,637.11. That is a 36.37% return and an annualized Sharpe ratio (mean return divided by its volatility) of 0.78, with the risk-free rate at 0.</p><p>As a baseline, buying at the first test hour and holding returned 35.93% with a Sharpe ratio of 0.77 under the same rules. The agent ended 0.44 points ahead in a rising market, too small a gap to credit to the policy.</p><p>Latency was measured only in software, never in hardware: 500 Stable-Baselines3 predict calls averaged 315.89 µs on a CPU.</p>          </div>
+          <div class="figs">
+            <div class="figrow figrow--pair" style="--cols:minmax(0, 1778fr) minmax(0, 1522fr);--rw:1152px">
+              <figure class="fig" style="--ar:1600/900;--cap:1138px">
+<figcaption class="fig__label">Buy and hold against the agent&#39;s final value</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/fpga-trading/hold-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Line plot of $10,000 held in BTC across the backtest window, ending at $13,592.94, with one dot at the same end point for the agent&#39;s final value of $13,637.11."><img src="../media/p/fpga-trading/hold-1600.webp" srcset="../media/p/fpga-trading/hold-800.webp 800w, ../media/p/fpga-trading/hold-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 612px" width="1600" height="900" alt="Line plot of $10,000 held in BTC across the backtest window, ending at $13,592.94, with one dot at the same end point for the agent&#39;s final value of $13,637.11." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+              <figure class="fig" style="--ar:1600/1051;--cap:974px">
+<figcaption class="fig__label">Notebook output: backtest return and Sharpe ratio</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/fpga-trading/nb-backtest-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Notebook cell that computes an annualized Sharpe ratio from hourly net worth, with its output: final net worth $13,637.11, profit 36.37%, Sharpe ratio 0.78."><img src="../media/p/fpga-trading/nb-backtest-1600.webp" srcset="../media/p/fpga-trading/nb-backtest-800.webp 800w, ../media/p/fpga-trading/nb-backtest-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 524px" width="1600" height="1051" alt="Notebook cell that computes an annualized Sharpe ratio from hourly net worth, with its output: final net worth $13,637.11, profit 36.37%, Sharpe ratio 0.78." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow figrow--pair" style="--cols:minmax(0, 2177fr) minmax(0, 1468fr);--rw:1152px">
+              <figure class="fig" style="--ar:1600/735;--cap:1393px">
+<figcaption class="fig__label">The FPGA stand-in: a hard-coded 2 µs sleep, then the software model</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/fpga-trading/nb-mock-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Notebook cell defining predict_fpga_mock, which sleeps for 0.000002 seconds and then calls the trained model&#39;s predict to get the action."><img src="../media/p/fpga-trading/nb-mock-1600.webp" srcset="../media/p/fpga-trading/nb-mock-800.webp 800w, ../media/p/fpga-trading/nb-mock-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 678px" width="1600" height="735" alt="Notebook cell defining predict_fpga_mock, which sleeps for 0.000002 seconds and then calls the trained model&#39;s predict to get the action." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+              <figure class="fig" style="--ar:1245/848;--cap:940px">
+<figcaption class="fig__label">From the notebook: BTCUSDT price and volume, Aug 2017 to Oct 2023</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/fpga-trading/nb-price-volume-1245.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Notebook plot of the BTCUSDT hourly close in orange above gray volume bars, from August 2017 to October 2023, with the price peaking in late 2021."><img src="../media/p/fpga-trading/nb-price-volume-1245.webp" srcset="../media/p/fpga-trading/nb-price-volume-800.webp 800w, ../media/p/fpga-trading/nb-price-volume-1245.webp 1245w" sizes="(max-width: 720px) 100vw, 458px" width="1245" height="848" alt="Notebook plot of the BTCUSDT hourly close in orange above gray volume bars, from August 2017 to October 2023, with the price peaking in late 2021." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+            <div class="figrow" style="--cols:minmax(0, 1358fr);--rw:706px">
+              <figure class="fig" style="--ar:1600/1178;--cap:706px">
+<figcaption class="fig__label">Notebook output: measured latency, software and mock</figcaption>                <div class="frame frame--paper">
+<a href="../media/p/fpga-trading/nb-latency-1600.webp" target="_blank" rel="noopener" aria-label="Open the full-size image in a new tab: Notebook cell that times 500 calls each way, with its output: software 315.89 µs, mock FPGA 622.43 µs, speedup 0.51x."><img src="../media/p/fpga-trading/nb-latency-1600.webp" srcset="../media/p/fpga-trading/nb-latency-800.webp 800w, ../media/p/fpga-trading/nb-latency-1600.webp 1600w" sizes="(max-width: 720px) 100vw, 706px" width="1600" height="1178" alt="Notebook cell that times 500 calls each way, with its output: software 315.89 µs, mock FPGA 622.43 µs, speedup 0.51x." loading="lazy" decoding="async"></a>                </div>
+              </figure>
+            </div>
+          </div>
+        </section>
+        <section aria-labelledby="s-limits">
+          <h2 class="h2" id="s-limits">Limits and next steps</h2>
+          <div class="prose">
+<p>No FPGA ran, and the HLS file has not been through synthesis. It still needs the trained weights exported in fixed point and a testbench.</p><p>The 16-bit fixed-point type cannot hold the raw inputs, so the features need scaling first. Training covered 20,480 of the 43,180 training rows in one unseeded run, and the backtest models no fees or slippage.</p><p>Still missing: longer training with fixed seeds, fees in the backtest and a synthesis report for the HLS core.</p>          </div>
+        </section>
+      </div>
+
+      <aside class="proj-aside" aria-labelledby="built-h">
+        <div class="proj-aside__in">
+          <h2 id="built-h">Built with</h2>
+          <ul class="tags"><li class="tag">Python</li><li class="tag">Stable-Baselines3</li><li class="tag">Gymnasium</li><li class="tag">PyTorch</li><li class="tag">pandas</li><li class="tag">Matplotlib</li><li class="tag">HLS C++ (ap_fixed)</li></ul>
+        </div>
+      </aside>
+    </div>
+
+    <nav class="proj-nav" aria-label="More projects">
+      <a href="expense-tracker.html"><span><span aria-hidden="true">&larr;</span> Previous project</span><b>MERN expense tracker with rule-based analytics</b></a>
+      <a href="autonomous-racecar.html"><span>Next project <span aria-hidden="true">&rarr;</span></span><b>Autonomous racecar for the MIT Beaver Works Grand Prix</b></a>
+    </nav>
+  </main>
+
+  <footer class="foot">
+  <span>Deniz Gursoy · B.S.E. in electrical engineering, Penn, class of 2028</span>
+  <nav aria-label="Footer">
+    <a href="../index.html">Board</a>
+    <a href="../list.html#projects">Projects</a>
+    <a href="../resume/Deniz_Gursoy_Resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <a href="https://github.com/dcgursoy" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://www.linkedin.com/in/dgursoy/" target="_blank" rel="noopener">LinkedIn</a>
+    <a href="mailto:dcgursoy07@gmail.com">dcgursoy07@gmail.com</a>
+  </nav>
+</footer>
+
+</div>
+<button class="ask-fab" type="button" data-ask-open><span aria-hidden="true">&gt;_</span> Ask me anything</button>
+<script src="../data/site.js"></script>
+<script src="../js/site.js"></script>
+<script src="../js/ask.js"></script>
+
+</body>
+</html>
