@@ -23,6 +23,13 @@ body { background-image: radial-gradient(var(--dot) 1.1px, transparent 1.3px); b
 .opener { display: flex; align-items: baseline; justify-content: space-between; gap: 8px 32px; flex-wrap: wrap; padding-block: 8px 14px; }
 .opener .lead { font-size: clamp(18px, 1.7vw, 23px); line-height: 1.3; color: var(--ink); letter-spacing: -0.01em; max-width: none; }
 .hint { font-size: 14px; color: var(--muted); }
+.opener__ask { flex-basis: 100%; }
+@media (max-width: 720px) {
+  .opener__ask .askbar__picks { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin-inline: -16px; padding-inline: 16px; max-width: 100vw; }
+  .opener__ask .askbar__picks::-webkit-scrollbar { display: none; }
+  .opener__ask .askbar__pick { white-space: nowrap; height: 36px; min-height: 0; padding-block: 0; }
+}
+.opener .hint { flex-basis: 100%; }
 .hint--touch { display: none; }
 @media (hover: none) { .hint--fine { display: none; } .hint--touch { display: inline; } }
 
@@ -242,6 +249,18 @@ svg.board { display: block; width: 100%; height: auto; overflow: visible; -webki
   <main>
     <div class="opener">
       <h1 class="lead" id="headline">I like building hardware end to end, from designing the first schematic to validation testing the final product.</h1>
+      <div class="askbar opener__ask">
+        <form class="askbar__form" data-ask-form role="search" aria-label="Ask a question about my work">
+          <span class="askbar__glyph" aria-hidden="true">&gt;_</span>
+          <input class="askbar__input" type="text" name="q" maxlength="400" autocomplete="off" enterkeyhint="send" placeholder="Ask about my work…" aria-label="Ask about my work">
+          <button class="askbar__send" type="submit">Ask</button>
+        </form>
+        <ul class="askbar__picks" aria-label="Ready questions">
+          <li><button class="askbar__pick" type="button" data-ask-q="What has he built on real hardware?">What has he built on real hardware?</button></li>
+          <li><button class="askbar__pick" type="button" data-ask-q="What did Deniz do at SpaceX?">What did he do at SpaceX?</button></li>
+          <li><button class="askbar__pick" type="button" data-ask-q="What does he do on Penn Hyperloop?">What does he do on Penn Hyperloop?</button></li>
+        </ul>
+      </div>
       <p class="hint"><span class="hint--fine">Each part of this board opens a section. Hover to preview, click to open.</span><span class="hint--touch">Tap a part of the board, or a section below.</span></p>
     </div>
     <div class="stage" id="stage">

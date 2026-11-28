@@ -4,7 +4,9 @@
    Pages include css/ask.css and this file, plus any trigger:
      <button class="ask-fab" type="button" data-ask-open>Ask me anything</button>
    (the ">_" glyph is added when the button has no aria-hidden child of its own)
-   API:    window.Ask.open(triggerElement?), window.Ask.close(), window.Ask.isOpen()
+   API:    window.Ask.open(triggerElement?), window.Ask.close(), window.Ask.isOpen(), window.Ask.ask(question, triggerElement?)
+   Markup: <form data-ask-form [data-ask-about="project title"]><input><button></form> sends what was typed;
+           <button data-ask-q="question"> sends a ready question.
    Events on document: "ask:open", "ask:close", "ask:busy" (detail true while waiting or printing, then false)
    Suggestions come from window.SITE.profile.ask_suggestions when that exists. */
 (() => {
@@ -444,7 +446,30 @@
     openPanel(t);
   });
 
-  window.Ask = { open: openPanel, close: closePanel, isOpen: () => open };
+  /* a question typed or picked outside the panel: open the panel and send it */
+  function askFrom(text, from) {
+    const q = String(text || '').replace(/\s+/g, ' ').trim();
+    openPanel(from);
+    if (q) submit(q);
+  }
+  document.addEventListener('submit', e => {
+    const f = e.target.closest && e.target.closest('form[data-ask-form]');
+    if (!f) return;
+    e.preventDefault();
+    const field = f.querySelector('input');
+    const typed = field ? field.value.replace(/\s+/g, ' ').trim() : '';
+    const about = f.dataset.askAbout;                    // a project page names its project, so "it" has a meaning
+    if (field) field.value = '';
+    askFrom(typed && about ? typed.slice(0, MAX_CHARS - about.length - 24) + ' (asked about: ' + about + ')' : typed, f.querySelector('button') || f);
+  });
+  document.addEventListener('click', e => {
+    const t = e.target.closest && e.target.closest('[data-ask-q]');
+    if (!t) return;
+    e.preventDefault();
+    askFrom(t.dataset.askQ, t);
+  });
+
+  window.Ask = { open: openPanel, close: closePanel, isOpen: () => open, ask: askFrom };
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();

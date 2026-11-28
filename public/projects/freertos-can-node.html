@@ -116,6 +116,23 @@
       </aside>
     </div>
 
+    <section class="proj-ask" aria-labelledby="ask-h">
+      <h2 id="ask-h">Ask a question about this project</h2>
+      <p>An AI assistant answers from this site's text. It can be wrong; this page is the source.</p>
+      <div class="askbar">
+        <form class="askbar__form" data-ask-form data-ask-about="FreeRTOS battery-module CAN node, simulated" role="search" aria-label="Ask a question about this project">
+          <span class="askbar__glyph" aria-hidden="true">&gt;_</span>
+          <input class="askbar__input" type="text" name="q" maxlength="300" autocomplete="off" enterkeyhint="send" placeholder="Ask about this project…" aria-label="Ask about this project">
+          <button class="askbar__send" type="submit">Ask</button>
+        </form>
+        <ul class="askbar__picks" aria-label="Ready questions">
+          <li><button class="askbar__pick" type="button" data-ask-q="On the project &quot;FreeRTOS battery-module CAN node, simulated&quot;, what was Deniz's own part?">What was his part?</button></li>
+          <li><button class="askbar__pick" type="button" data-ask-q="What are the results of the project &quot;FreeRTOS battery-module CAN node, simulated&quot;?">What were the results?</button></li>
+          <li><button class="askbar__pick" type="button" data-ask-q="What are the limits of the project &quot;FreeRTOS battery-module CAN node, simulated&quot;?">What are its limits?</button></li>
+        </ul>
+      </div>
+    </section>
+
     <nav class="proj-nav" aria-label="More projects">
       <a href="quadruped-rl.html"><span><span aria-hidden="true">&larr;</span> Previous project</span><b>Simulated quadruped that learns to walk with PPO</b></a>
       <a href="panda-pick-place-il.html"><span>Next project <span aria-hidden="true">&rarr;</span></span><b>Imitation learning study on a simulated Franka Panda</b></a>
